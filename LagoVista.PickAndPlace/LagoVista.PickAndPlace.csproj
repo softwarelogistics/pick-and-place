@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LagoVista.Core" Version="2.1.1359-beta1343" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LagoVista.GCode\LagoVista.GCode.csproj" />
+    <ProjectReference Include="..\LagoVista.PCB.Eagle\LagoVista.PCB.Eagle.csproj" />
+  </ItemGroup>
+
+</Project>

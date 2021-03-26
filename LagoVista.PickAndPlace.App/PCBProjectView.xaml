@@ -1,0 +1,351 @@
+﻿<Window x:Class="LagoVista.PickAndPlace.App.PCBProjectView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LagoVista.PickAndPlace.App"
+        xmlns:ctls="clr-namespace:LagoVista.PickAndPlace.App.Controls"
+        mc:Ignorable="d"
+        Title="PCBProject" Height="480" Width="640">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl>
+            <TabItem Header="Board">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Eagle Board File" />
+                    <ctls:MaskingTextBox Text="{Binding Path=Project.EagleBRDFilePath, Mode=TwoWay}" Grid.Column="1" Margin="4,4,0,4" />
+                    <Button Content="..." Width="30" HorizontalAlignment="Left" Grid.Column="2" Margin="0,4,4,4" Command="{Binding OpenEagleBoardCommand}" />
+
+                    <Label Content="Top Etching GCode" Grid.Row="1" />
+                    <ctls:MaskingTextBox Grid.Row="1" Text="{Binding Path=Project.TopEtchingFilePath, Mode=TwoWay}" Grid.Column="1" Margin="4,4,0,4" />
+                    <Button Grid.Row="1" Content="..." Width="30" HorizontalAlignment="Left" Grid.Column="2" Margin="0,4,4,4" Command="{Binding OpenTopEtchingCommand}"/>
+
+                    <Label Grid.Row="2" Content="Bottom Etching GCode" />
+                    <ctls:MaskingTextBox Grid.Row="2" Text="{Binding Path=Project.BottomEtchingFilePath, Mode=TwoWay}" Grid.Column="1" Margin="4,4,0,4" />
+                    <Button Content="..." Grid.Row="2" Width="30" HorizontalAlignment="Left" Grid.Column="2" Margin="0,4,4,4" Command="{Binding OpenBottomEtchingCommand}"/>
+
+                    <Label Content="Scrap Sides" Grid.Row="3" />
+                    <ctls:MaskingTextBox  UnitType="Size" Min="0" Max="99" Text="{Binding Path=Project.ScrapSides, Mode=TwoWay}" ToolTip="The bottom and left margin from the origin to the PCB area.  The board edges will be milled from the scrap area." Margin="4,4,0,4" Grid.Column="1" Grid.Row="3" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="3" />
+
+                    <Label Content="Scrap Top/Bottom" Grid.Row="4" />
+                    <ctls:MaskingTextBox  UnitType="Size" Min="0" Max="99" Text="{Binding Path=Project.ScrapTopBottom, Mode=TwoWay}" ToolTip="The bottom and left margin from the origin to the PCB area.  The board edges will be milled from the scrap area." Margin="4,4,0,4" Grid.Column="1" Grid.Row="4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="4" />
+
+
+                    <Label Content="Stock Width" Grid.Row="5" />
+                    <ctls:MaskingTextBox UnitType="Size" Min="0" Max="999" Text="{Binding Path=Project.StockWidth, Mode=TwoWay}" ToolTip="The Width of the blank PCB file, this is used for establishing drill and mill depths" Margin="4,4,0,4" Grid.Column="1" Grid.Row="5" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="5" />
+
+                    <Label Content="Stock Height" Grid.Row="6" />
+                    <ctls:MaskingTextBox UnitType="Size" Min="0" Max="999" Text="{Binding Path=Project.StockHeight, Mode=TwoWay}" ToolTip="The Height of the blank PCB file, this is used for establishing drill and mill depths" Margin="4,4,0,4" Grid.Column="1" Grid.Row="6" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="6" />
+
+                    <Label Content="Stock Thickness" Grid.Row="7" />
+                    <ctls:MaskingTextBox UnitType="Size" Min="0" Max="99" Text="{Binding Path=Project.StockThickness, Mode=TwoWay}" ToolTip="The Thickness of the blank PCB file, this is used for establishing drill and mill depths" Margin="4,4,0,4" Grid.Column="1" Grid.Row="7" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="7" />
+
+                    <Label Content="Detected Width" Grid.Row="8" />
+                    <TextBlock Text="{Binding Path=PCB.Width}" Grid.Row="8" Grid.Column="1" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="8" />
+
+                    <Label Content="Detected Height" Grid.Row="9" />
+                    <TextBlock Text="{Binding Path=PCB.Height}" Grid.Row="9" Grid.Column="1" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="9" />
+
+
+                    <Label Content="Mirror (Bottom Etching)" Grid.Row="10" />
+                    <CheckBox IsChecked="{Binding Path=FlipBoard}"  VerticalAlignment="Center"  Grid.Row="10" Grid.Column="1" ToolTip="How to handle bottom etching, if this is checked the board will maintain the XY origin of the bottom left for the bottom etching operation.  If this is unchecked, the board will be mirrored so the the origin will be in negative X space." />
+
+                    <Button Grid.Row="11" Grid.Column="1" Content="Center Board" Command="{Binding CenterBoardCommand}" Margin="4" />
+                    <Button Grid.Row="12" Grid.Column="1" Content="Generate Isolation Milling (pcb-gcode)" Command="{Binding GenerateIsolationMillingCommand}" Margin="4" />
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Drill">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Plunge Rate" Grid.Row="0" />
+                    <ctls:MaskingTextBox UnitType="Rate" Min="0" Max="9999" Grid.Column="1" Grid.Row="0" Text="{Binding Path=Project.DrillPlungeRate, Mode=TwoWay}" ToolTip="The rate at which the Z-Axis will be moved from the time the bit touches the board until drill has been completed." Margin="4,4,0,4" />
+                    <Label Content="mm/min" Grid.Column="2" Grid.Row="0" />
+
+                    <Label Content="Spindle RPM" Grid.Row="1" />
+                    <ctls:MaskingTextBox Min="0" Max="99999"  UnitType="RPM"  Grid.Column="1" Grid.Row="1" Text="{Binding Path=Project.DrillSpindleRPM, Mode=TwoWay}" ToolTip="For drills that have computer controlled RPM the rotations per minute during the drill process" Margin="4,4,0,4" />
+                    <Label Content="rpm" Grid.Column="2" Grid.Row="1" />
+
+                    <Label Content="Spindle Dwell" Grid.Row="2" />
+                    <ctls:MaskingTextBox Min="0" Max="99" UnitType="Seconds" Grid.Column="1" Grid.Row="2" Text="{Binding Path=Project.DrillSpindleDwell, Mode=TwoWay}" ToolTip="The amount of time to pause while the drill spins-up." Margin="4,4,0,4" />
+                    <Label Content="sec" Grid.Column="2" Grid.Row="2" />
+
+                    <Label Content="Safe Height" Grid.Row="3" />
+                    <ctls:MaskingTextBox Min="0" Max="99" UnitType="Size" Grid.Column="1" Grid.Row="3" Text="{Binding Path=Project.DrillSafeHeight, Mode=TwoWay}" ToolTip="The Height above the Z-Axis the the bit will move to prior to moving between drills and tool change." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="3" />
+
+                    <Label Content="Safe Plunge/Reover Rate" Grid.Row="4" />
+                    <ctls:MaskingTextBox UnitType="Rate"  Min="0" Max="9999" Grid.Column="1" Grid.Row="4" Text="{Binding Path=Project.SafePlungeRecoverRate, Mode=TwoWay}" ToolTip="The Rate at which the drill will move from the safe height to the Z Zero Axis, also the Rate at which the bill will be with drawn from the board." Margin="4,4,0,4" />
+                    <Label Content="mm/sec" Grid.Column="2" Grid.Row="4" />
+
+                    <Label Content="Use Tool Change Process" Grid.Row="5" />
+                    <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding Project.PauseForToolChange, Mode=TwoWay}" VerticalAlignment="Center" Margin="4" ToolTip="Perform a process on Tool Change where Machine is Stopped, move to a Safe Hope Position and Probed." />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Drill Rack">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="50*" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="50*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30*" />
+                        <ColumnDefinition Width="10*" />
+                        <ColumnDefinition Width="60*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="4" Text="The Full List includes all the drill sizes as specified by the Eagle parts list.  In some cases if the difference is minor, it may make sense to combine drills to eliminate drill changes"  TextWrapping="Wrap" Grid.ColumnSpan="3" />
+                    <Label Content="Drill Rack from Eagle"  Grid.Row="1"/>
+
+                    <ListBox x:Name="FullDrillIst" ItemsSource="{Binding Path=PCB.OriginalToolRack}" Grid.Row="2" Grid.RowSpan="3" Margin="4" AllowDrop="True" Drop="FullDrillIst_Drop" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid MouseMove="SourceBitsGrid_MouseMove">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding ToolName}" Grid.Column="0" />
+                                    <TextBlock Text="{Binding Diameter, StringFormat=0.00}" TextAlignment="Right" Grid.Column="1" />
+                                    <TextBlock Text="mm" Margin="4,0,0,0" Grid.Column="2" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Label Content="Consolidated Drill Rack"  Grid.Row="1" Grid.Column="2"/>
+                    <Button Content="+" x:Name="AddConsolidatedDril" Click="AddConsolidatedDrill_Click" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="1" Margin="0,0,4,0" Width="24" />
+                    <ListBox x:Name="ConsolidatedDrillRack" ItemsSource="{Binding Path=Project.ConsolidatedDrillRack}" Grid.Row="2" Grid.Column="2" Margin="4" SelectedItem="{Binding ConsolidatedDrillBit}" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Display, FallbackValue=TS01 0.3 33}" Grid.Column="0" x:Name="ConsolidatedDrillBitItem" MouseDown="ConsolidatedDrillBitItem_MouseDown" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Label Content="{Binding Path=ConsolidatedDrillBit.Title}"  Grid.Row="3" Grid.Column="2" />
+                    <ListBox x:Name="ConsolidatedDrills" ItemsSource="{Binding Path=ConsolidatedDrillBit.Bits}" Grid.Column="2" Grid.Row="4" Margin="4" AllowDrop="True" Drop="ConsolidatedDrills_Drop" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid MouseMove="ConsolidatedBitsGrid_MouseMove">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding ToolName}" Grid.Column="0" />
+                                    <TextBlock Text="{Binding Diameter, StringFormat=0.00}" TextAlignment="Right" Grid.Column="1" />
+                                    <TextBlock Text="mm" Margin="4,0,0,0" Grid.Column="2" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Mill Cutout">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Cut Depth" Grid.Row="0" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="0" Text="{Binding Path=Project.MillCutDepth, Mode=TwoWay}" ToolTip="The Milling Process can make multiple passes to Cut the PCB from the Blank, this is the depth the PCB is cut with each pass." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="0" />
+
+                    <Label Content="Tool Size" Grid.Row="1" />
+                    <ctls:MaskingTextBox Min="0" Max="20"  Grid.Column="1" Grid.Row="1" Text="{Binding Path=Project.MillToolSize, Mode=TwoWay}" ToolTip="To Ensure that the Milled Board matches the specified size, it will mill from outside the boundary of the board.  The tool size is required to determine how far outside the boundary will be milled." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="1" />
+
+                    <Label Content="Spindle RPM" Grid.Row="2" />
+                    <ctls:MaskingTextBox Min="0" Max="99999"  Grid.Column="1" Grid.Row="2" Text="{Binding Path=Project.MillSpindleRPM, Mode=TwoWay}" ToolTip="How fast the Spindle will Spin in RPM during the Milling Process" Margin="4,4,0,4" />
+                    <Label Content="rpm" Grid.Column="2" Grid.Row="2" />
+
+                    <Label Content="Spindle Dwell" Grid.Row="3" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="3" Text="{Binding Path=Project.MillSpindleDwell, Mode=TwoWay}" ToolTip="Number of Seconds to Pause prior after the Spindle has spun up prior to the milling operation" Margin="4,4,0,4" />
+                    <Label Content="sec" Grid.Column="2" Grid.Row="3" />
+
+                    <Label Content="Feed Rate" Grid.Row="4" />
+                    <ctls:MaskingTextBox Min="0" Max="999"  Grid.Column="1" Grid.Row="4" Text="{Binding Path=Project.MillFeedRate, Mode=TwoWay}" ToolTip="Number of Seconds to Pause prior after the Spindle has spun up prior to the milling operation." Margin="4,4,0,4" />
+                    <Label Content="mm/sec" Grid.Column="2" Grid.Row="4" />
+
+                    <Label Content="Safe Height" Grid.Row="5" />
+                    <ctls:MaskingTextBox UnitType="Size" Min="0" Max="100"  Grid.Column="1" Grid.Row="5" Text="{Binding Path=Project.MillSafeHeight, Mode=TwoWay}" ToolTip="Height above the Z Axis the bit will move to prior to moving in the XY plane" Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="5" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Height Map">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Grid Size" Grid.Row="0" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="0" Text="{Binding Path=Project.HeightMapGridSize, Mode=TwoWay}" ToolTip="The distance between points when creating a Height Map to correct for slight warpage in the PCB Blank." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="0" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Hold Down">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.ColumnSpan="3" Margin="4" Text="Hold Downs are extra holes drilled in the PCB Stock, usually on the Scrap portion that hold the PCB down durring drilling and milling operations" TextWrapping="Wrap" />
+
+                    <Label Content="Hole Diameter" Grid.Row="1" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="1" Text="{Binding Path=Project.HoldDownDiameter, Mode=TwoWay}" ToolTip="The diameter that will be drilled in the PCB to allow a screw or mounting post to be passed through it and into underlying material." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="1" />
+
+
+                    <Label Content="Drill Diameter" Grid.Row="2" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="2" Text="{Binding Path=Project.HoldDownDrillDiameter, Mode=TwoWay}" ToolTip="The diameter that will be drilled into the underlying material.  This will often be less than the Hold Diameter to allow the threads to grab into the material.  If this is the same as the Hole Diameter, only one drill operation will be generated and no tool change will be required" Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="2" />
+
+                    <Label Content="Drill Depth" Grid.Row="3" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="3" Text="{Binding Path=Project.HoldDownDrillDepth, Mode=TwoWay}" ToolTip="The depth into the underlying material that will be drilled.  This is how far below the PCB into the underlying materil will be drilled to allow a post or scew to be inserted." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="3" />
+
+                    <Label Content="Board Offset" Grid.Row="4" />
+                    <ctls:MaskingTextBox  Min="0" Max="99" Grid.Column="1" Grid.Row="4" Text="{Binding Path=Project.HoldDownBoardOffset, Mode=TwoWay}" ToolTip="The distance offset from the board edges to the center of the drill hold for the hold down holes." Margin="4,4,0,4" />
+                    <Label Content="mm" Grid.Column="2" Grid.Row="4" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Fiducial" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="50*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="50*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Margin="4" Text="Fiducials are know locations on your board and are used to accurately position the tool using camera.  Fiducials are pulled from the Hole Layer (45) for any holes that are greather than 2mm.  These are generally the mounting holes on the outside of the board.  You should select at a minimum 3 holes.  The one closest to the bottom left will be useds as the primary location. "  TextWrapping="Wrap" />
+                    <Label Content="Available"  Grid.Row="1"/>
+                    <ListBox x:Name="FiducialList" ItemsSource="{Binding Path=Project.FiducialOptions}" Grid.Row="2">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding X}" Grid.Column="1" />
+                                    <TextBlock Text="{Binding Y}" Grid.Column="2" />
+                                    <TextBlock Text="{Binding Drill}"  Grid.Column="3" />
+                                    <Button x:Name="Add" Content="Add" Click="Add_Click" Height="24" Width="60"  Grid.Column="4" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Label Content="Selected"  Grid.Row="3"/>
+                    <ListBox x:Name="SelectedFidcuals" ItemsSource="{Binding Path=Project.Fiducials}" Grid.Row="4">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding X}" Grid.Column="1" />
+                                    <TextBlock Text="{Binding Y}" Grid.Column="2" />
+                                    <TextBlock Text="{Binding Drill}"  Grid.Column="3" />
+                                    <Button x:Name="Add" Content="Add" Click="Add_Click" Height="24" Width="60"  Grid.Column="4" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Save" Width="100" Height="32" Margin="4" x:Name="SaveButton" Click="SaveButton_Click" />
+            <Button Content="Cancel" Width="100" Height="32" Margin="4" x:Name="CloseButton" Click="CloseButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cvtrs="clr-namespace:LagoVista.PickAndPlace.App.Converters">
+    <cvtrs:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <cvtrs:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
+    <cvtrs:ColorEnabledConverter x:Key="ColorEnabledConverter" />
+    <cvtrs:PointConverter x:Key="PointConverter" />
+    <cvtrs:NotNullEnabledConverter x:Key="NotNullEnabledConverter" />
+    <cvtrs:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+    <cvtrs:ToolTopPointConverter x:Key="ToolTopPointConverter" />
+    <cvtrs:Lines2Visual3DConverter x:Key="Lines2Visual3DConverter" />
+    <cvtrs:HeightMap2MeshConverter x:Key="HeightMap2MeshConverter" />
+    <cvtrs:MessageTypeBackgroundColorConverter x:Key="MessageTypeBackgroundColorConverter" />
+    <cvtrs:MessageTypeForegroundColorConverter x:Key="MessageTypeForegroundColorConverter" />
+    <cvtrs:HeightMapProbePoint2PointConverter x:Key="HeightMapProbePoint2PointConverter" />
+    <cvtrs:Point2TextConverter x:Key="Point2TextConverter" />
+    <cvtrs:BoolColorConverter x:Key="BoolColorConverter" />
+    <cvtrs:NoTNullToVisibilityConverter x:Key="NoTNullToVisibilityConverter" />
+</ResourceDictionary>

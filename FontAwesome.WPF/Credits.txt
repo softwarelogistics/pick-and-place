@@ -1,0 +1,4 @@
+﻿Version of Font-Awesome-WPF Library available at
+https://github.com/charri/Font-Awesome-WPF
+
+This port works for .NET Core versions of WPF app.

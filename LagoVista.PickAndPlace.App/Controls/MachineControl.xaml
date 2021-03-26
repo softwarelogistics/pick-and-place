@@ -1,0 +1,16 @@
+﻿<UserControl xmlns:Controls="clr-namespace:LagoVista.PickAndPlace.App.Controls"  x:Class="LagoVista.PickAndPlace.App.Controls.MachineControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Background="Gray"
+             d:DesignHeight="800" d:DesignWidth="300">
+    <StackPanel>
+        <Controls:MachineLocation Visibility="{Binding Machine.IsPnPMachine, Converter={StaticResource BoolToInverseVisibilityConverter}}"/>
+        <Controls:PnPMachineLocation Visibility="{Binding Machine.IsPnPMachine, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <Controls:JogControls />
+        <Controls:JogButtons Visibility="{Binding Machine.IsPnPMachine, Converter={StaticResource BoolToInverseVisibilityConverter}}"/>
+        <Controls:PnPButtons Visibility="{Binding Machine.IsPnPMachine, Converter={StaticResource BoolToVisibilityConverter}}"/>
+    </StackPanel>
+</UserControl>

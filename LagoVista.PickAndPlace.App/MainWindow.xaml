@@ -1,0 +1,127 @@
+﻿<Window x:Class="LagoVista.PickAndPlace.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:h="http://helix-toolkit.org/wpf"
+        xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+        xmlns:ctls="clr-namespace:LagoVista.PickAndPlace.App.Controls"
+        Closed="Window_Closed" 
+	    mc:Ignorable="d"
+		AllowDrop="True"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="800" MinWidth="1200"
+        Title="DIY PCB Commander" Height="900" Width="1600" Closing="Window_Closing">
+    <Window.Resources>
+        <ResourceDictionary Source="MainWindow.Resources.xaml"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File"  >
+                <MenuItem  Header="Exit" Click="CloseMenu_Click" />
+            </MenuItem>
+            <MenuItem Header="GCode">
+                <MenuItem Header="Open GCode" Command="{Binding OpenGCodeCommand}" />
+                <MenuItem Header="Save Modified GCode" Command="{Binding SaveModifiedGCodeCommamnd}" />
+                <MenuItem Header="Close GCode File" Command="{Binding ClearGCodeCommand}" />
+                <MenuItem  Header="Recent GCode Files" x:Name="RecentGCodeFiles" />
+                <Separator />
+                <MenuItem Header="PCB Hold Down" Command="{Binding ShowHoldDownGCodeCommand}" />
+                <MenuItem Header="Drills" Command="{Binding ShowDrillGCodeCommand}" />
+                <MenuItem Header="Probe Height Map" Command="{Binding ShowCutoutMillingGCodeCommand}" />
+                <MenuItem Header="New HeightMap" x:Name="NewHeigtMap" Click="NewHeigtMap_Click" />
+                <MenuItem Header="Apply HeightMap"  Command="{Binding ApplyHeightMapCommand}" />
+                <MenuItem Header="Cutout Milling" Command="{Binding ShowCutoutMillingGCodeCommand}" />
+                <MenuItem Header="Top Etching" Command="{Binding ShowTopEtchingGCodeCommand}" />
+                <MenuItem Header="Bottom Etching" Command="{Binding ShowBottomEtchingGCodeCommand}" />
+              
+            </MenuItem>
+            <MenuItem Header="Machine Control" x:Name="MachineControl" Click="MachineControl_Click" ></MenuItem>
+            <MenuItem Header="PCB" >
+                <MenuItem Header="New Project" x:Name="NewPCBProject" Click="NewPCBProject_Click" />
+                <MenuItem Header="Open Project" x:Name="OpenPCBProject"  Click="OpenPCBProject_Click" />
+                <MenuItem Header="Edit project" x:Name="EditPCBProject" Click="EditPCBProject_Click" />
+                <MenuItem Header="Close project" x:Name="ClosePCBProject" Click="ClosePCBProject_Click" />
+                <MenuItem  Header="Recent Projects" x:Name="RecentProjects" />
+                <Separator />
+                <MenuItem Header="Generate Etching (PCBGCode)" x:Name="PCB2GCode" Click="PCB2GCode_Click" />
+                <Separator />
+                <MenuItem Header="Open Eagle Board File" Command="{Binding OpenEagleBoardFileCommand}" />
+                <MenuItem Header="Close Eagle Board File" Command="{Binding CloseEagleBoardFileCommand}" />
+                <MenuItem  Header="Recent Eagle Boards" x:Name="RecentBoards" />
+                <Separator />
+            </MenuItem>
+            <MenuItem Header="Pick and Place" >
+                <MenuItem Header="New PnP Job" x:Name="NewPnPJob" Click="NewPnPJob_Click" />
+                <MenuItem Header="Open PnP Job" x:Name="OpenPnPJob" Click="OpenPnPJob_Click" />
+                <MenuItem Header="Edit PnP Job" x:Name="EditPnPJob" Click="EditPnPJob_Click" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="Edit Feeder Library" x:Name="EditFeederLibrary" Click="EditFeederLibrary_Click" />
+                <MenuItem Header="Edit Part Packs" x:Name="PartPacks" Click="PartPacks_Click" />
+                <Separator/>
+                <MenuItem  Header="Recent PnP Jobs" x:Name="RecentPNPJobs" />
+                <Separator />
+                <MenuItem Header="Close PnP Job" x:Name="ClosePnPJob" Click="ClosePnPJob_Click" IsEnabled="False" />
+                <Separator/>
+                <MenuItem Header="Edit Package Library" x:Name="EditPackageLibrary" Click="EditPackageLibrary_Click" />
+            </MenuItem>
+            <MenuItem Header="View" >
+                <MenuItem Header="Home" Tag="HomingView" Click="ViewMenu_Show" />
+                <MenuItem Header="Work Alignment" Tag="WorkAlignment" Click="ViewMenu_Show" />
+                <MenuItem Header="Tool Alignment" Tag="ToolAlignment" Click="ViewMenu_Show" />
+                <MenuItem Header="FeederAlignmentt"  Tag="FeederAlignment"  Click="ViewMenu_Show" IsEnabled="False" x:Name="FeederAlignementView" />
+                <MenuItem Header="Calibration" Tag="Calibration" Click="ViewMenu_Show" />
+                <MenuItem Header="Pick and Place" Tag="PickAndPlace" Click="ViewMenu_Show" />
+            </MenuItem>
+            <MenuItem Header="Height Map" >
+                <MenuItem Header="New Generated HeightMap" x:Name="NewGeneratedHeigtMap" Click="NewGeneratedHeigtMap_Click" />
+                <MenuItem Header="Open HeightMap"  Command="{Binding OpenHeightMapCommand}" />
+                <MenuItem Header="Save HeightMap"  Command="{Binding SaveHeightMapCommand}" />
+                <Separator />
+                <MenuItem Header="Apply to GCode" x:Name="EditHeightMap" Command="{Binding ApplyHeightMapCommand}"/>
+                <MenuItem Header="Save Updated GCode"  Command="{Binding SaveModifiedGCodeCommamnd}" />
+                <Separator />
+                <MenuItem Header="Clear HeightMap"  Command="{Binding ClearHeightMapCommand}" />
+            </MenuItem>
+
+            <MenuItem Header="Machines" x:Name="MachinesMenu" >
+                <MenuItem Header="New" x:Name="NewMachinePRofile" Click="NewMachinePRofile_Click" />
+                <MenuItem x:Name="EditMachineMenu" Header="Edit" Click="EditMachineMenu_Click" />
+                <Separator />
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="280" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="160" />
+                    <RowDefinition Height="36" />
+                </Grid.RowDefinitions>
+
+                <ctls:JobControl Grid.ColumnSpan="2" DataContext="{Binding JobControlVM}" />
+
+                <ctls:HeightMapControl  Grid.Row="1" Grid.ColumnSpan="2"  />
+
+                <ctls:CurrentFileControl x:Name="CurrentFile"  Grid.Row="2"/>
+                <ctls:MachineResponseControl x:Name="MachineResponse" Grid.Row="2" Grid.Column="1" />
+                <ctls:MachineStatusControl Grid.Row="1" Grid.Column="1" Width="200" Height="150" HorizontalAlignment="RIght" VerticalAlignment="Bottom" />
+
+                <ctls:MachineControl  Grid.Column="2" Grid.RowSpan="2" DataContext="{Binding MachineControlVM}"  />
+                <ctls:ImageSensorControl x:Name="ImageSensor" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="1" Grid.Column="2" Grid.Row="2" />
+                <ctls:ManualSend Grid.Row="3" Grid.ColumnSpan="2"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

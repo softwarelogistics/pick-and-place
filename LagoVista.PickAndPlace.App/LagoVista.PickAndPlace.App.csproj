@@ -1,0 +1,149 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controls\HeightMapControl.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Imgs\AddFavorite1.png" />
+    <None Remove="Imgs\AddFavorite2.png" />
+    <None Remove="Imgs\AddWorkspaceHome.png" />
+    <None Remove="Imgs\Backwards.png" />
+    <None Remove="Imgs\BottomLight.png" />
+    <None Remove="Imgs\Center.png" />
+    <None Remove="Imgs\Down.png" />
+    <None Remove="Imgs\DownLeft.png" />
+    <None Remove="Imgs\DownRight.png" />
+    <None Remove="Imgs\ExhaustSolenoid.png" />
+    <None Remove="Imgs\Forward.png" />
+    <None Remove="Imgs\FrontView.png" />
+    <None Remove="Imgs\GotoFavorite1.png" />
+    <None Remove="Imgs\GotoFavorite2.png" />
+    <None Remove="Imgs\GotoFiducialHome.png" />
+    <None Remove="Imgs\GotoWorkspaceHome.png" />
+    <None Remove="Imgs\LaserOff.png" />
+    <None Remove="Imgs\LaserOn.png" />
+    <None Remove="Imgs\LayerBottomTraces.png" />
+    <None Remove="Imgs\LayerGCode.png" />
+    <None Remove="Imgs\LayerPCB.png" />
+    <None Remove="Imgs\LayerStock.png" />
+    <None Remove="Imgs\LayerTopTraces.png" />
+    <None Remove="Imgs\Left.png" />
+    <None Remove="Imgs\LeftView.png" />
+    <None Remove="Imgs\Perspective.png" />
+    <None Remove="Imgs\Perspective2.png" />
+    <None Remove="Imgs\Right.png" />
+    <None Remove="Imgs\SetFiducialHome.png" />
+    <None Remove="Imgs\ShowAll.png" />
+    <None Remove="Imgs\ShowObject.png" />
+    <None Remove="Imgs\Solenoid.png" />
+    <None Remove="Imgs\SpindleOff.png" />
+    <None Remove="Imgs\SpindleOn.png" />
+    <None Remove="Imgs\TestPattern.JPG" />
+    <None Remove="Imgs\TopLight.png" />
+    <None Remove="Imgs\TopView.png" />
+    <None Remove="Imgs\Up.png" />
+    <None Remove="Imgs\UpLeft.png" />
+    <None Remove="Imgs\UpRight.png" />
+    <None Remove="Imgs\Vacuum.png" />
+    <None Remove="Imgs\Vacuum1.png" />
+    <None Remove="Imgs\Vacuum2.png" />
+    <None Remove="Imgs\ZoomIn.png" />
+    <None Remove="Imgs\ZoomOut.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Controls\HeightMapControl.xaml" />
+    <Page Remove="Resources\Styles.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Styles.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="4.5.1.4349" />
+    <PackageReference Include="Emgu.CV.UI" Version="4.5.1.4349" />
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.15.0" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.1359-beta1343" />
+    <PackageReference Include="Meziantou.WpfFontAwesome" Version="5.15.3" />
+    <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FontAwesome.WPF\FontAwesome.WPF.csproj" />
+    <ProjectReference Include="..\LagoVista.GCode\LagoVista.GCode.csproj" />
+    <ProjectReference Include="..\LagoVista.PCB.Eagle\LagoVista.PCB.Eagle.csproj" />
+    <ProjectReference Include="..\LagoVista.PickAndPlace\LagoVista.PickAndPlace.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Imgs\AddFavorite1.png" />
+    <Resource Include="Imgs\AddFavorite2.png" />
+    <Resource Include="Imgs\AddWorkspaceHome.png" />
+    <Resource Include="Imgs\Backwards.png" />
+    <Resource Include="Imgs\BottomLight.png" />
+    <Resource Include="Imgs\Center.png" />
+    <Resource Include="Imgs\Down.png" />
+    <Resource Include="Imgs\DownLeft.png" />
+    <Resource Include="Imgs\DownRight.png" />
+    <Resource Include="Imgs\ExhaustSolenoid.png" />
+    <Resource Include="Imgs\Forward.png" />
+    <Resource Include="Imgs\FrontView.png" />
+    <Resource Include="Imgs\GotoFavorite1.png" />
+    <Resource Include="Imgs\GotoFavorite2.png" />
+    <Resource Include="Imgs\GotoFiducialHome.png" />
+    <Resource Include="Imgs\GotoWorkspaceHome.png" />
+    <Resource Include="Imgs\LaserOff.png" />
+    <Resource Include="Imgs\LaserOn.png" />
+    <Resource Include="Imgs\LayerBottomTraces.png" />
+    <Resource Include="Imgs\LayerGCode.png" />
+    <Resource Include="Imgs\LayerPCB.png" />
+    <Resource Include="Imgs\LayerStock.png" />
+    <Resource Include="Imgs\LayerTopTraces.png" />
+    <Resource Include="Imgs\Left.png" />
+    <Resource Include="Imgs\LeftView.png" />
+    <Resource Include="Imgs\Perspective.png" />
+    <Resource Include="Imgs\Perspective2.png" />
+    <Resource Include="Imgs\Right.png" />
+    <Resource Include="Imgs\SetFiducialHome.png" />
+    <Resource Include="Imgs\ShowAll.png" />
+    <Resource Include="Imgs\ShowObject.png" />
+    <Resource Include="Imgs\Solenoid.png" />
+    <Resource Include="Imgs\SpindleOff.png" />
+    <Resource Include="Imgs\SpindleOn.png" />
+    <Resource Include="Imgs\TestPattern.JPG" />
+    <Resource Include="Imgs\TopLight.png" />
+    <Resource Include="Imgs\TopView.png" />
+    <Resource Include="Imgs\Up.png" />
+    <Resource Include="Imgs\UpLeft.png" />
+    <Resource Include="Imgs\UpRight.png" />
+    <Resource Include="Imgs\Vacuum.png" />
+    <Resource Include="Imgs\Vacuum1.png" />
+    <Resource Include="Imgs\Vacuum2.png" />
+    <Resource Include="Imgs\ZoomIn.png" />
+    <Resource Include="Imgs\ZoomOut.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

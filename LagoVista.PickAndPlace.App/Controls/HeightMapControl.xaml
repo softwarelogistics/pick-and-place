@@ -1,0 +1,220 @@
+﻿<UserControl x:Class="LagoVista.PickAndPlace.App.Controls.HeightMapControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:h="http://helix-toolkit.org/wpf" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="1000">
+    <Grid >
+        <h:HelixViewport3D Name="viewport" ShowViewCube="False" Panel.ZIndex="0"   >
+
+            <h:HelixViewport3D.Camera >
+                <PerspectiveCamera x:Name="Camera" Position="50, -120,70" LookDirection="0, 4,-1.7" UpDirection="0,0,1"/>
+            </h:HelixViewport3D.Camera>
+
+            <h:DefaultLights/>
+            <h:CoordinateSystemVisual3D ArrowLengths="5"/>
+            <h:LinesVisual3D Thickness="1" Color="Red" Points="{Binding Path=Machine.GCodeFileManager.RapidMoves, Converter={StaticResource Lines2Visual3DConverter}}" />
+            <h:LinesVisual3D Thickness="2" Color="Red" Points="{Binding Path=Machine.GCodeFileManager.Lines, Converter={StaticResource Lines2Visual3DConverter}}"/>
+            <h:LinesVisual3D Thickness="2" Color="Red" Points="{Binding Path=Machine.GCodeFileManager.Arcs, Converter={StaticResource Lines2Visual3DConverter}}"/>
+
+
+            <h:LinesVisual3D Thickness="2" Color="DarkGray" x:Name="BottomWires" />
+            <h:LinesVisual3D Thickness="2" Color="#B87333" x:Name="TopWires" />
+
+            <ModelVisual3D x:Name="StockLayer"  />
+            <ModelVisual3D x:Name="PCBLayer" />
+
+            <h:ArrowVisual3D  x:Name="ModelTool" Direction="0,0,-10" Fill="Red"
+                Point2="{Binding Machine.NormalizedPosition, Converter={StaticResource PointConverter}}"
+                Point1="{Binding Machine.NormalizedPosition, Converter={StaticResource ToolTopPointConverter}}" />
+
+            <!-- Note: Width and Height seem to have different meanings on GridLinesVisual3D-->
+            <h:GridLinesVisual3D x:Name="ModelGrid" MinorDistance="10"  MajorDistance="100" Origin="BottomLeft"
+           	    Width="{Binding Machine.Settings.WorkAreaHeight, FallbackValue=80}"
+                Length ="{Binding Machine.Settings.WorkAreaWidth, FallbackValue=100}"  />
+
+            <h:MeshGeometryVisual3D Material="{StaticResource HeightMapMediaGroup}" x:Name="HeightMap" MeshGeometry="{Binding Machine.HeightMapManager.HeightMap, Converter={StaticResource HeightMap2MeshConverter}}" />
+            <h:LinesVisual3D x:Name="ModelHeightMapBoundary" Thickness="2" Color="Lime"  Points="{Binding Path=Machine.HeightMapManager.HeightMap.RawBoardOutline, Converter={StaticResource Lines2Visual3DConverter}}"/>
+            <h:PointsVisual3D Points="{Binding Path=Machine.HeightMapManager.HeightMap.Points, Converter={StaticResource HeightMapProbePoint2PointConverter}}" x:Name="ModelHeightMapPoints" Color="Red" Size="4"/>
+        </h:HelixViewport3D>
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" >
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="Auto" />
+                <RowDefinition  Height="Auto" />
+                <RowDefinition  Height="150" />
+            </Grid.RowDefinitions>
+            <Grid Grid.RowSpan="3" Background="Gray" Opacity="0.25"></Grid>
+
+            <StackPanel Orientation="Horizontal" >
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide Stock Layer" Tag="Stock">
+                    <Button.Content>
+                        <Image Source="/imgs/LayerStock.png" />
+                    </Button.Content>
+                </Button>
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide PCB Layer" Tag="PCB">
+                    <Button.Content>
+                        <Image Source="/imgs/LayerPCB.png" />
+                    </Button.Content>
+                </Button>
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide Top Wires" Tag="TopWires">
+                    <Button.Content>
+                        <Image Source="/imgs/LayerTopTraces.png" />
+                    </Button.Content>
+                </Button>
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide Bottom Wires" Tag="BottomWires">
+                    <Button.Content>
+                        <Image Source="/imgs/LayerBottomTraces.png" />
+                    </Button.Content>
+                </Button>
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide GCode" Tag="GCode">
+                    <Button.Content>
+                        <Image Source="/imgs/TopView.png" />
+                    </Button.Content>
+                </Button>
+                <Button Width="32" Background="Transparent" Click="ChangeLayer_Handler" ToolTip="Show/Hide GCode" Tag="HeightMap">
+                    <Button.Content>
+                        <Image Source="/imgs/TopView.png" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <Label Content="Drill Rack" Grid.Row="1" FontWeight="Bold" />
+            <ListBox ItemsSource="{Binding Machine.PCBManager.DrillRack}" Margin="4" Grid.Row="2" Background="Transparent">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding DrillName}" Foreground="Black" />
+                            <TextBlock Text="{Binding Diameter, StringFormat=0.00}" Foreground="Black" TextAlignment="Right" Grid.Column="1" />
+                            <TextBlock Text="mm" Foreground="Black" TextAlignment="Right" Grid.Column="2" />
+                            <TextBlock Text="{Binding DrillCount}" Foreground="Black" Grid.Column="3" TextAlignment="Right" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button Width="32" Background="Transparent" Tag="Top" Click="ChangeView_Handler" ToolTip="Top View">
+                <Button.Content>
+                    <Image Source="/imgs/TopView.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="Front" Click="ChangeView_Handler" ToolTip="Front View">
+                <Button.Content>
+                    <Image Source="/imgs/FrontView.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="Left" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/LeftView.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="ZoomIn" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/ZoomIn.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="ZoomOut" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/ZoomOut.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="ShowObject" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/ShowObject.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Background="Transparent" Tag="ShowAll" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/ShowAll.png" />
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,32,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="32" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+            <Button Width="32" Background="Transparent" Tag="UpLeft" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/UpLeft.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Grid.Column="1" Background="Transparent" Tag="Up" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Up.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="2" Background="Transparent" Tag="UpRight" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/UpRight.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="0" Grid.Row="1" Background="Transparent" Tag="MoveLeft" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Left.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="1" Grid.Row="1" Background="Transparent" Tag="Center" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Center.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="2" Grid.Row="1" Background="Transparent" Tag="Right" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Right.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Grid.Column="0" Grid.Row="2" Background="Transparent" Tag="DownLeft" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/DownLeft.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="1" Grid.Row="2" Background="Transparent" Tag="Down" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Down.png" />
+                </Button.Content>
+            </Button>
+
+            <Button Width="32" Grid.Column="2" Grid.Row="2" Background="Transparent" Tag="DownRight" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/DownRight.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Grid.Column="3" Grid.Row="0" Background="Transparent" Tag="Forwards" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Forward.png" />
+                </Button.Content>
+            </Button>
+            <Button Width="32" Grid.Column="3" Grid.Row="2" Background="Transparent" Tag="Backwards" Click="ChangeView_Handler">
+                <Button.Content>
+                    <Image Source="/imgs/Backwards.png" />
+                </Button.Content>
+            </Button>
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="4" x:Name="CameraPosition" />
+        </Grid>
+
+
+    </Grid>
+
+</UserControl>
