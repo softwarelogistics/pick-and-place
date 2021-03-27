@@ -239,7 +239,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 Y = size.Height / 2
             };
 
-            var circles = CvInvoke.HoughCircles(input, HoughType.Gradient, Profile.HoughCirclesDP, Profile.HoughCirclesMinDistance, Profile.HoughCirclesParam1, Profile.HoughCirclesParam2, Profile.HoughCirclesMinRadius, Profile.HoughCirclesMaxRadius);
+            var circles = CvInvoke.HoughCircles(input, HoughModes.Gradient, Profile.HoughCirclesDP, Profile.HoughCirclesMinDistance, Profile.HoughCirclesParam1, Profile.HoughCirclesParam2, Profile.HoughCirclesMinRadius, Profile.HoughCirclesMaxRadius);
 
             var foundCircle = false;
             /* Above will return ALL maching circles, we only want the first one that is in the target image radius in the middle of the screen */
@@ -303,7 +303,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         #endregion
 
         #region Find Corners
-        private void FindCorners(IImage blurredGray, IInputOutputArray output, Size size)
+        private void FindCorners(Image<Gray,byte> blurredGray, IInputOutputArray output, Size size)
         {
             var center = new Point2D<int>()
             {
@@ -370,7 +370,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         FloatMedianFilter _rectP4 = new FloatMedianFilter();
 
         #region Find Rotated Rectangles
-        private void FindRectangles(IImage input, IInputOutputArray output, Size size)
+        private void FindRectangles(Image<Gray,byte> input, IInputOutputArray output, Size size)
         {
             UMat edges = new UMat();
 
@@ -492,7 +492,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
         #endregion
 
-        public IImage PerformShapeDetection(Mat img)
+        public UMat PerformShapeDetection(Image<Bgr,byte> img)
         {
             if (img == null)
             {
@@ -501,8 +501,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             try
             {
-                using (var gray = new Image<Gray, byte>(img.ToBitmap()))
-                using (var blurredGray = new Image<Gray, float>(gray.Size))
+                using (Image<Gray, Byte> gray = img.Convert<Gray, Byte>())
+                using (var blurredGray = new Image<Gray, byte>(gray.Size))
                 {
                     var output = ShowOriginalImage ? img : (IInputOutputArray)gray;
 
@@ -525,10 +525,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         _stabilizedPointCount = 0;
                     }
 
-                    if (ShowOriginalImage) return img;
-                    else if (UseBlurredImage) return blurredGray.Clone();
+                    if (ShowOriginalImage)
+                        return img.ToUMat();
+                    else if (UseBlurredImage) 
+                        return blurredGray.Clone().ToUMat();
 
-                    return gray.Clone();
+                    return gray.Clone().ToUMat();
                 }
             }
             catch (Exception)

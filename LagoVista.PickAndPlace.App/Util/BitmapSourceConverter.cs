@@ -28,7 +28,7 @@ namespace Emgu.CV.WPF
         /// </summary>
         /// <param name="image">The Emgu CV Image</param>
         /// <returns>The equivalent BitmapSource</returns>
-        public static BitmapSource ToBitmapSource(IImage image)
+        public static BitmapSource ToBitmapSource(UMat image)
         {
             if(image == null)
             {
@@ -36,7 +36,7 @@ namespace Emgu.CV.WPF
             }
             
 
-            using (System.Drawing.Bitmap source = image.Bitmap)
+            using (System.Drawing.Bitmap source = image.ToBitmap())
             {
                 IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
 
@@ -50,6 +50,35 @@ namespace Emgu.CV.WPF
                 return bs;
             }
         }
+
+        /// <summary>
+        /// Convert an IImage to a WPF BitmapSource. The result can be used in the Set Property of Image.Source
+        /// </summary>
+        /// <param name="image">The Emgu CV Image</param>
+        /// <returns>The equivalent BitmapSource</returns>
+        public static BitmapSource ToBitmapSource(Mat image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+
+
+            using (System.Drawing.Bitmap source = image.ToBitmap())
+            {
+                IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
+
+                BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                    ptr,
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+
+                DeleteObject(ptr); //release the HBitmap
+                return bs;
+            }
+        }
+
 
         public static Mat ToMat(BitmapSource source)
         {

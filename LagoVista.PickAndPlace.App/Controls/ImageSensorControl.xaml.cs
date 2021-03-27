@@ -1,4 +1,5 @@
 ﻿using Emgu.CV;
+using Emgu.CV.Structure;
 using LagoVista.PickAndPlace.ViewModels;
 using System;
 using System.Runtime.InteropServices;
@@ -69,7 +70,7 @@ namespace LagoVista.PickAndPlace.App.Controls
                             {
                                 using (var originalFrame = _videoCapture.QueryFrame())
                                 {
-                                    var result = PerformShapeDetection(null, originalFrame);
+                                    var result = PerformShapeDetection(null, originalFrame.ToImage<Bgr, byte>());
                                 }
 
                             }

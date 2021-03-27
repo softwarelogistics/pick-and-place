@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controls\HeightMapControl.xaml.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Imgs\AddFavorite1.png" />
     <None Remove="Imgs\AddFavorite2.png" />
     <None Remove="Imgs\AddWorkspaceHome.png" />
@@ -56,15 +52,6 @@
     <None Remove="Imgs\Vacuum2.png" />
     <None Remove="Imgs\ZoomIn.png" />
     <None Remove="Imgs\ZoomOut.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Remove="Controls\HeightMapControl.xaml" />
-    <Page Remove="Resources\Styles.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Styles.xaml" />
   </ItemGroup>
 
   <ItemGroup>

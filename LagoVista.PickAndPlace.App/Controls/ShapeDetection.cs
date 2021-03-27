@@ -33,9 +33,10 @@ namespace LagoVista.PickAndPlace.App.Controls
 
         }
 
-        public Result PerformShapeDetection(VisionProfile profile, Mat img)
+        public Result PerformShapeDetection(VisionProfile profile, Image<Bgr,byte> img)
         {
-            using (var gray = new Image<Gray, byte>(img.Bitmap))
+
+            using (Image<Gray, Byte> gray = img.Convert<Gray, Byte>())
             using (var blurredGray = new Mat())
             using (var finalOutput = new Mat())
             {
@@ -55,7 +56,7 @@ namespace LagoVista.PickAndPlace.App.Controls
 
                 //Image<Gray, Byte> gray = img.Convert<Gray, Byte>().PyrDown().PyrUp();
 
-                var circles = CvInvoke.HoughCircles(img, HoughType.Gradient,profile.HoughCirclesDP, profile.HoughCirclesMinDistance, profile.HoughCirclesParam1, profile.HoughCirclesParam2, profile.HoughCirclesMinRadius, profile.HoughCirclesMaxRadius);
+                var circles = CvInvoke.HoughCircles(img, HoughModes.Gradient,profile.HoughCirclesDP, profile.HoughCirclesMinDistance, profile.HoughCirclesParam1, profile.HoughCirclesParam2, profile.HoughCirclesMinRadius, profile.HoughCirclesMaxRadius);
 
                 UMat cannyEdges = new UMat();
                 CvInvoke.Canny(img, cannyEdges, profile.CannyLowThreshold, profile.CannyHighThreshold, profile.CannyApetureSize, profile.CannyGradient);

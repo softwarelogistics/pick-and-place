@@ -1,4 +1,5 @@
 ﻿using Emgu.CV;
+using Emgu.CV.Structure;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -93,7 +94,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     if (UseTopCamera)
                     {
                         using (var originalFrame = _topCameraCapture.QueryFrame())
-                        using (var results = PerformShapeDetection(originalFrame))
+                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
                         {
                             PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
                         }
@@ -142,7 +143,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     if (UseBottomCamera)
                     {
                         using (var originalFrame = _bottomCameraCapture.QueryFrame())
-                        using (var results = PerformShapeDetection(originalFrame))
+                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr,byte>()))
                         {
                             PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
                         }

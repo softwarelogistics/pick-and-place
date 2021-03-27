@@ -4,7 +4,7 @@
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:sndr="clr-namespace:LagoVista.GCode.Sender;assembly=LagoVista.GCode.Sender"
+             xmlns:sndr="clr-namespace:LagoVista.PickAndPlace;assembly=LagoVista.PickAndPlace"
              xmlns:local="clr-namespace:LagoVista.PickAndPlace.App.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">

@@ -29,7 +29,11 @@
                 Point1="{Binding Machine.NormalizedPosition, Converter={StaticResource ToolTopPointConverter}}" />
 
             <!-- Note: Width and Height seem to have different meanings on GridLinesVisual3D-->
-            <h:GridLinesVisual3D x:Name="ModelGrid" MinorDistance="10"  MajorDistance="100" Origin="BottomLeft"
+        <!--    <h:GridLinesVisual3D x:Name="ModelGrid" MinorDistance="10"  MajorDistance="100"  Origin="BottomLeft"
+           	    Width="{Binding Machine.Settings.WorkAreaHeight, FallbackValue=80}"
+                Length ="{Binding Machine.Settings.WorkAreaWidth, FallbackValue=100}"  />-->
+
+            <h:GridLinesVisual3D x:Name="ModelGrid" MinorDistance="10"  MajorDistance="100" 
            	    Width="{Binding Machine.Settings.WorkAreaHeight, FallbackValue=80}"
                 Length ="{Binding Machine.Settings.WorkAreaWidth, FallbackValue=100}"  />
 
