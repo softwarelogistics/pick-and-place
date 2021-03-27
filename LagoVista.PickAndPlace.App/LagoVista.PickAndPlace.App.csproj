@@ -52,15 +52,21 @@
     <None Remove="Imgs\Vacuum2.png" />
     <None Remove="Imgs\ZoomIn.png" />
     <None Remove="Imgs\ZoomOut.png" />
+    <None Remove="Resources\DSEG14Classic-Regular.ttf" />
+    <None Remove="Resources\GrblErrors.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DirectShowLib.Standard" Version="2.1.0" />
     <PackageReference Include="Emgu.CV" Version="4.5.1.4349" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.1.4349" />
     <PackageReference Include="Emgu.CV.UI" Version="4.5.1.4349" />
+    <PackageReference Include="font-awesome" Version="4.7.0" />
     <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.15.0" />
     <PackageReference Include="LagoVista.Core" Version="2.1.1359-beta1343" />
     <PackageReference Include="Meziantou.WpfFontAwesome" Version="5.15.3" />
     <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -116,6 +122,12 @@
     <Resource Include="Imgs\Vacuum2.png" />
     <Resource Include="Imgs\ZoomIn.png" />
     <Resource Include="Imgs\ZoomOut.png" />
+    <Content Include="Resources\DSEG14Classic-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\GrblErrors.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

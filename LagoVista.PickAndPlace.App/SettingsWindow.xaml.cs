@@ -1,4 +1,5 @@
-﻿using LagoVista.PickAndPlace.Interfaces;
+﻿using DirectShowLib;
+using LagoVista.PickAndPlace.Interfaces;
 using LagoVista.PickAndPlace.ViewModels;
 using System;
 using System.Windows;
@@ -18,9 +19,9 @@ namespace LagoVista.PickAndPlace.App
             _settings = settings;
 
             DataContext = new SettingsViewModel(machine, _settings);
-            throw new NotImplementedException("NEED TO ENUMERATE VIDEO CAMERAS");
-            //var cameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
-            /*var idx = 0;
+            
+            var cameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            var idx = 0;
 
             ViewModel.Cameras.Add(new Models.Camera()
             {
@@ -41,7 +42,7 @@ namespace LagoVista.PickAndPlace.App
 
             InitializeComponent();
 
-            Tabs.SelectedIndex = index;*/
+            Tabs.SelectedIndex = index;
 		}
         public SettingsViewModel ViewModel
         {

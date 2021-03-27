@@ -76,6 +76,6 @@
 
         <Controls:XYJog Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
         <Controls:ImageAdjustments Grid.Column="1" Grid.Row="1" Visibility="Collapsed" />
-        <Controls:LoadingMask Grid.ColumnSpan="2" Grid.Row="1"   />
+        <Controls:LoadingMask Grid.ColumnSpan="2" Grid.Row="1" />
     </Grid>
 </Window>

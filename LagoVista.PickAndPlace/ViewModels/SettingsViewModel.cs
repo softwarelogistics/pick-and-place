@@ -53,6 +53,7 @@ namespace LagoVista.PickAndPlace.ViewModels
                 };
             }
 
+
             var ports = await SLWIOC.Get<IDeviceManager>().GetSerialPortsAsync();
 #if DEBUG
             ports.Insert(0, new SerialPortInfo() { Id = "Simulated", Name = "Simulated" });

@@ -5,4 +5,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="FontAwesome.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="FontAwesome.otf" />
+  </ItemGroup>
+
 </Project>

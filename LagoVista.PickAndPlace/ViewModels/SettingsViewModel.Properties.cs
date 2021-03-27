@@ -55,7 +55,7 @@ namespace LagoVista.PickAndPlace.ViewModels
 
         public String ConnectionType
         {
-            get { return Settings.ConnectionType.ToString(); }
+            get { return Settings.ConnectionType.ToString().Replace("_", " "); }
             set
             {
                 var newValue = value.Replace(" ", "_");

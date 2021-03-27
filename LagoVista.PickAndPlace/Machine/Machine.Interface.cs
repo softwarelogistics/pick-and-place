@@ -15,6 +15,8 @@ namespace LagoVista.PickAndPlace
 
         public async Task ConnectAsync(ISerialPort port)
         {
+            var pnpPort = port as IPnPSerialPort;
+
             if (Connected)
                 throw new Exception("Can't Connect: Already Connected");
 
@@ -22,12 +24,12 @@ namespace LagoVista.PickAndPlace
             {
                 await port.OpenAsync();
 
-/*                var outputStream = port.OutputStream;
+                var outputStream = pnpPort.OutputStream;
                 if (outputStream == null)
                 {
                     AddStatusMessage(StatusMessageTypes.Warning, $"Could not open serial port");
                     return;
-                }*/
+                }
 
                 Connected = true;
 
@@ -58,7 +60,7 @@ namespace LagoVista.PickAndPlace
 
                 await Task.Run(() =>
                 {
-                   // Work(port.InputStream, port.OutputStream);
+                    Work(pnpPort.InputStream, pnpPort.OutputStream);
                 }, _cancelSource.Token);
             }
             catch (Exception ex)

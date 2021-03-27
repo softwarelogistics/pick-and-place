@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LagoVista.PickAndPlace.Models
 {
-    public class Line3D
+/*    public class Line3D
     {
         public LagoVista.Core.Models.Drawing.Vector3 Start { get; set; }
         public LagoVista.Core.Models.Drawing.Vector3 End { get; set; }
@@ -19,5 +19,5 @@ namespace LagoVista.PickAndPlace.Models
                 End = new Core.Models.Drawing.Vector3(x2, y2, z2)
             };
         }
-    }
+    }*/
 }

@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.PlatformSupport;
+﻿using LagoVista.Core.Models.Drawing;
+using LagoVista.Core.PlatformSupport;
 using LagoVista.GCode;
 using LagoVista.GCode.Commands;
 using LagoVista.PickAndPlace.Interfaces;
