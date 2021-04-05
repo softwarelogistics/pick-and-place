@@ -6,11 +6,11 @@ namespace LagoVista.PickAndPlace.Models
     {   
         public PnPMachine()
         {
-            Carrier = new PartPackCarrier();
+            PartStrips = new ObservableCollection<PartStrip>();
             Packages = new ObservableCollection<Package>();
         }
 
-        public PartPackCarrier Carrier { get; set; }
+        public ObservableCollection<PartStrip> PartStrips{ get; set; }
 
         public ObservableCollection<Package> Packages { get; set; }    
     }

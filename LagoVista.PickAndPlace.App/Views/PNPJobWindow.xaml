@@ -16,8 +16,28 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
 
         <Controls:MVCommandBar x:Name="CmdBar" HorizontalAlignment="Left" />
+
+        <TabControl Grid.RowSpan="3" Grid.Column="1">
+            <TabItem Header="Machine">
+                <StackPanel >
+                    <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
+                    <Controls:JogControls  DataContext="{Binding MachineControls}"  />
+                    <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Image">
+                <Grid>
+                    <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
+                    <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
+                </Grid>
+            </TabItem>
+        </TabControl>
 
         <TabControl Grid.Row="1">
             <TabItem Header="Job">
@@ -59,12 +79,12 @@
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.Y, Mode=TwoWay}"  UnitType="Size " Grid.Row="4" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
                         <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" Grid.Row="0" Grid.RowSpan="7" />
                         <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="320" Height="240" Grid.Row="1" Stretch="Uniform" Grid.RowSpan="7" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                        
+                        <ListBox Grid.Row="7" HorizontalAlignment="Left" Grid.Column="3" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" />
 
                         <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"></Button>
                         <Button Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"></Button>
-
-                        <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="3" Grid.RowSpan="7" />
-                        <Controls:ImageAdjustments Grid.Column="4" Grid.RowSpan="7" />
+                        
                         <StackPanel Grid.Row="5" Grid.ColumnSpan="2">
                             <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) HomingCycle" />
                             <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Machine Fiducial" />
@@ -130,21 +150,17 @@
                             <DataGridTextColumn Header="Value" Width="120" IsReadOnly="true" Binding="{Binding Value, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Package" IsReadOnly="true" Width="120" Binding="{Binding Package, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Count" IsReadOnly="true" Width="40" Binding="{Binding Count, Mode=TwoWay}"  />
-                            <DataGridTextColumn Header="Slot" Width="120" IsReadOnly="true" Binding="{Binding Path=Slot.Name, Mode=TwoWay}"  />
-                            <DataGridTextColumn Header="Pack" Width="120" IsReadOnly="true" Binding="{Binding Path=PartPack.Name, Mode=TwoWay}"  />
-                            <DataGridTextColumn Header="Row" Width="80" IsReadOnly="true" Binding="{Binding Path=Row.RowNumber, Mode=TwoWay}"  />
-                            <DataGridTextColumn Header="Row Size" Width="80" IsReadOnly="true" Binding="{Binding Path=Row.PartCount}"  />
-                            <DataGridTextColumn Header="Available" Width="80" IsReadOnly="true" Binding="{Binding Path=Row.AvailableParts}"  />
+                            <DataGridTextColumn Header="Available" Width="80" IsReadOnly="true" Binding="{Binding Path=PartStrip.AvailablePartCount}"  />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
 
-            <TabItem x:Name="PartPackManagerHost" Header="Part Pack Management" DataContext="{Binding PartPackManagerVM}" >
+            <TabItem x:Name="PartPackManagerHost" Header="Part Strips" DataContext="{Binding PartStripsViewModel}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="325" />
-                        <ColumnDefinition Width="142.664" />
+                        <ColumnDefinition Width="180" />
                         <ColumnDefinition Width="207.336"/>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
@@ -156,19 +172,16 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.ColumnSpan="3" HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" 
-                                    Visibility="{Binding PartPacks, Converter={StaticResource NoTNullToVisibilityConverter}}">
-                            <Button Width="32" Height="32"  Command="{Binding AddPartPackCommand}" Style="{StaticResource JogArrow}" >
+                        <StackPanel Grid.ColumnSpan="3" HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" >
+                            <Button Width="32" Height="32"  Command="{Binding AddPartStripCommand}" Style="{StaticResource JogArrow}" >
                                 <Button.Content>
                                     <fa:ImageAwesome  Icon="PlusCircle" />
                                 </Button.Content>
                             </Button>
-                            <Button Grid.Row="10" Content="Go To Pin 1, Row 1" Grid.Column="1" Style="{StaticResource CommandButton}"
-                                    Command="{Binding DataContext.GoToPin1InFeederCommand, ElementName=PartPackManagerHost}" />
                         </StackPanel>
 
-                        <ListView ItemsSource="{Binding PartPacks}" Margin="2" Height="200" SelectedItem="{Binding SelectedPartPack, Mode=TwoWay}" Grid.Row="1" 
-                                  Visibility="{Binding PartPacks, Converter={StaticResource NoTNullToVisibilityConverter}}">
+                        <ListView ItemsSource="{Binding PartStrips}" Margin="2" SelectedItem="{Binding SelectedPartStrip, Mode=TwoWay}" Grid.Row="1" 
+                                  Grid.RowSpan="3"  Visibility="{Binding PartStrips, Converter={StaticResource NoTNullToVisibilityConverter}}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -178,17 +191,17 @@
                                             <ColumnDefinition Width="30" />
                                             <ColumnDefinition Width="30" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text="{Binding Id}" Grid.Column="1" />
-                                        <TextBlock Text="{Binding Rows.Count}" Grid.Column="2" />
-                                        <TextBlock Text="{Binding RowHeight}" Grid.Column="3" />
+                                        <TextBlock Text="{Binding PackageName}" />
+                                        <TextBlock Text="{Binding Value}" Grid.Column="1" />
+                                        <TextBlock Text="{Binding AvailablePartCount}" Grid.Column="2" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
-                    <Grid Grid.Column="1"  Visibility="{Binding SelectedSlot, Converter={StaticResource NoTNullToVisibilityConverter}}" Grid.ColumnSpan="2">
+                    <Grid Grid.Column="1"  Visibility="{Binding SelectedPartStrip, Converter={StaticResource NoTNullToVisibilityConverter}}" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -206,23 +219,23 @@
                             <ColumnDefinition Width="79*"/>
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <Controls:PartPackControl Visibility="{Binding SelectedPartPack, Converter={StaticResource NoTNullToVisibilityConverter}}" DataContext="{Binding SelectedPartPack}" 
-                                                 Grid.ColumnSpan="5" Grid.Row="0" Margin="4" />
-                        <Label Content="{Binding SelectedSlot.Name}" Grid.ColumnSpan="4" FontWeight="Bold" Grid.Row="1" />
-                        <Label Content="Slot Location" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        
+                        <ComboBox ItemsSource="{Binding PackageDefinitions}" SelectedItem="{Binding SelectedPackage, Mode=TwoWay}" DisplayMemberPath="Name" Grid.ColumnSpan="3" Grid.Column="2" />
 
-                        <TextBlock  Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{} x={0:0.00}, y={1:0.00}">
-                                    <Binding Path="SelectedSlot.X" />
-                                    <Binding Path="SelectedSlot.Y" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
+                        <Label Content="Value" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Text="{Binding SelectedPartStrip.Value, Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right" />
+                        
+                        <Label Content="Length" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Text="{Binding SelectedPartStrip.StripLength, Mode=TwoWay}" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right"/>
 
 
-                        <Label Content="Pin 1 Offset" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBlock  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
+                        <Label Content="Ref Hol" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+
+                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.ReferenceHoleX, Mode=TwoWay, StringFormat=0.00}" Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
+                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.ReferenceHoleY, Mode=TwoWay, StringFormat=0.00}" Width="60" TextAlignment="Right" HorizontalAlignment="Right" />
+
+                        <Label Content="Pin 1 Offset" Grid.Column="1" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBlock  Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x={0:0.00}, y={1:0.00}">
                                     <Binding Path="SelectedPartPack.Pin1XOffset" />
@@ -231,21 +244,21 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="4"/>
-                        <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="4" VerticalAlignment="Center" Margin="0,5" >
+                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="5"/>
+                        <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="5" VerticalAlignment="Center" Margin="0,5" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x tape={0}, y tape={1}, r={2}">
-                                    <Binding Path="CurrentPackage.CenterXFromHole" />
-                                    <Binding Path="CurrentPackage.CenterYFromHole" />
-                                    <Binding Path="CurrentPackage.RotationInTape" />
+                                    <Binding Path="SelectedPackage.CenterXFromHole" />
+                                    <Binding Path="SelectedPackage.CenterYFromHole" />
+                                    <Binding Path="SelectedPackage.RotationInTape" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <Label Content="{Binding SelectedPartPack.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="5"/>
+                        <Label Content="{Binding SelectedPartPack.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="6"/>
 
-                        <Label Content="Part 1 Location" Grid.Column="1" FontWeight="Bold" Grid.Row="6"  VerticalAlignment="Center" Margin="0,3" />
-                        <TextBlock  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
+                        <Label Content="Part 1 Location" Grid.Column="1" FontWeight="Bold" Grid.Row="7"  VerticalAlignment="Center" Margin="0,3" />
+                        <TextBlock  Grid.Column="2" Grid.Row="7" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x={0:0.00}, y={1:0.00}">
                                     <Binding Path="CurrentPartX" />
@@ -254,164 +267,18 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <Button Grid.Row="2" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding GoToSlotCommand}" Content="Go" Style="{StaticResource CommandButton}" Margin="6,6,0,6" />
-                        <StackPanel Grid.Row="3" Grid.Column="4"  Orientation="Horizontal">
-                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding GoToPin1InFeederCommand}" Content="Go" Style="{StaticResource CommandButton}" />
-                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding SetPin1InFeederCommand}" Content="Set" Style="{StaticResource CommandButton}" />
-                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding FindPin1InFeederCommand}" Content="Find" Style="{StaticResource CommandButton}" />
+                        <Button Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding SetStripOriginCommand}" Content="SET" Style="{StaticResource CommandButton}" Margin="6,6,0,6" />
+                        <StackPanel Grid.Row="4" Grid.Column="4"  Orientation="Horizontal">
+                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding GoToReferencePointCommand}" Content="REF" Style="{StaticResource CommandButton}" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding GoToPartCommand}" Content="PART" Style="{StaticResource CommandButton}" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding FindPin1InFeederCommand}" Content="CURRENT" Style="{StaticResource CommandButton}" />
                         </StackPanel>
                         <Button Grid.Row="6" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding GoToCurrentPartCommand}" Content="Go" Style="{StaticResource CommandButton}" Margin="6,6,0,6" />
                     </Grid>
 
-                    <TextBlock Text="Please open or create a part pack set" FontSize="24" Grid.ColumnSpan="2" HorizontalAlignment="Center" 
-                               VerticalAlignment="Center" Visibility="{Binding PartPacks, Converter={StaticResource NullVisibilityConverter}}" Grid.Column="2" Margin="10.336,413,478,412" />
-
-
                     <Rectangle Grid.Column="3" Fill="LightGray" />
 
-                    <Image x:Name="WebCamImage2" Source="{Binding DataContext.PrimaryCapturedImage, ElementName=MainView}"  
-                                   MouseDown="WebCamImage2_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" 
-                                   Margin="5,5,5,0"  />
-
-                    <Controls:MVViewOptions Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-
-                    <StackPanel HorizontalAlignment="Right"  Grid.Column="4">
-
-                        <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
-                        <Controls:JogControls  DataContext="{Binding MachineControls}"  />
-                        <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Carrier Slots" DataContext="{Binding PartPackManagerVM}" x:Name="PartPackMgrTab">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="340" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.ColumnSpan="3" HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" >
-                        <Button Width="32" Height="32"  Command="{Binding AddSlotCommand}" >
-                            <Button.Content>
-                                <fa:ImageAwesome  Icon="PlusCircle" />
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Name" />
-                        <TextBlock Text="Row" Grid.Column="1" />
-                        <TextBlock Text="Col" Grid.Column="2" />
-                        <TextBlock Text="Part Pack" Grid.Column="3"/>
-                    </Grid>
-
-                    <ListView ItemsSource="{Binding Slots}" SelectedItem="{Binding SelectedSlot, Mode=TwoWay}" Grid.Row="1" Margin="0,24,0,0" >
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120" />
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Text="{Binding Row}" Grid.Column="1" />
-                                    <TextBlock Text="{Binding Column}" Grid.Column="2" />
-                                    <TextBlock Text="{Binding PartPack.Text}" Grid.Column="3" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <Grid Grid.Row="2" Visibility="{Binding SelectedSlot, Converter={StaticResource NoTNullToVisibilityConverter}}">
-                        <Grid Grid.Row="2" DataContext="{Binding SelectedSlot}" >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Label Content="Name" Grid.Row="0" />
-                            <TextBox Text="{Binding Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" />
-
-                            <Label Content="Row" Grid.Row="1" />
-                            <Controls:MaskingTextBox Text="{Binding Row, Mode=TwoWay}"  UnitType="Count"  Grid.Row="1" Grid.Column="1" />
-
-                            <Label Content="Column" Grid.Row="2" />
-                            <Controls:MaskingTextBox Text="{Binding Column, Mode=TwoWay}"  UnitType="Size"  Grid.Row="2" Grid.Column="1" />
-
-                            <Label Content="X" Grid.Row="3" />
-                            <Controls:MaskingTextBox Text="{Binding X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="3" Grid.Column="1" />
-                            <Label Content="(mm)" Grid.Row="3" Grid.Column="3" />
-                            <Button Content="Set" Grid.Row="3" Grid.Column="3" Margin="48,0,0,0" HorizontalAlignment="Left" Width="24" Height="20" 
-                                    Style="{StaticResource CommandButton}" Command="{Binding DataContext.SetSlotXCommand, ElementName=PartPackMgrTab}" />
-
-                            <Label Content="Y" Grid.Row="4" />
-                            <Controls:MaskingTextBox Text="{Binding Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="4" Grid.Column="1" />
-                            <Label Content="(mm)" Grid.Row="4" Grid.Column="3" />
-                            <Button Content="Set" Grid.Row="4" Grid.Column="3" Margin="48,0,0,0" HorizontalAlignment="Left" Width="24" Height="20" 
-                                    Style="{StaticResource CommandButton}" Command="{Binding DataContext.SetSlotYCommand, ElementName=PartPackMgrTab}" />
-
-
-                            <Label Content="Width" Grid.Row="7" />
-                            <Controls:MaskingTextBox Text="{Binding Width, Mode=TwoWay}"  UnitType="Size"  Grid.Row="7" Grid.Column="1" />
-                            <Label Content="(mm)" Grid.Row="7" Grid.Column="3" />
-
-                            <Label Content="Height" Grid.Row="8" />
-                            <Controls:MaskingTextBox Text="{Binding Height, Mode=TwoWay}"  UnitType="Count"  Grid.Row="8" Grid.Column="1" />
-                            <Label Content="(mm)" Grid.Row="8" Grid.Column="3" />
-
-                            <Label Content="Current Part Pack" Grid.Row="9" />
-                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding DataContext.PartPacks, ElementName=PartPackMgrTab}" 
-                                      DisplayMemberPath="Name" SelectedValuePath="Id"  SelectedValue="{Binding DataContext.CurrentSlotPartPack,ElementName=PartPackMgrTab}" />
-
-                            <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                                <Button Command="{Binding DataContext.DoneEditSlotCommand, ElementName=PartPackMgrTab}" Content="Done" 
-                                    Grid.Row="8" Grid.ColumnSpan="3"  HorizontalAlignment="Right" Style="{StaticResource CommandButton}" />
-
-                                <Button Command="{Binding DataContext.GoToSlotCommand, ElementName=PartPackMgrTab}" Content="Go To Slot" 
-                                    Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Right" Style="{StaticResource CommandButton}" />
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-
-                    <Image x:Name="WebCamImage3" Source="{Binding DataContext.PrimaryCapturedImage, ElementName=MainView}"  
-                                     Grid.Column="1" VerticalAlignment="Top"  Stretch="Uniform" 
-                                   Grid.Row="0" Grid.RowSpan="3" Margin="5"  />
-
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="0" Grid.RowSpan="3" Grid.Column="2">
-                        <Controls:MVViewOptions HorizontalAlignment="Stretch" />
-                        <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
-                        <Controls:JogControls  DataContext="{Binding MachineControls}"  />
-                        <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
-                    </StackPanel>
+                    <Image x:Name="WebCamImage2" Source="{Binding DataContext.PrimaryCapturedImage, ElementName=MainView}" MouseDown="WebCamImage2_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" />
                 </Grid>
             </TabItem>
 
@@ -507,8 +374,6 @@
                                 <Label Content="Rotation in tape" Grid.Row="9" />
                                 <Controls:MaskingTextBox Text="{Binding RotationInTape, Mode=TwoWay}"  UnitType="Size" Grid.Row="9" Grid.Column="1"  />
                                 <Label Content="(deg)" Grid.Row="9" Grid.Column="2" />
-
-
                             </Grid>
                             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Right">
                                 <StackPanel.Resources>
@@ -533,7 +398,6 @@
                         <ColumnDefinition Width="320"/>
                         <ColumnDefinition Width="340"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="300" />
                     </Grid.ColumnDefinitions>
                     <DataGrid AutoGenerateColumns="False" CanUserAddRows="false" LoadingRow="DataGrid_LoadingRow" 
                               CanUserDeleteRows="False" Grid.Column="0" ItemsSource="{Binding ConfigurationParts}"
@@ -573,18 +437,22 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Part in feeder" FontWeight="Bold" Grid.ColumnSpan="5" />
+                            <Label Content="Part:" Grid.Row="0" />
 
-                            <Label Content="Feeder:" Grid.Row="1"  />
-                            <Label Content="{Binding SelectedPart.PartPack.Name, FallbackValue=-}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" ></Label>
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat=" {0} ({1})">
+                                        <Binding Path="SelectedPartStrip.Value" />
+                                        <Binding Path="SelectedPartStrip.PackageName" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
 
-                            <Label Content="Row:" Grid.Row="2" />
-                            <Label Grid.Row="2" Grid.Column="1" Content="{Binding SelectedPartRow, FallbackValue=-}"  Grid.ColumnSpan="4"></Label>
-
-                            <Label Content="Part Count:" Grid.Row="3" />
-                            <Label Grid.Row="3"  Content="{Binding SelectedPartRow.CurrentPartIndex, FallbackValue=-}" Grid.Column="1" ></Label>
-
-                            <Controls:MaskingTextBox Text="{Binding SelectedPartRow.PartCount, Mode=TwoWay}"  UnitType="Size" Grid.Row="3" Grid.Column="1" Width="30" Height="20" />
+                            <Label Content="Part Count:" Grid.Row="1" />
+                            <Label Content="{Binding SelectedPartStrip.CurrentPartIndex, FallbackValue=-}" Grid.Row="1"  Grid.Column="1" />
+                            <Label Content="Available:" Grid.Row="3" />
+                            <Label Content="{Binding SelectedPartStrip.AvailablePartCount}" Grid.Row="3" Grid.Column="1" />
+                                                        
                             <Label Content="Part in Tray:" Grid.Row="4" />
                             <TextBlock Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5,0,0">
                                 <TextBlock.Text>
@@ -595,7 +463,6 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-
 
                             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" Grid.Row="5" HorizontalAlignment="Center">
                                 <Button  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
@@ -628,7 +495,6 @@
                                     </Button.Content>
                                 </Button>
                             </StackPanel>
-
                         </Grid>
 
                         <Grid Grid.Row="2">
@@ -646,9 +512,7 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Label Content="Part to be placed" FontWeight="Bold" Grid.ColumnSpan="2" />
-                            <Label Content="Part:" Grid.Row="1" />
-                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SelectedPartToBePlaced.Name, FallbackValue=-}" ></TextBlock>
-
+                            
                             <TextBlock  Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" >
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{} x={0}, y={1} r={2}">
@@ -678,12 +542,8 @@
                     </Grid>
 
                     <Image x:Name="WebCamImage" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown"  Grid.Column="2" VerticalAlignment="Top"  Stretch="Uniform" />
-                    <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="2" />
-                    <Controls:ImageAdjustments Grid.Column="4" Grid.RowSpan="2" Visibility="{Binding AreToolSettingsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                     <Controls:LoadingMask Grid.ColumnSpan="5"  />
-
-                    <Controls:PnPButtons Grid.Column="3" DataContext="{Binding MachineControls}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="1,0,0,0" />
                 </Grid>
             </TabItem>
         </TabControl>

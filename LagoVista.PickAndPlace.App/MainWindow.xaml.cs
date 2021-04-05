@@ -355,14 +355,7 @@ namespace LagoVista.PickAndPlace.App
             librWindow.Owner = this;
             librWindow.ShowDialog();
         }
-
-        private void EditFeederLibrary_Click(object sender, RoutedEventArgs e)
-        {
-            var lbrWindow = new Views.MVFeederLocatorView(ViewModel.Machine, _pnpJob, _pnpJobFileName);
-            lbrWindow.Owner = this;
-            lbrWindow.ShowDialog();
-        }
-
+        
         private async Task OpenPnPJobAsync(string fileName)
         {
             _pnpJobFileName = fileName;
@@ -437,7 +430,6 @@ namespace LagoVista.PickAndPlace.App
             {
                 case "WorkAlignment": new Views.WorkAlignmentView(ViewModel.Machine).Show(); break;
                 case "ToolAlignment": new Views.ToolAlignment(ViewModel.Machine).Show(); break;
-                case "FeederAlignment": new Views.MVFeederLocatorView(ViewModel.Machine, _pnpJob, _pnpJobFileName).Show(); break;
                 case "HomingView": new Views.HomingView(ViewModel.Machine).Show(); break;
                 case "Calibration": new Views.MVCalibrationView(ViewModel.Machine).Show(); break;
                 case "PickAndPlace": new Views.MVPNPView(ViewModel.Machine).Show(); break;
@@ -469,16 +461,6 @@ namespace LagoVista.PickAndPlace.App
             EditPnPJob.IsEnabled = false;
             FeederAlignementView.IsEnabled = false;
             ClosePnPJob.IsEnabled = false;
-        }
-
-        private void PartPacks_Click(object sender, RoutedEventArgs e)
-        {
-            var partPackViewModel = new PartPackManagerViewModel(ViewModel.Machine);
-            var partPackView = new PartPackManagerView();
-            partPackView.DataContext = partPackViewModel;
-            partPackView.Owner = this;
-            partPackView.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            partPackView.ShowDialog();
         }
 
         private async void MachineControl_Click(object sender, RoutedEventArgs e)

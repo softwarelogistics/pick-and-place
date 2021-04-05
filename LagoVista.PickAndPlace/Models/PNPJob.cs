@@ -21,7 +21,6 @@ namespace LagoVista.PickAndPlace.Models
 
         public PnPJob()
         {
-            Feeders = new ObservableCollection<FeederInstance>();
             Parts = new ObservableCollection<Part>();
             BuildFlavors = new ObservableCollection<BuildFlavor>();
             BoardFiducial1 = new Point2D<double>();
@@ -61,8 +60,6 @@ namespace LagoVista.PickAndPlace.Models
         public ObservableCollection<BuildFlavor> BuildFlavors { get; set; }
 
         public ObservableCollection<Part> Parts { get; set; }
-
-        public ObservableCollection<FeederInstance> Feeders { get; set; }
 
         public Task OpenAsync()
         {

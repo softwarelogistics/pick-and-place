@@ -47,7 +47,8 @@ namespace LagoVista.PickAndPlace.App.Controls
 
         void ReadController(object state)
         {
-            if (_controller.IsConnected &&
+            if (this._viewModel != null &&
+                _controller.IsConnected &&
                 _viewModel.Machine.Connected &&
                 _viewModel.Machine.Mode == OperatingMode.Manual)
             {

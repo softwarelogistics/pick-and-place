@@ -130,12 +130,14 @@ namespace LagoVista.PickAndPlace.ViewModels
 
         public void SetCamera()
         {
-            Machine.ViewType = ViewTypes.Camera;
+            //Machine.ViewType = ViewTypes.Camera;
+            Machine.SetViewTypeAsync(ViewTypes.Camera);
         }
 
         public void SetTool1()
         {
-            Machine.ViewType = ViewTypes.Tool1;
+            Machine.SetViewTypeAsync(ViewTypes.Tool1);
+            //Machine.ViewType = ViewTypes.Tool1;
         }
 
 

@@ -1,18 +1,9 @@
 ﻿using LagoVista.PickAndPlace.App.ViewModels;
 using LagoVista.PickAndPlace.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace LagoVista.PickAndPlace.App.Views
 {
@@ -24,6 +15,12 @@ namespace LagoVista.PickAndPlace.App.Views
         public PNPJobWindow()
         {
             InitializeComponent();
+            this.Closing += PNPJobWindow_Closing;
+        }
+
+        private void PNPJobWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ViewModel.StopCapture();
         }
 
         public PnPJobViewModel ViewModel
@@ -44,9 +41,9 @@ namespace LagoVista.PickAndPlace.App.Views
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             var placeablePart = e.Row.DataContext as PlaceableParts;
-            if (placeablePart != null && placeablePart.Row != null)
+            if (placeablePart != null && placeablePart.PartStrip != null)
             {
-                if (placeablePart.Row.AvailableParts >= placeablePart.Count)
+                if (placeablePart.PartStrip.AvailablePartCount >= placeablePart.Count)
                 {
                     e.Row.Background = new SolidColorBrush(Colors.Green);
                     e.Row.Foreground = new SolidColorBrush(Colors.White);

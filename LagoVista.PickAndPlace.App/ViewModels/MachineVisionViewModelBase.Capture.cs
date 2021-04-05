@@ -114,7 +114,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
                 else if (UseBottomCamera && _bottomCameraCapture != null)
                 {
-                    _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                  //  _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
 
                     if (_lastBottomBrightness != _bottomCameraProfile.Brightness)
                     {
@@ -132,13 +132,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     {
                         _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, _bottomCameraProfile.Contrast);
                         _lastBottomContrast = _bottomCameraProfile.Contrast;
-                    }
+                    }/*
 
                     if (_lastBottomExposure != _bottomCameraProfile.Exposure)
                     {
                         _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Exposure, _bottomCameraProfile.Exposure);
                         _lastBottomExposure = _bottomCameraProfile.Exposure;
-                    }
+                    }*/
 
                     if (UseBottomCamera)
                     {
