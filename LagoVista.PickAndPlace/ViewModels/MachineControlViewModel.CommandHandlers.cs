@@ -121,9 +121,9 @@ namespace LagoVista.PickAndPlace.ViewModels
                         Machine.SendCommand("G90");
 
                         Machine.SendCommand($"{Machine.Settings.JogGCodeCommand} E{(newAngle).ToDim()} F5000");
-                        Machine.SendCommand("G91");
+/*                        Machine.SendCommand("G91");
                         Machine.SendCommand($"G0 X{xOffset.ToDim()}  Y{yOffset.ToDim()}");
-                        Machine.SendCommand("G90");
+                        Machine.SendCommand("G90");*/
 
                         Debug.WriteLine($"New Angle {newAngle}°, Normalized {normalizedAngle}° Correction: ({xOffset.ToDim()} - {yOffset.ToDim()})");
                     }
@@ -142,9 +142,9 @@ namespace LagoVista.PickAndPlace.ViewModels
                         var yOffset = -(Math.Cos(normalizedAngle.ToRadians()) * ShaftOffsetCorrection);
 
                         Machine.SendCommand($"{Machine.Settings.JogGCodeCommand} E{(newAngle).ToDim()} F5000"); 
-                        Machine.SendCommand("G91");
+                        /*Machine.SendCommand("G91");
                         Machine.SendCommand($"G0 X{xOffset.ToDim()}  Y{yOffset.ToDim()}");
-                        Machine.SendCommand("G90");
+                        Machine.SendCommand("G90");*/
 
                         Debug.WriteLine($"New Angle {newAngle}°, Normalized {normalizedAngle}° Correction: ({xOffset.ToDim()} - {yOffset.ToDim()})");
 

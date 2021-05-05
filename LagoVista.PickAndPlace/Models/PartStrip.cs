@@ -50,6 +50,28 @@ namespace LagoVista.PickAndPlace.Models
             set => Set(ref _currentPartIndex, value);
         }
 
+        private string _partInStripMsg;
+        [JsonIgnore]
+        public String PartInStripMsg
+        {
+            get => _partInStripMsg;
+            set => Set(ref _partInStripMsg, value);
+        }
+
+        private int _tempPartIndex = 0;
+        [JsonIgnore]
+        public int TempPartIndex
+        {
+            get => _tempPartIndex;
+            set
+            {
+                Set(ref _tempPartIndex, value);
+                RaisePropertyChanged(nameof(PartInStripMsg));
+
+                PartInStripMsg = $"Part {TempPartIndex} of {AvailablePartCount}";
+            }
+        }
+
         private double _stripLength;
         public double StripLength
         {

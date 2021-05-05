@@ -87,6 +87,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         PnPMachineManager.ResolvePart(_pnpMachine, part);
                     }
                 }
+
+                InspectIndex = 0;
+                PrevInspectCommand.RaiseCanExecuteChanged();
+                NextInspectCommand.RaiseCanExecuteChanged();
+                FirstInspectCommand.RaiseCanExecuteChanged();
             }
         }
 

@@ -25,6 +25,7 @@ namespace LagoVista.PickAndPlace.Models
             BuildFlavors = new ObservableCollection<BuildFlavor>();
             BoardFiducial1 = new Point2D<double>();
             BoardFiducial2 = new Point2D<double>();
+            BoardOffset = new Point2D<double>();
         }
 
         private Point2D<double> _boardFiducial1;
@@ -32,6 +33,13 @@ namespace LagoVista.PickAndPlace.Models
         {
             get => _boardFiducial1;
             set => Set(ref _boardFiducial1, value);
+        }
+
+        private Point2D<double> _boardOffset;
+        public Point2D<double> BoardOffset
+        {
+            get => _boardOffset;
+            set => Set(ref _boardOffset, value);
         }
 
         private Point2D<double> _boardFiducial2;

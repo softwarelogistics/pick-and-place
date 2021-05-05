@@ -19,8 +19,30 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent = parent;
             AddPartStripCommand = new RelayCommand(AddPartStrip, () => _pnpMachine != null);
             SetStripOriginCommand = new RelayCommand(SetStripOrigin, () => SelectedPartStrip != null);
-            GoToPartCommand = new RelayCommand(GotoPart, () => SelectedPartStrip != null && SelectedPackage != null);
+            GoToFirstPartCommand = new RelayCommand(GoToFirstPart, () => SelectedPartStrip != null && SelectedPackage != null);
+
+            NextPartCommand = new RelayCommand(NextPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.AvailablePartCount > SelectedPartStrip.TempPartIndex);
+            PrevPartCommand = new RelayCommand(PrevPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.TempPartIndex > 0);
+            
+            GoToCurrentPartCommand = new RelayCommand(GoToCurrentPart, () => SelectedPartStrip != null && SelectedPackage != null);
             GoToReferencePointCommand = new RelayCommand(GoToReferencePoint, () => SelectedPartStrip != null);
+
+            SetCurrentPartIndexCommand = new RelayCommand(SetCurrentPartIndex, () => SelectedPartStrip != null);
+        }
+
+        private void RefreshCommandEnabled()
+        {
+            AddPartStripCommand.RaiseCanExecuteChanged();
+            SetStripOriginCommand.RaiseCanExecuteChanged();
+            GoToFirstPartCommand.RaiseCanExecuteChanged();
+
+            NextPartCommand.RaiseCanExecuteChanged();
+            PrevPartCommand.RaiseCanExecuteChanged();
+
+            GoToCurrentPartCommand.RaiseCanExecuteChanged();
+            GoToReferencePointCommand.RaiseCanExecuteChanged();
+
+            SetCurrentPartIndexCommand.RaiseCanExecuteChanged();
         }
 
         public void AddPartStrip()
@@ -47,9 +69,48 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent.Machine.GotoPoint(SelectedPartStrip.ReferenceHoleX, SelectedPartStrip.ReferenceHoleY);
         }
 
-        public void GotoPart()
+        public void GoToCurrentPart()
         {
+            _parent.Machine.GotoPoint(
+                   SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
+                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);            
+        }
+
+        public void NextPart()
+        {
+            SelectedPartStrip.TempPartIndex++;
+
+            _parent.Machine.GotoPoint(
+                   SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
+                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);
+
+            RefreshCommandEnabled();
+        }
+
+        public void PrevPart()
+        {
+            if (SelectedPartStrip.TempPartIndex > 0)
+            {
+                SelectedPartStrip.TempPartIndex--;
+                _parent.Machine.GotoPoint(
+                       SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
+                       SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);
+
+                RefreshCommandEnabled();
+            }
+        }
+
+        public void SetCurrentPartIndex()
+        {
+            SelectedPartStrip.CurrentPartIndex = SelectedPartStrip.TempPartIndex;
+            SavePnPMachine();
+        }
+
+        public void GoToFirstPart()
+        {
+            SelectedPartStrip.TempPartIndex = 0;
             _parent.Machine.GotoPoint(SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole, SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);
+            RefreshCommandEnabled();
         }
 
         public void SetStripOrigin()
@@ -74,6 +135,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             RaisePropertyChanged(nameof(PartStrips));
             RaisePropertyChanged(nameof(PackageDefinitions));
+
+            RefreshCommandEnabled();
         }
 
         public ObservableCollection<PartStrip> PartStrips
@@ -96,11 +159,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
 
                 RaisePropertyChanged(nameof(SelectedPackage));
+                RefreshCommandEnabled();
 
-                SetStripOriginCommand.RaiseCanExecuteChanged();
-                AddPartStripCommand.RaiseCanExecuteChanged();
-                GoToPartCommand.RaiseCanExecuteChanged();
-                GoToReferencePointCommand.RaiseCanExecuteChanged();
+                GoToCurrentPart();
             }
         }
 
@@ -119,10 +180,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     SelectedPartStrip.SetPackage(value);
                     SavePnPMachine();
 
-                    SetStripOriginCommand.RaiseCanExecuteChanged();
-                    AddPartStripCommand.RaiseCanExecuteChanged();
-                    GoToPartCommand.RaiseCanExecuteChanged();
-                    GoToReferencePointCommand.RaiseCanExecuteChanged();
+                    RefreshCommandEnabled();
                 }
             }
         }
@@ -141,8 +199,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public RelayCommand SetStripOriginCommand { get; }
         public RelayCommand AddPartStripCommand { get; }
-
         public RelayCommand GoToReferencePointCommand { get; }
-        public RelayCommand GoToPartCommand { get; }
+        public RelayCommand SetCurrentPartIndexCommand { get; }
+
+        public RelayCommand GoToFirstPartCommand { get; }
+        public RelayCommand GoToCurrentPartCommand { get; }
+
+        public RelayCommand NextPartCommand { get; }
+        public RelayCommand PrevPartCommand { get; }
     }
 }

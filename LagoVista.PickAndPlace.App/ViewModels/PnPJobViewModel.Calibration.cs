@@ -106,6 +106,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        public void SetBoardOffset()
+        {
+            var deltaX = SelectedPartToBePlaced.X - Machine.MachinePosition.X;
+            var deltaY = SelectedPartToBePlaced.Y - Machine.MachinePosition.Y;
+
+            _job.BoardOffset = new Point2D<double>(deltaX.Value, deltaY.Value);
+            SaveJob();
+        }
+
         public async void AlignBottomCamera()
         {
             if (Machine.Settings.PartInspectionCamera?.AbsolutePosition != null)
@@ -151,5 +160,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        public void SetBottomCamera()
+        {
+            Machine.SendCommand($"G92 X{Machine.Settings.PartInspectionCamera.AbsolutePosition.X} Y{Machine.Settings.PartInspectionCamera.AbsolutePosition.Y}");
+        }
     }
 }

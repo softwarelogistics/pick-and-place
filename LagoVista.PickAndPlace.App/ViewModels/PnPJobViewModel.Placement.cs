@@ -85,7 +85,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 cmds.Add(PlaceHeightGCode(SelectedPartPackage));
                 cmds.Add(WaitForComplete());
                 cmds.Add(ProduceVacuumGCode(false));
-                cmds.Add(DwellGCode(500)); // Wait 500ms to let placed part settle in
+                cmds.Add(DwellGCode(1500)); // Wait 500ms to let placed part settle in
                 cmds.Add(SafeHeightGCodeGCode()); // Return to move height.
 
                 cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
@@ -139,7 +139,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private String GetGoToPartOnBoardGCode()
         {
-            return $"G1 X{SelectedPartToBePlaced.X} Y{SelectedPartToBePlaced.Y} F{Machine.Settings.FastFeedRate}";
+            return $"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{Machine.Settings.FastFeedRate}";
         }
 
         public void GoToPartOnBoard()

@@ -40,6 +40,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             CalibrateBottomCameraCommand = new RelayCommand(() => CalibrateBottomCamera());
 
+            NextInspectCommand = new RelayCommand(NextInspect,() => _inspectIndex < ConfigurationParts.Count - 1);
+            PrevInspectCommand = new RelayCommand(PrevInspect, () => _inspectIndex > 0);
+            FirstInspectCommand = new RelayCommand(FirstInspect, () => _inspectIndex > 0);
+
+            SetBoardOffsetCommand = new RelayCommand(SetBoardOffset, () => SelectedPartToBePlaced != null);
+
+            SetBottomCameraPositionCommand = new RelayCommand(SetBottomCamera, () => Machine.Connected);
         }
 
         public RelayCommand HomingCycleCommand { get; private set; }
@@ -67,6 +74,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand AlignBottomCameraCommand { get; private set; }
         public RelayCommand CalibrateBottomCameraCommand { get; private set; }
         public RelayCommand SetFiducialCalibrationCommand { get; private set; }
+
+        public RelayCommand FirstInspectCommand { get; private set; }
+        public RelayCommand NextInspectCommand { get; private set; }
+        public RelayCommand PrevInspectCommand { get; private set;  }
+
+        public RelayCommand SetBoardOffsetCommand { get; private set; }
+        public RelayCommand SetBottomCameraPositionCommand { get; private set; }
 
 
         public bool CanPlacePart()
