@@ -1,5 +1,7 @@
 ﻿using LagoVista.PickAndPlace.App.ViewModels;
+using LagoVista.PickAndPlace.Interfaces;
 using LagoVista.PickAndPlace.Models;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,6 +18,12 @@ namespace LagoVista.PickAndPlace.App.Views
         {
             InitializeComponent();
             this.Closing += PNPJobWindow_Closing;
+            this.KeyUp += PNPJobWindow_KeyUp;
+        }
+
+        private void PNPJobWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            ViewModel.MachineControls.HandleKeyDown((WindowsKey)e.Key, Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift), Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
         }
 
         private void PNPJobWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -58,6 +66,26 @@ namespace LagoVista.PickAndPlace.App.Views
         private void WebCamImage2_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void ListView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void CheckBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            var chk = sender as CheckBox;
+            if (chk.IsChecked.Value)
+            {
+                e.Handled = true;
+                //this.ViewModel.ToolAlignmentVM.SetTool1Location();
+            }
         }
     }
 }

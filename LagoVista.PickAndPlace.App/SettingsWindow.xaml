@@ -100,6 +100,40 @@
                 </Grid>
             </TabItem>
 
+            <TabItem Header="Bounds">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="85*" />
+                        <ColumnDefinition Width="181*"/>
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Content="Min X" />
+                    <TextBox  Text="{Binding Settings.MinX}" Grid.Row="0" Grid.ColumnSpan="2" />
+                    <Label Content="mm" Grid.Row="0" Grid.Column="3" />
+
+                    <Label Grid.Row="1" Content="Max X" />
+                    <TextBox  Text="{Binding Settings.MaxX}" Grid.Row="1" Grid.ColumnSpan="2" />
+                    <Label Content="mm" Grid.Row="1" Grid.Column="3" />
+
+                    <Label Grid.Row="2" Content="Min Y" />
+                    <TextBox  Text="{Binding Settings.MinY}" Grid.Row="2" Grid.ColumnSpan="2" />
+                    <Label Content="mm" Grid.Row="2" Grid.Column="3" />
+
+                    <Label Grid.Row="3" Content="Max Y" />
+                    <TextBox  Text="{Binding Settings.MaxY}" Grid.Row="3" Grid.ColumnSpan="2" />
+                    <Label Content="mm" Grid.Row="3" Grid.Column="3" />
+
+                </Grid>
+            </TabItem>
+
             <TabItem Header="Connection">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -181,7 +215,8 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />                    </Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
                     <Label Content="Top/Positioning Camera" />
                     <ComboBox ItemsSource="{Binding Cameras}" 

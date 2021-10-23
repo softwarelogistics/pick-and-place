@@ -17,6 +17,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             GoToPartPositionInTrayCommand = new RelayCommand(GoToPartPositionInTray);
 
             SelectMachineFileCommand = new RelayCommand(SelectMachineFile);
+            SelectBoardFileCommand = new RelayCommand(SelectBoardFile);
+
+            RefreshBoardCommand = new RelayCommand(RefreshBoard);
 
             HomingCycleCommand = new RelayCommand(() => Machine.HomingCycle());
 
@@ -45,8 +48,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             FirstInspectCommand = new RelayCommand(FirstInspect, () => _inspectIndex > 0);
 
             SetBoardOffsetCommand = new RelayCommand(SetBoardOffset, () => SelectedPartToBePlaced != null);
+            ClearBoardOffsetCommand = new RelayCommand(ClearBoardOffset, () => SelectedPartToBePlaced != null);
 
             SetBottomCameraPositionCommand = new RelayCommand(SetBottomCamera, () => Machine.Connected);
+            GoToMachineFiducialCommand = new RelayCommand(GotoMachineFiducial, () => Machine.Connected);
+
         }
 
         public RelayCommand HomingCycleCommand { get; private set; }
@@ -55,9 +61,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand RefreshConfigurationPartsCommand { get; private set; }
         public RelayCommand CloneCommand { get; private set; }
         public RelayCommand SaveCommand { get; private set; }
+        public RelayCommand GoToMachineFiducialCommand { get; private set; }
         public RelayCommand GoToPartOnBoardCommand { get; private set; }
         public RelayCommand GoToPartPositionInTrayCommand { get; private set; }
         public RelayCommand SelectMachineFileCommand { get; private set; }
+        public RelayCommand SelectBoardFileCommand { get; private set; }
+        public RelayCommand RefreshBoardCommand { get; private set; }
         public RelayCommand ResetCurrentComponentCommand { get; set; }
         public RelayCommand MoveToPreviousComponentInTapeCommand { get; set; }
         public RelayCommand PausePlacmentCommand { get; set; }
@@ -80,6 +89,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand PrevInspectCommand { get; private set;  }
 
         public RelayCommand SetBoardOffsetCommand { get; private set; }
+        public RelayCommand ClearBoardOffsetCommand { get; private set; }
         public RelayCommand SetBottomCameraPositionCommand { get; private set; }
 
 

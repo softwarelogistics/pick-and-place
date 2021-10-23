@@ -193,5 +193,38 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        public void RefreshBoard()
+        {
+            foreach(var flavor in Job.BuildFlavors)
+            {
+                foreach (var component in flavor.Components)
+                {
+                    var part = Job.Board.Components.Where(cmp => cmp.Name == component.Name).FirstOrDefault();
+                    component.X = part.X;
+                    component.Y = part.Y;
+                    component.Rotate = part.Rotate;
+                }
+            }
+        }
+
+        public async void SelectBoardFile()
+        {
+            var result = await Popups.ShowOpenFileAsync(Constants.FileFilterPCB);
+            if (!String.IsNullOrEmpty(result))
+            {
+                try
+                {
+                    Job.EagleBRDFilePath = result;
+                    await SaveJob();
+
+
+                }
+                catch
+                {
+                    await Popups.ShowAsync("Could not open packages");
+                }
+            }
+        }
+
     }
 }

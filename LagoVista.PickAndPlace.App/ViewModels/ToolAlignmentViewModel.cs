@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Commanding;
 using LagoVista.Core.Models.Drawing;
 using LagoVista.PickAndPlace.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagoVista.PickAndPlace.App.ViewModels
@@ -10,16 +11,17 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public ToolAlignmentViewModel(IMachine machine) : base(machine)
         {
 
-            SetToolOneMovePositionCommand = new RelayCommand(SetTool1MovePosition, () => HasFrame);
-            SetToolOnePickPositionCommand = new RelayCommand(SetTool1PickPosition, () => HasFrame);
-            SetToolOnePlacePositionCommand = new RelayCommand(SetTool1PlacePosition, () => HasFrame);
+            SetToolOneMovePositionCommand = new RelayCommand(SetTool1MovePosition, () => Machine.Connected);
+            SetToolOnePickPositionCommand = new RelayCommand(SetTool1PickPosition, () => Machine.Connected);
+            SetToolOnePlacePositionCommand = new RelayCommand(SetTool1PlacePosition, () => Machine.Connected);
 
-            SetToolOneLocationCommand = new RelayCommand(SetTool1Location, () => HasFrame && TopCameraLocation != null);
-            SetToolTwoLocationCommand = new RelayCommand(SetTool2Location, () => HasFrame && TopCameraLocation != null);
+            SetToolOneLocationCommand = new RelayCommand(SetTool1Location, () => Machine.Connected && TopCameraLocation != null);
+            SetToolTwoLocationCommand = new RelayCommand(SetTool2Location, () => Machine.Connected && TopCameraLocation != null);
 
-            SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => HasFrame);
-            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation, () => HasFrame && Machine.Settings.PartInspectionCamera != null);
-
+            SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => Machine.Connected);
+            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation, () => Machine.Settings.PartInspectionCamera != null);
+            AddNozzleCommand = new RelayCommand(AddNozzle);
+            DeleteNozzleCommand = new RelayCommand(DeleteNozzle);
             SaveCalibrationCommand = new RelayCommand(SaveCalibration, () => IsDirty);
         }
         
@@ -49,6 +51,27 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 Set(ref _isDirty, value);
                 SaveCalibrationCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public void AddNozzle()
+        {
+            Machine.Settings.CurrentNozzle = new Models.ToolNozzle();
+            Machine.Settings.CurrentNozzle.Name = "-new nozzle-";
+            Machine.Settings.Nozzles.Add(Machine.Settings.CurrentNozzle);
+            IsDirty = true;
+        }
+
+        public void DeleteNozzle()
+        {
+            Machine.Settings.Nozzles.Remove(Machine.Settings.CurrentNozzle);
+            if(Machine.Settings.Nozzles.Any())
+            {
+                Machine.Settings.CurrentNozzle = Machine.Settings.Nozzles.First();
+            }
+            else
+            {
+                AddNozzle();
             }
         }
 
@@ -199,6 +222,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand SetToolOneMovePositionCommand { get; private set; }
         public RelayCommand SetToolOnePickPositionCommand { get; private set; }
         public RelayCommand SaveCalibrationCommand { get; private set; }
+
+        public RelayCommand AddNozzleCommand { get; private set; }
+        public RelayCommand DeleteNozzleCommand { get; private set; }
 
         Point2D<double> _topCameraLocation;
         public Point2D<double> TopCameraLocation

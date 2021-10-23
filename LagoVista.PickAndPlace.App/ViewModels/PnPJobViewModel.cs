@@ -66,6 +66,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             PackageLibraryVM = new PackageLibraryViewModel();
             PartStripsViewModel = new PartStriptsViewModel(machine, this);
+            ToolAlignmentVM = new ToolAlignmentViewModel(machine);
 
             GoToFiducial1Command = new RelayCommand(() => GoToFiducial(1));
             GoToFiducial2Command = new RelayCommand(() => GoToFiducial(2));

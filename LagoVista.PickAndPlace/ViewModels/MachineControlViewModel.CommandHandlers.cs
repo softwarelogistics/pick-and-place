@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core;
+using LagoVista.PickAndPlace.Interfaces;
 using System;
 using System.Diagnostics;
 
@@ -121,9 +122,9 @@ namespace LagoVista.PickAndPlace.ViewModels
                         Machine.SendCommand("G90");
 
                         Machine.SendCommand($"{Machine.Settings.JogGCodeCommand} E{(newAngle).ToDim()} F5000");
-/*                        Machine.SendCommand("G91");
-                        Machine.SendCommand($"G0 X{xOffset.ToDim()}  Y{yOffset.ToDim()}");
-                        Machine.SendCommand("G90");*/
+                        /*                        Machine.SendCommand("G91");
+                                                Machine.SendCommand($"G0 X{xOffset.ToDim()}  Y{yOffset.ToDim()}");
+                                                Machine.SendCommand("G90");*/
 
                         Debug.WriteLine($"New Angle {newAngle}°, Normalized {normalizedAngle}° Correction: ({xOffset.ToDim()} - {yOffset.ToDim()})");
                     }
@@ -141,7 +142,7 @@ namespace LagoVista.PickAndPlace.ViewModels
                         var xOffset = -(Math.Sin(normalizedAngle.ToRadians()) * ShaftOffsetCorrection);
                         var yOffset = -(Math.Cos(normalizedAngle.ToRadians()) * ShaftOffsetCorrection);
 
-                        Machine.SendCommand($"{Machine.Settings.JogGCodeCommand} E{(newAngle).ToDim()} F5000"); 
+                        Machine.SendCommand($"{Machine.Settings.JogGCodeCommand} E{(newAngle).ToDim()} F5000");
                         /*Machine.SendCommand("G91");
                         Machine.SendCommand($"G0 X{xOffset.ToDim()}  Y{yOffset.ToDim()}");
                         Machine.SendCommand("G90");*/
@@ -158,7 +159,7 @@ namespace LagoVista.PickAndPlace.ViewModels
             if ((Machine.Settings.MachineType == FirmwareTypes.Repeteir_PnP ||
                 Machine.Settings.MachineType == FirmwareTypes.Marlin_Laser ||
                 Machine.Settings.MachineType == FirmwareTypes.Marlin ||
-                Machine.Settings.MachineType == FirmwareTypes.GRBL1_1) && 
+                Machine.Settings.MachineType == FirmwareTypes.GRBL1_1) &&
                 (direction != JogDirections.CMinus && direction != JogDirections.CPlus)
                 )
             {
@@ -238,6 +239,128 @@ namespace LagoVista.PickAndPlace.ViewModels
                     break;
 
 
+            }
+        }
+
+        public void HandleKeyDown(WindowsKey key, bool isShift, bool isControl)
+        {
+            switch (key)
+            {
+                case WindowsKey.Home:
+                    if (isControl)
+                    {
+                        Machine.SetWorkspaceHome();
+                    }
+                    else if(isShift)
+                    {
+                        Machine.HomingCycle();
+                    }
+                    else
+                    {
+                        Machine.GotoWorkspaceHome();
+                    }
+
+                    break;
+                case WindowsKey.Left: Jog(JogDirections.XMinus); break;
+                case WindowsKey.Right: Jog(JogDirections.XPlus); break;
+                case WindowsKey.Up: Jog(JogDirections.YPlus); break;
+                case WindowsKey.Down: Jog(JogDirections.YMinus); break;
+
+                case WindowsKey.OemPlus:
+                    switch (XYStepMode)
+                    {
+                        case StepModes.XLarge:
+                            XYStepSizeSlider += 10;
+                            XYStepSizeSlider = Math.Min(100, XYStepSizeSlider);
+                            break;
+                        case StepModes.Large:
+                            XYStepSizeSlider = XYStepSizeSlider += 5;
+                            XYStepSizeSlider = Math.Min(20, XYStepSizeSlider);
+                            break;
+                        case StepModes.Medium:
+                            XYStepSizeSlider = XYStepSizeSlider += 1;
+                            XYStepSizeSlider = Math.Min(10, XYStepSizeSlider);
+                            break;
+                        case StepModes.Small:
+                            XYStepSizeSlider = XYStepSizeSlider += 0.1;
+                            XYStepSizeSlider = Math.Min(1, XYStepSizeSlider);
+                            break;
+                        case StepModes.Micro:
+                            XYStepSizeSlider = XYStepSizeSlider += 0.01;
+                            XYStepSizeSlider = Math.Min(0.1, XYStepSizeSlider);
+                            break;
+                    }
+
+                    break;
+                case WindowsKey.OemMinus:
+
+
+                    switch (XYStepMode)
+                    {
+                        case StepModes.XLarge:
+                            XYStepSizeSlider = XYStepSizeSlider -= 10;
+                            XYStepSizeSlider = Math.Max(20, XYStepSizeSlider);
+                            break;
+                        case StepModes.Large:
+                            XYStepSizeSlider = XYStepSizeSlider -= 2.5;
+                            XYStepSizeSlider = Math.Max(10, XYStepSizeSlider);
+                            break;
+                        case StepModes.Medium:
+                            XYStepSizeSlider = XYStepSizeSlider -= 1;
+                            XYStepSizeSlider = Math.Max(1, XYStepSizeSlider);
+                            break;
+                        case StepModes.Small:
+                            XYStepSizeSlider = XYStepSizeSlider -= 0.1;
+                            XYStepSizeSlider = Math.Max(0.1, XYStepSizeSlider);
+                            break;
+                        case StepModes.Micro:
+                            XYStepSizeSlider = XYStepSizeSlider -= 0.01;
+                            XYStepSizeSlider = Math.Max(0.01, XYStepSizeSlider);
+
+                            break;
+                    }
+
+
+                    break;
+
+                case WindowsKey.PageUp:
+                    switch (XYStepMode)
+                    {
+                        case StepModes.XLarge:
+                            break;
+                        case StepModes.Large:
+                            XYStepMode = StepModes.XLarge;
+                            break;
+                        case StepModes.Medium:
+                            XYStepMode = StepModes.Large;
+                            break;
+                        case StepModes.Small:
+                            XYStepMode = StepModes.Medium;
+                            break;
+                        case StepModes.Micro:
+                            XYStepMode = StepModes.Small;
+                            break;
+                    }
+                    break;
+                case WindowsKey.PageDown:
+                    switch (XYStepMode)
+                    {
+                        case StepModes.XLarge:
+                            XYStepMode = StepModes.Large;
+                            break;
+                        case StepModes.Large:
+                            XYStepMode = StepModes.Medium;
+                            break;
+                        case StepModes.Medium:
+                            XYStepMode = StepModes.Small;
+                            break;
+                        case StepModes.Small:
+                            XYStepMode = StepModes.Micro;
+                            break;
+                        case StepModes.Micro:
+                            break;
+                    };
+                    break;
             }
         }
     }

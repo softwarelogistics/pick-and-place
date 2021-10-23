@@ -2,9 +2,12 @@
 using LagoVista.Core.Models.Drawing;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.PickAndPlace.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagoVista.PickAndPlace
@@ -23,8 +26,8 @@ namespace LagoVista.PickAndPlace
 
         private Point2D<double> _tool1Offset = new Point2D<double>();
         public Point2D<double> Tool1Offset
-        { 
-            get { return _tool1Offset; } 
+        {
+            get { return _tool1Offset; }
             set { Set(ref _tool1Offset, value); }
         }
 
@@ -77,18 +80,60 @@ namespace LagoVista.PickAndPlace
             set { Set(ref _ipAddress, value); }
         }
 
-        private double _toolSafeMoveHeight;
-        public double ToolSafeMoveHeight 
-        { 
-            get { return _toolSafeMoveHeight; }
-            set { Set(ref _toolSafeMoveHeight, value);  }
+        [JsonIgnore]
+        public double ToolSafeMoveHeight
+        {
+            get { return _currentNozzle.SafeMoveHeight; }
+            set
+            {
+                _currentNozzle.SafeMoveHeight = value;
+                RaisePropertyChanged(nameof(ToolSafeMoveHeight));
+            }
         }
 
-        private double _toolPickHeight;
-        public double ToolPickHeight 
-        { 
-            get { return _toolPickHeight; }
-            set { Set(ref _toolPickHeight, value); }
+        [JsonIgnore]
+        public double ToolPickHeight
+        {
+            get { return _currentNozzle.PickHeight; }
+            set
+            {
+                _currentNozzle.PickHeight = value;
+                RaisePropertyChanged(nameof(ToolPickHeight));
+            }
+        }
+
+        ToolNozzle _currentNozzle = new ToolNozzle();
+        [JsonIgnore]
+        public ToolNozzle CurrentNozzle
+        {
+            get { return _currentNozzle; }
+            set
+            {
+                if(_currentNozzle != null)
+                {
+                    var currentNozzle = Nozzles.Where(noz => noz.Id == _currentNozzle.Id).FirstOrDefault();
+                    if(currentNozzle != null)
+                    {
+                        currentNozzle.Name = _currentNozzle.Name;
+                        currentNozzle.BoardHeight = _currentNozzle.BoardHeight;
+                        currentNozzle.PickHeight = _currentNozzle.PickHeight;
+                        currentNozzle.SafeMoveHeight = _currentNozzle.SafeMoveHeight;
+                    }
+
+                    _currentNozzle = value;                    
+                    RaisePropertyChanged(nameof(CurrentNozzle));
+                    RaisePropertyChanged(nameof(ToolPickHeight));
+                    RaisePropertyChanged(nameof(ToolBoardHeight));
+                    RaisePropertyChanged(nameof(ToolSafeMoveHeight));
+                }
+            }
+        }
+
+        ObservableCollection<ToolNozzle> _nozzles = new ObservableCollection<ToolNozzle>();
+        public ObservableCollection<ToolNozzle> Nozzles
+        {
+            get { return _nozzles; }
+            set { Set(ref _nozzles, value); }
         }
 
         /// <summary>
@@ -96,11 +141,15 @@ namespace LagoVista.PickAndPlace
         /// the this location plus the height of the part, we also will likely have different
         /// heights for the different nozzles.
         /// </summary>
-        private double _toolboardHeight;
-        public double ToolBoardHeight 
+        [JsonIgnore]
+        public double ToolBoardHeight
         {
-            get { return _toolboardHeight; }
-            set { Set(ref _toolboardHeight, value); }
+            get { return CurrentNozzle.BoardHeight; }
+            set
+            {
+                CurrentNozzle.BoardHeight = value;
+                RaisePropertyChanged(nameof(ToolBoardHeight));
+            }
         }
 
         public bool EnableCodePreview { get; set; }
@@ -208,7 +257,34 @@ namespace LagoVista.PickAndPlace
             set { Set(ref _partInspectionCamera, value); }
         }
 
-        
+
+        private double _maxX;
+        public double MaxX 
+        {
+            get => _maxX;
+            set => Set(ref _maxX, value);
+        }
+
+        private double _minX;
+        public double MinX
+        {
+            get => _minX;
+            set => Set(ref _minX, value);
+        }
+
+        private double _maxY;
+        public double MaxY
+        {
+            get => _maxY;
+            set => Set(ref _maxY, value);
+        }
+
+        private double _minY;
+        public double MinY
+        {
+            get => _minY;
+            set => Set(ref _minY, value);
+        }
 
         public FirmwareTypes MachineType { get; set; }
 

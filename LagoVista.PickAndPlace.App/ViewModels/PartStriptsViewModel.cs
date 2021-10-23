@@ -4,6 +4,7 @@ using LagoVista.PickAndPlace.Managers;
 using LagoVista.PickAndPlace.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace LagoVista.PickAndPlace.App.ViewModels
@@ -19,8 +20,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent = parent;
             AddPartStripCommand = new RelayCommand(AddPartStrip, () => _pnpMachine != null);
             SetStripOriginCommand = new RelayCommand(SetStripOrigin, () => SelectedPartStrip != null);
+            SetCorrectionCommand = new RelayCommand(SetCorrection, () => SelectedPartStrip != null);
             GoToFirstPartCommand = new RelayCommand(GoToFirstPart, () => SelectedPartStrip != null && SelectedPackage != null);
-
+            GoToLastPartCommand = new RelayCommand(GoToLastPart, () => SelectedPartStrip != null && SelectedPackage != null);
+            GoToLastPartUncalibratedCommand = new RelayCommand(GoToLastPartUncalibrated, () => SelectedPartStrip != null && SelectedPackage != null);
             NextPartCommand = new RelayCommand(NextPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.AvailablePartCount > SelectedPartStrip.TempPartIndex);
             PrevPartCommand = new RelayCommand(PrevPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.TempPartIndex > 0);
             
@@ -35,6 +38,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             AddPartStripCommand.RaiseCanExecuteChanged();
             SetStripOriginCommand.RaiseCanExecuteChanged();
             GoToFirstPartCommand.RaiseCanExecuteChanged();
+            GoToLastPartCommand.RaiseCanExecuteChanged();
+            GoToLastPartUncalibratedCommand.RaiseCanExecuteChanged();
+            SetCorrectionCommand.RaiseCanExecuteChanged();
 
             NextPartCommand.RaiseCanExecuteChanged();
             PrevPartCommand.RaiseCanExecuteChanged();
@@ -71,9 +77,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToCurrentPart()
         {
+            var partLocationRatio =  (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+            var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+            var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+
             _parent.Machine.GotoPoint(
-                   SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
-                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);            
+                   SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset,
+                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset);            
         }
 
         public void NextPart()
@@ -82,7 +92,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             _parent.Machine.GotoPoint(
                    SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
-                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);
+                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole, false);
 
             RefreshCommandEnabled();
         }
@@ -92,9 +102,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             if (SelectedPartStrip.TempPartIndex > 0)
             {
                 SelectedPartStrip.TempPartIndex--;
+
+                var partLocationRatio = (double)SelectedPartStrip.TempPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+                var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+                var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+
                 _parent.Machine.GotoPoint(
-                       SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole,
-                       SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole);
+                       SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset,
+                       SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset, false);
 
                 RefreshCommandEnabled();
             }
@@ -113,10 +128,44 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             RefreshCommandEnabled();
         }
 
+        public void GoToLastPartUncalibrated()
+        {           
+            var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
+            var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
+            _parent.Machine.GotoPoint(lastPartX, lastPartY);
+            RefreshCommandEnabled();
+        }
+
+        public void GoToLastPart()
+        {
+            SelectedPartStrip.TempPartIndex = Convert.ToInt32(SelectedPartStrip.StripLength / SelectedPackage.SpacingX);
+
+            var partLocationRatio = (double)SelectedPartStrip.TempPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+            var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+            var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+
+            _parent.Machine.GotoPoint(
+                   SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset,
+                   SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset);
+
+            RefreshCommandEnabled();
+        }
+
+
         public void SetStripOrigin()
         {
             SelectedPartStrip.ReferenceHoleX = Machine.MachinePosition.X;
             SelectedPartStrip.ReferenceHoleY = Machine.MachinePosition.Y;
+            SavePnPMachine();
+        }
+
+        public void SetCorrection()
+        {
+            var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
+            var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
+            var deltaX = _parent.Machine.MachinePosition.X - lastPartX;
+            var deltaY = _parent.Machine.MachinePosition.Y - lastPartY;
+            Debug.WriteLine("DELTA " + deltaX + " " + deltaY);
             SavePnPMachine();
         }
 
@@ -197,12 +246,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        public RelayCommand SetCorrectionCommand { get; }
         public RelayCommand SetStripOriginCommand { get; }
         public RelayCommand AddPartStripCommand { get; }
         public RelayCommand GoToReferencePointCommand { get; }
         public RelayCommand SetCurrentPartIndexCommand { get; }
 
         public RelayCommand GoToFirstPartCommand { get; }
+        public RelayCommand GoToLastPartCommand { get; }
+        public RelayCommand GoToLastPartUncalibratedCommand { get; }
         public RelayCommand GoToCurrentPartCommand { get; }
 
         public RelayCommand NextPartCommand { get; }

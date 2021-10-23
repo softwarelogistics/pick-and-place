@@ -56,12 +56,13 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120" />
                             <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="400" />
                         </Grid.ColumnDefinitions>
@@ -69,39 +70,203 @@
                         <Label Content="Machine File" />
                         <Controls:MaskingTextBox Text="{Binding Path=Job.PnPMachinePath, Mode=TwoWay}" Grid.Column="1" Margin="4,4,0,4" />
                         <Button Content="..." Width="30" HorizontalAlignment="Left" Grid.Column="2" Margin="0,4,4,4" Command="{Binding SelectMachineFileCommand}" />
-                        <Label Content="Fiducual 1 - X" Grid.Row="1" />
-                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="1" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
-                        <Label Content="Fiducual 1 - Y" Grid.Row="2" />
-                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="2" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
-                        <Label Content="Fiducual 2 - X" Grid.Row="3" />
-                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="3" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
-                        <Label Content="Fiducual 2 - Y" Grid.Row="4" />
-                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.Y, Mode=TwoWay}"  UnitType="Size " Grid.Row="4" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
-                        <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" Grid.Row="0" Grid.RowSpan="7" />
-                        <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="320" Height="240" Grid.Row="1" Stretch="Uniform" Grid.RowSpan="7" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
-                        
-                        <ListBox Grid.Row="7" HorizontalAlignment="Left" Grid.Column="3" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" />
 
-                        <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"></Button>
-                        <Button Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"></Button>
-                        
-                        <StackPanel Grid.Row="5" Grid.ColumnSpan="2">
-                            <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) HomingCycle" />
-                            <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Machine Fiducial" />
-                            <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" />
-                            <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4) Board Fiducial 1" />
-                            <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" />
-                            <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="6) Bottom Camera" />
-                            <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="7) Calibrate Bottom Camera" />
-                            <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="8) Set Bottom Camera" />
+                        <Label Content="Board File" Grid.Row="1" />
+                        <Controls:MaskingTextBox Text="{Binding Path=Job.EagleBRDFilePath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="4,4,0,4" />
+                        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                            <Button Content="..." Width="20" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Margin="0,4,4,4" Command="{Binding SelectBoardFileCommand}" />
+                            <Button Content="Refresh" Width="30" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" Margin="0,4,4,4" Command="{Binding RefreshBoardCommand}" />
+                        </StackPanel>
+
+
+                        <Label Content="Fiducual 1 - X" Grid.Row="2" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="2" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
+                        <Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"></Button>
+
+                        <Label Content="Fiducual 1 - Y" Grid.Row="3" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="3" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
+                        <Label Content="Fiducual 2 - X" Grid.Row="4" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="4" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
+                        <Button Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="40,0,0,0" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"></Button>
+
+                        <Label Content="Fiducual 2 - Y" Grid.Row="5" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.Y, Mode=TwoWay}"  UnitType="Size " Grid.Row="5" Grid.Column="1" Margin="0,4,4,4" Width="80" HorizontalAlignment="Left" />
+
+                        <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" Grid.Row="0" Grid.RowSpan="8" />
+                        <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="320" Height="240" Grid.Row="1" Stretch="Uniform" Grid.RowSpan="8" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+
+                        <ListBox Grid.Row="8" HorizontalAlignment="Left" Grid.Column="3" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" />
+
+                        <StackPanel Grid.Row="6" Grid.ColumnSpan="2">
+                            <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
+                            <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
+                            <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
+                            <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4) Board Fiducial 1" Width="200" />
+                            <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" Width="200" />
+                            <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="6) Bottom Camera" Width="200" />
+                            <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="7) Calibrate Bottom Camera" Width="200" />
+                            <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="8) Set Bottom Camera" Width="200" />
+                            <Button Command="{Binding GoToMachineFiducialCommand }" Style="{StaticResource CommandButton}" Content="9) Move To Machine Fiducial" Width="200" />
                         </StackPanel>
                     </Grid>
                 </Grid>
 
             </TabItem>
+            <TabItem Header="Tool Alignment">
+                <Grid >
+                    <Grid.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource CommandButton}" >
+                            <Setter Property="Width" Value="50" />
+                            <Setter Property="Height" Value="24" />
+                        </Style>
+                        <Style TargetType="Label" x:Key="ValueLabel">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                        <Style TargetType="Label" x:Key="ValueContent">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="Margin" Value="0,0,5,0" />
+                        </Style>
+
+                    </Grid.Resources>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="300" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image x:Name="ToolVMWebCamImage" Source="{Binding PrimaryCapturedImage}" MouseDown="WebCamImage_MouseDown" VerticalAlignment="Top" Stretch="Uniform" Grid.Row="1" Grid.RowSpan="2" />
+
+                    <Grid Grid.Column="1" Grid.RowSpan="2" Background="White" KeyUp="Grid_KeyUp" >
+                        <ScrollViewer>
+                            <StackPanel Margin="10">
+                                <TextBlock Text="Calibrate Machine Locations" FontWeight="Bold"  FontSize="18"/>
+                                <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducual via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
+
+                                <TextBlock Text="Step 1 - Positioning Camera Location"  FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Center the Top Camera over a known location such as a via on a PCB, or drill a hole.  Then press Set Top Camera Location." TextWrapping="Wrap" Margin="0,0,0,5"  />
+
+                                <Grid Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Top Camera:"  />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding ToolAlignmentVM.TopCameraLocation, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
+                                    <Button Command="{Binding ToolAlignmentVM.SetTopCameraLocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="3" />
+                                </Grid>
+
+
+                                <TextBlock Text="Step 2 - Bottom Camera" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Center Place Head over Bottom Facing Camera" TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Bottom Camera:"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="0,-10,0,0" HorizontalAlignment="Right">
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}({0},{1:0.00},{2:0.00})">
+                                                    <Binding Path="BottomCameraLocation.X" />
+                                                    <Binding Path="BottomCameraLocation.Y" />
+                                                    <Binding Path="BottomCameraLocation.Z" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Button Command="{Binding ToolAlignmentVM.SetBottomCameraLocationCommand}" Content="Set" Grid.Column="2" />
+                                </Grid>
+
+                                <TextBlock Text="Step 3 - Tool 1 Location"  FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Center Tool 1 over the location found in step one and press Set " TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Label Style="{StaticResource ValueLabel}" Content="Tool 1 Offset" />
+                                    <TextBox Text="{Binding Machine.Settings.Tool1Offset.X, Mode=TwoWay}" Grid.Column="1" Height="18" TextAlignment="Right" />
+                                    <TextBox Text="{Binding Machine.Settings.Tool1Offset.Y, Mode=TwoWay}" Grid.Column="2" Height="18" TextAlignment="Right" />
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolOneLocationCommand}" Content="Set" Grid.Column="3" />
+                                    
+                                </Grid>
+
+                                <TextBlock Text="Step 4 - Tool 2 Location (optional)"  FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Move Tool 1 over the center of the bottom facing camera and rotate the C Axis." TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Tool 2 Location" />
+                                    <TextBlock Text="{Binding Machine.Settings.Tool2Offset, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolTwoLocationCommand}" Content="Set" Grid.Column="2" />
+                                </Grid>
+
+                                <Button Command="{Binding ToolAlignmentVM.AddNozzleCommand}" HorizontalAlignment="Right">Add</Button>
+                                <TextBox Text="{Binding Machine.Settings.CurrentNozzle.Name}" />
+                                <ComboBox ItemsSource="{Binding Machine.Settings.Nozzles}" SelectedItem="{Binding Machine.Settings.CurrentNozzle, Mode=TwoWay}" DisplayMemberPath="Name"  />
+
+                                <TextBlock Text="Step 5 - Save Move Height" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Move the Pick head to the location to be set when the picked component is being moved." TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Safe Move Height" />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.ToolSafeMoveHeight}" Grid.Column="1" />
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolOneMovePositionCommand}" Content="Set" Grid.Column="3"/>
+                                </Grid>
+
+                                <TextBlock Text="Step 6 - Pick Height" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Set the Pick head ot the location where it will pick the default size component" TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Pick Height" />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.ToolPickHeight}" Grid.Column="1"  />
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolOnePickPositionCommand}" Content="Set" Grid.Column="3" />
+                                </Grid>
+
+                                <TextBlock Text="Step 7 - Board Height" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Position to tool so that it just touches the baord and press set." TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Board  Height" />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.ToolBoardHeight}" Grid.Column="1"  />
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolOnePlacePositionCommand}" Content="Set" Grid.Column="2" />
+                                </Grid>
+
+                                <Button Command="{Binding ToolAlignmentVM.SaveCalibrationCommand}" Content="Save" HorizontalAlignment="Right" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </TabItem>
 
             <TabItem Header="Configuration">
-                <Grid>
+                <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -129,7 +294,7 @@
                         <Button Command="{Binding CloneCommand}" Width="60" Margin="10" Content="Clone" />
                     </StackPanel>
 
-                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="3" CanUserDeleteRows="False" Grid.Row="3" CanUserAddRows="False" ItemsSource="{Binding SelectedBuildFlavor.Components}" HorizontalContentAlignment="Stretch" >
+                    <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="3" CanUserDeleteRows="False" Grid.Row="3" PreviewKeyDown="ListView_PreviewKeyDown" CanUserAddRows="False" ItemsSource="{Binding SelectedBuildFlavor.Components}" HorizontalContentAlignment="Stretch" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Width="60" IsReadOnly="true" Binding="{Binding Name}"  />
                             <DataGridCheckBoxColumn Header="Include" Width="60" Binding="{Binding Included, Mode=TwoWay}"  />
@@ -146,7 +311,7 @@
                         </Button.Content>
                     </Button>
 
-                    <DataGrid AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" Grid.Column="3" LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding ConfigurationParts}" Grid.Row="3" HorizontalContentAlignment="Stretch" >
+                    <DataGrid AutoGenerateColumns="False" PreviewKeyDown="ListView_PreviewKeyDown" CanUserAddRows="false" CanUserDeleteRows="False" Grid.Column="3" LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding ConfigurationParts}" Grid.Row="3" HorizontalContentAlignment="Stretch" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Value" Width="120" IsReadOnly="true" Binding="{Binding Value, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Package" IsReadOnly="true" Width="120" Binding="{Binding Package, Mode=TwoWay}"  />
@@ -167,13 +332,17 @@
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="102*"/>
+                            <ColumnDefinition Width="223*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.ColumnSpan="3" HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" >
+                        <StackPanel HorizontalAlignment="Left" Grid.Row="0" Orientation="Horizontal" >
                             <Button Width="32" Height="32"  Command="{Binding AddPartStripCommand}" Style="{StaticResource JogArrow}" >
                                 <Button.Content>
                                     <fa:ImageAwesome  Icon="PlusCircle" />
@@ -181,20 +350,21 @@
                             </Button>
                         </StackPanel>
 
-                        <ListView ItemsSource="{Binding PartStrips}" Margin="2" SelectedItem="{Binding SelectedPartStrip, Mode=TwoWay}" Grid.Row="1" 
-                                  Grid.RowSpan="3"  Visibility="{Binding PartStrips, Converter={StaticResource NoTNullToVisibilityConverter}}">
+                        <ListView PreviewKeyDown="ListView_PreviewKeyDown" Focusable="false"  ItemsSource="{Binding PartStrips}" Margin="2" SelectedItem="{Binding SelectedPartStrip, Mode=TwoWay}" Grid.Row="1" 
+                                  Grid.RowSpan="2"  Visibility="{Binding PartStrips, Converter={StaticResource NoTNullToVisibilityConverter}}" Grid.ColumnSpan="2">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="140" />
                                             <ColumnDefinition Width="100" />
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="40" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding PackageName}" />
                                         <TextBlock Text="{Binding Value}" Grid.Column="1" />
-                                        <TextBlock Text="{Binding AvailablePartCount}" Grid.Column="2" />
+                                        <TextBlock Text="{Binding AvailablePartCount}" Grid.Column="2" HorizontalAlignment="Right" />
+                                        <TextBlock Text="{Binding CurrentPartIndex}" Grid.Column="3" HorizontalAlignment="Right" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -202,6 +372,8 @@
                     </Grid>
                     <Grid Grid.Column="1"  Visibility="{Binding SelectedPartStrip, Converter={StaticResource NoTNullToVisibilityConverter}}" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -221,39 +393,38 @@
                             <ColumnDefinition Width="79*"/>
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <ComboBox ItemsSource="{Binding PackageDefinitions}" SelectedItem="{Binding SelectedPackage, Mode=TwoWay}" DisplayMemberPath="Name" Grid.ColumnSpan="3" Grid.Column="2" />
 
                         <Label Content="Value" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
                         <TextBox Text="{Binding SelectedPartStrip.Value, Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right" />
-                        
+
                         <Label Content="Length" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
                         <TextBox Text="{Binding SelectedPartStrip.StripLength, Mode=TwoWay}" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right"/>
 
-                        <Label Content="Current Part Idx" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBox Text="{Binding SelectedPartStrip.CurrentPartIndex, Mode=TwoWay}" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="2" HorizontalContentAlignment="Right"/>
-                        <Button Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetCurrentPartIndexCommand}" Content="Set" Style="{StaticResource CommandButton}" />
-                        
-                        <Label Content="Ref Hol" Grid.Column="1" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <Button Grid.Row="4" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetStripOriginCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+                        <Label Content="Current Part Idx" Grid.Column="1" Grid.Row="7" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Text="{Binding SelectedPartStrip.CurrentPartIndex, Mode=TwoWay}" Grid.Row="7" Grid.ColumnSpan="2" Grid.Column="2" HorizontalContentAlignment="Right"/>
+                        <Button Grid.Row="7" Grid.Column="6" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetCurrentPartIndexCommand}" Content="Set" Style="{StaticResource CommandButton}" />
 
-                        <TextBox  Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.ReferenceHoleX, Mode=TwoWay, StringFormat=0.00}" 
+                        <Label Content="Ref Hol" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <Button Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetStripOriginCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+
+                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.ReferenceHoleX, Mode=TwoWay, StringFormat=0.00}" 
                                   Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
-                        <TextBox  Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.ReferenceHoleY, Mode=TwoWay, StringFormat=0.00}" 
+                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.ReferenceHoleY, Mode=TwoWay, StringFormat=0.00}" 
                                   Width="60" TextAlignment="Right" HorizontalAlignment="Right" />
 
-                        <Label Content="Pin 1 Offset" Grid.Column="1" Grid.Row="5" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBlock  Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="{} x={0:0.00}, y={1:0.00}">
-                                    <Binding Path="SelectedPartPack.Pin1XOffset" />
-                                    <Binding Path="SelectedPartPack.Pin1YOffset" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
+                        <Label Content="Correction" Grid.Column="1" Grid.Row="6" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
 
-                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="6"/>
-                        <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="6" VerticalAlignment="Center" Margin="0,5" >
+                        <TextBox  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.CorrectionFactorX, Mode=TwoWay, StringFormat=0.00}" 
+                                  Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
+                        <TextBox  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.CorrectionFactorY, Mode=TwoWay, StringFormat=0.00}" 
+                                  Width="60" TextAlignment="Right" HorizontalAlignment="Right" />
+
+                        <Button Grid.Row="6" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetCorrectionCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+
+                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="8"/>
+                        <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="8" VerticalAlignment="Center" Margin="0,5" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x tape={0}, y tape={1}, r={2}">
                                     <Binding Path="SelectedPackage.CenterXFromHole" />
@@ -263,7 +434,7 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <Label Content="{Binding SelectedPartPack.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="7"/>
+                        <Label Content="{Binding SelectedPartStrip.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="7"/>
 
                         <TextBlock  Grid.Column="2" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
                             <TextBlock.Text>
@@ -274,16 +445,21 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="5"  Orientation="Horizontal">
-                            <Button HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding GoToReferencePointCommand}" Content="Reference Hole" Style="{StaticResource CommandButton}" />
-                            <Button HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding GoToFirstPartCommand}" Content="First Part" Style="{StaticResource CommandButton}" />
-                            <Button HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding GoToCurrentPartCommand}" Content="Current Part"  Style="{StaticResource CommandButton}" />
+                        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="5"  >
+                            <StackPanel Orientation="Horizontal">
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToReferencePointCommand}" Content="Ref. Hole" Style="{StaticResource CommandButton}" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToFirstPartCommand}" Content="First Part" Style="{StaticResource CommandButton}" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToCurrentPartCommand}" Content="Current Part"  Style="{StaticResource CommandButton}" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
+                            </StackPanel>
+                            <TextBlock Text="Last part is correction calibrated, got to last part, center the part and press set for the correction." TextWrapping="Wrap"   Margin="5" />
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartUncalibratedCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
                         </StackPanel>
 
 
-                        <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PartInStripMsg}"  />
-                        <StackPanel Grid.Row="9" Grid.Column="4"  Orientation="Horizontal">
-                              
+                        <TextBlock Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PartInStripMsg}"  />
+                        <StackPanel Grid.Row="10" Grid.Column="4"  Orientation="Horizontal">
+
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding PrevPartCommand}" Content="&lt;=" Style="{StaticResource CommandButton}" />
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding NextPartCommand}" Content="=&gt;" Style="{StaticResource CommandButton}" />
                         </StackPanel>
@@ -309,7 +485,7 @@
                             </Button.Content>
                         </Button>
                     </StackPanel>
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Packages}" CanUserAddRows="False" AutoGenerateColumns="False" SelectedItem="{Binding CurrentPackage}" Visibility="{Binding Packages, Converter={StaticResource NoTNullToVisibilityConverter}}">
+                    <DataGrid Grid.Row="1" PreviewKeyDown="ListView_PreviewKeyDown" ItemsSource="{Binding Packages}" CanUserAddRows="False" AutoGenerateColumns="False" SelectedItem="{Binding CurrentPackage}" Visibility="{Binding Packages, Converter={StaticResource NoTNullToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Value" Width="80" Binding="{Binding Name, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Length" Width="70" Binding="{Binding Length, Mode=TwoWay}"  />
@@ -424,7 +600,7 @@
 
                     <TextBlock Text="{Binding InspectMessage}" Grid.Row="1" Margin="5" FontSize="14" Background="Yellow"  />
 
-                    <DataGrid Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="false" LoadingRow="DataGrid_LoadingRow" 
+                    <DataGrid PreviewKeyDown="ListView_PreviewKeyDown" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="false" LoadingRow="DataGrid_LoadingRow" 
                               CanUserDeleteRows="False" Grid.Column="0" ItemsSource="{Binding ConfigurationParts}"
                               SelectedItem="{Binding SelectedInspectPart, Mode=TwoWay}"
                               HorizontalContentAlignment="Stretch"  >
@@ -439,7 +615,7 @@
 
                 </Grid>
             </TabItem>
-                     
+
 
             <TabItem Header="Place">
                 <Grid>
@@ -469,7 +645,7 @@
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="90"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -486,7 +662,7 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Part:" Grid.Row="0" />
+                            <Label Content="Part:" Grid.Row="0" FontWeight="Bold" />
 
                             <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5,0,0">
                                 <TextBlock.Text>
@@ -497,12 +673,12 @@
                                 </TextBlock.Text>
                             </TextBlock>
 
-                            <Label Content="Part Count:" Grid.Row="1" />
+                            <Label Content="Part Count:" Grid.Row="1"  FontWeight="Bold" />
                             <Label Content="{Binding SelectedPartStrip.CurrentPartIndex, FallbackValue=-}" Grid.Row="1"  Grid.Column="1" />
-                            <Label Content="Available:" Grid.Row="3" />
+                            <Label Content="Available:" Grid.Row="3" FontWeight="Bold"  />
                             <Label Content="{Binding SelectedPartStrip.AvailablePartCount}" Grid.Row="3" Grid.Column="1" />
-                                                        
-                            <Label Content="Part in Tray:" Grid.Row="4" />
+
+                            <Label Content="Part in Tray:" Grid.Row="4" FontWeight="Bold" />
                             <TextBlock Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5,0,0">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="x={0}, y={1} r={2}">
@@ -513,7 +689,21 @@
                                 </TextBlock.Text>
                             </TextBlock>
 
-                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" Grid.Row="5" HorizontalAlignment="Center">
+                            <Label Content="Board Offset:" Grid.Row="5" FontWeight="Bold" />
+                            <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="1" Margin="0,5,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="x={0:0.0000}, y={1:0.0000}">
+                                        <Binding Path="BoardOffset.X" />
+                                        <Binding Path="BoardOffset.Y" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                            <Button Grid.Row="5" Grid.Column="4" Command="{Binding ClearBoardOffsetCommand}"  >
+                                <fa:ImageAwesome  Icon="Remove" Margin="2" Width="10" Height="10" />
+                            </Button>
+
+                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" Grid.Row="6" HorizontalAlignment="Center">
                                 <Button  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
                                     ToolTip="Reset to first component"
                                     Grid.Row="4" Grid.Column="0" Command="{Binding ResetCurrentComponentCommand}">
@@ -561,13 +751,14 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Label Content="Part to be placed" FontWeight="Bold" Grid.ColumnSpan="2" />
-                            
-                            <TextBlock  Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" >
+
+                            <TextBlock  Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" Grid.ColumnSpan="3" >
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{} x={0}, y={1} r={2}">
+                                    <MultiBinding StringFormat="{} {0} x={1}, y={2} r={3}">
+                                        <Binding Path="SelectedPartToBePlaced.Name" />
                                         <Binding Path="SelectedPartToBePlaced.X" />
                                         <Binding Path="SelectedPartToBePlaced.Y" />
-                                        <Binding Path="SelectedPartToBePlaced.Rotate" />
+                                        <Binding Path="SelectedPartToBePlaced.RotateAngle" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -580,7 +771,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <DataGrid Grid.Row="3" ItemsSource="{Binding SelectedPart.Parts}" CanUserSortColumns="False" SelectedItem="{Binding SelectedPartToBePlaced}"
+                        <DataGrid PreviewKeyDown="ListView_PreviewKeyDown" Grid.Row="3" ItemsSource="{Binding SelectedPart.Parts}" CanUserSortColumns="False" SelectedItem="{Binding SelectedPartToBePlaced}"
                                   AutoGenerateColumns="False" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="true" Width="80" />

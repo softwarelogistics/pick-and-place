@@ -75,7 +75,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 cmds.Add(SafeHeightGCodeGCode()); // Go to move height
 
                 var cRotation = SelectedPartToBePlaced.RotateAngle + SelectedPartPackage.RotationInTape;
-                if (cRotation > 0)
+                if (cRotation != 0)
                 {
                     cmds.Add(RotationGCode(cRotation));
                     cmds.Add(WaitForComplete());
@@ -148,6 +148,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 Machine.SendCommand(SafeHeightGCodeGCode());
                 Machine.SendCommand(GetGoToPartOnBoardGCode());
+
+                Machine.SendCommand($"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} F{Machine.Settings.FastFeedRate}");
+                Machine.SendCommand($"G1 Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{Machine.Settings.FastFeedRate}");
             }
         }
     }

@@ -7,7 +7,7 @@
         xmlns:ctls="clr-namespace:LagoVista.PickAndPlace.App.Controls"
         xmlns:local="clr-namespace:LagoVista.PickAndPlace.App.Views"
         mc:Ignorable="d"
-        Title="Tool Alignment View" Height="900" Width="1400">
+        Title="Tool Alignment View" Height="1000" Width="1400">
     <Grid >
         <Grid.Resources>
             <Style TargetType="Button" BasedOn="{StaticResource CommandButton}" >
@@ -117,16 +117,19 @@
                     <Button Command="{Binding SetToolTwoLocationCommand}" Content="Set" Grid.Column="2" />
                 </Grid>
 
+                <Button Command="{Binding AddNozzleCommand}" HorizontalAlignment="Right">Add</Button>
+                <TextBox Text="{Binding Machine.Settings.CurrentNozzle.Name}" />
+                <ComboBox ItemsSource="{Binding Machine.Settings.Nozzles}" SelectedItem="{Binding Machine.Settings.CurrentNozzle, Mode=TwoWay}" DisplayMemberPath="Name"  />
 
                 <TextBlock Text="Step 5 - Save Move Height" FontWeight="Bold" FontSize="16" />
                 <TextBlock Text="Move the Pick head to the location to be set when the picked component is being moved." TextWrapping="Wrap" Margin="0,0,0,5"  />
                 <Grid Margin="0,0,0,5"  >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="120" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="80" />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource ValueLabel}" Content="Save Move Height" />
+                    <Label Style="{StaticResource ValueLabel}" Content="Safe Move Height" />
                     <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.ToolSafeMoveHeight}" Grid.Column="1" />
                     <Button Command="{Binding SetToolOneMovePositionCommand}" Content="Set" Grid.Column="3"/>
                 </Grid>
@@ -144,15 +147,15 @@
                     <Button Command="{Binding SetToolOnePickPositionCommand}" Content="Set" Grid.Column="3" />
                 </Grid>
 
-                <TextBlock Text="Step 7 - Place Height" FontWeight="Bold" FontSize="16" />
-                <TextBlock Text="Move Tool 1 over the center of the bottom facing camera and rotate the C Axis." TextWrapping="Wrap" Margin="0,0,0,5"  />
+                <TextBlock Text="Step 7 - Board Height" FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="Position to tool so that it just touches the baord and press set." TextWrapping="Wrap" Margin="0,0,0,5"  />
                 <Grid Margin="0,0,0,5"  >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="80" />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource ValueLabel}" Content="Place Height" />
+                    <Label Style="{StaticResource ValueLabel}" Content="Board  Height" />
                     <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.ToolBoardHeight}" Grid.Column="1"  />
                     <Button Command="{Binding SetToolOnePlacePositionCommand}" Content="Set" Grid.Column="2" />
                 </Grid>

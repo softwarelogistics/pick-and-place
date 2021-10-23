@@ -94,27 +94,32 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     if (UseTopCamera)
                     {
                         using (var originalFrame = _topCameraCapture.QueryFrame())
-                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
                         {
-                            PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
-                        }
-
-                        if (PictureInPicture && _bottomCameraCapture != null)
-                        {
-                            using (var originalFrame = _bottomCameraCapture.QueryFrame())
+                            if (originalFrame != null)
                             {
-                                SecondaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(originalFrame);
+                                using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
+                                {
+                                    PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
+                                }
+
+                                if (PictureInPicture && _bottomCameraCapture != null)
+                                {
+                                    using (var childFrame = _bottomCameraCapture.QueryFrame())
+                                    {
+                                        SecondaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(childFrame);
+                                    }
+                                }
+                                else
+                                {
+                                    SecondaryCapturedImage = null;
+                                }
                             }
-                        }
-                        else
-                        {
-                            SecondaryCapturedImage = null;
                         }
                     }
                 }
                 else if (UseBottomCamera && _bottomCameraCapture != null)
                 {
-                  //  _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                    //  _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
 
                     if (_lastBottomBrightness != _bottomCameraProfile.Brightness)
                     {
@@ -143,7 +148,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     if (UseBottomCamera)
                     {
                         using (var originalFrame = _bottomCameraCapture.QueryFrame())
-                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr,byte>()))
+                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
                         {
                             PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
                         }

@@ -1,4 +1,5 @@
-﻿using LagoVista.PCB.Eagle.Models;
+﻿using LagoVista.Core.Models.Drawing;
+using LagoVista.PCB.Eagle.Models;
 using LagoVista.PickAndPlace.Models;
 using LagoVista.PickAndPlace.ViewModels;
 using System;
@@ -101,8 +102,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 if (SelectedPart != null && SelectedPartStrip != null && SelectedPartPackage != null)
                 {
                     //var xCorrection = SelectedPart.PartStrip.CorrectionAngleX * ((SelectedPartRow.RowNumber - 1) * SelectedPart.PartPack.RowCount);
-                    var xCorrection = 0;
-                    return SelectedPart.PartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole + xCorrection;
+                    var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+                    var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+
+                    return SelectedPart.PartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole + xOffset;
                 }
                 else
                 {
@@ -117,10 +120,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 if (SelectedPart != null && SelectedPartStrip != null && SelectedPartPackage != null)
                 {
-                    var yCorrection = SelectedPart.PartStrip.CorrectionAngleY * ((SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole);
-
-
-                    return SelectedPart.PartStrip.ReferenceHoleY + SelectedPartPackage.CenterYFromHole + yCorrection;
+                    var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+                    var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+                    return SelectedPart.PartStrip.ReferenceHoleY + SelectedPartPackage.CenterYFromHole + yOffset;
                 }
                 else
                 {
@@ -156,6 +158,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
 
 
+        public ToolAlignmentViewModel ToolAlignmentVM { get; }
+
 
         public PartStrip SelectedPartStrip
         {
@@ -187,10 +191,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 {
                     _partIndex = SelectedPart.Parts.IndexOf(value);
                     SetBoardOffsetCommand.RaiseCanExecuteChanged();
+                    ClearBoardOffsetCommand.RaiseCanExecuteChanged();
                     GoToPartOnBoard();
                 }
             }
         }
+
+        public Point2D<double> BoardOffset => _job.BoardOffset;
 
         public ObservableCollection<Part> Parts
         {

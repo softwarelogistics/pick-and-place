@@ -83,15 +83,15 @@ namespace LagoVista.PickAndPlace.Models
             }
         }
 
-        private double _correctionAngleX;
-        public double CorrectionAngleX
+        private double _correctionAngleX = 0;
+        public double CorrectionFactorX
         {
             get => _correctionAngleX;
             set => Set(ref _correctionAngleX, value);
         }
 
-        private double _correctionAngleY;
-        public double CorrectionAngleY
+        private double _correctionAngleY = 0;
+        public double CorrectionFactorY
         {
             get => _correctionAngleY;
             set => Set(ref _correctionAngleY, value);

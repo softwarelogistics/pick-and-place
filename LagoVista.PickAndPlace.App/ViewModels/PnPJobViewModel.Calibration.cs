@@ -10,12 +10,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 {
     public partial class PnPJobViewModel
     {
-        public void PerformMachineAlignment()
+        public async void PerformMachineAlignment()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
             _mvLocatorState = MVLocatorState.Idle;
 
-            Machine.ViewType = ViewTypes.Camera;
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
             Machine.TopLightOn = true;
 
             Machine.GotoWorkspaceHome();
@@ -29,6 +29,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             ShowCircles = true;
 
             _mvLocatorState = MVLocatorState.MachineFidicual;
+        }
+
+        public void GotoMachineFiducial()
+        {
+            GoToFiducial(0);
         }
 
         private void FinalizeCameraCalibration()
@@ -51,7 +56,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             var top = _nozzleCalibration.First(pt => pt.Value.Y == maxY);
 
-            var topAngle = top.Key;
+            var left = _nozzleCalibration.First(pt => pt.Value.X == minX);
+            var right = _nozzleCalibration.First(pt => pt.Value.X == maxX);            
+
+            var topAngle = ((left.Key + right.Key) / 2) - 180;
+
             var offsetX = top.Value.X / 20.0;
             var offsetY = top.Value.Y / 20.0;
 
@@ -79,7 +88,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 samplesAtPoint++;
 
-                if (samplesAtPoint > 25)
+                if (samplesAtPoint > 30)
                 {
                     var avgX = _averagePoints.Average(pt => pt.X);
                     var avgY = _averagePoints.Average(pt => pt.Y);
@@ -106,13 +115,21 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
-        public void SetBoardOffset()
+        public async void SetBoardOffset()
         {
             var deltaX = SelectedPartToBePlaced.X - Machine.MachinePosition.X;
             var deltaY = SelectedPartToBePlaced.Y - Machine.MachinePosition.Y;
 
             _job.BoardOffset = new Point2D<double>(deltaX.Value, deltaY.Value);
-            SaveJob();
+            RaisePropertyChanged(nameof(BoardOffset));
+            await SaveJob();
+        }
+
+        public async void ClearBoardOffset()
+        {
+            _job.BoardOffset = new Point2D<double>(0, 0);
+            RaisePropertyChanged(nameof(BoardOffset));
+            await SaveJob();
         }
 
         public async void AlignBottomCamera()

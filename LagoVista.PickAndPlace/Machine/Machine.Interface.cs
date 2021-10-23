@@ -368,6 +368,6 @@ namespace LagoVista.PickAndPlace
         public void LaserOn()
         {
             Enqueue("M3");
-        }
+        }        
     }
 }
