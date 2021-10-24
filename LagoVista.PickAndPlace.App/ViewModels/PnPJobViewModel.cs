@@ -92,7 +92,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public override async Task IsClosingAsync()
         {
-            await SaveJob();
+            await SaveJobAsync();
             await base.IsClosingAsync();
         }
     }

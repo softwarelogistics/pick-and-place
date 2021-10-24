@@ -274,7 +274,7 @@ namespace LagoVista.PickAndPlace
         {
             if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
             {
-                Enqueue("G92 X0 Y0 Z0");
+                Enqueue("G92 X0 Y0");
             }
             else
             {

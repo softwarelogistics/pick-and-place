@@ -59,5 +59,9 @@ namespace LagoVista.PickAndPlace.App.Views
             ViewModel.Machine.GotoPoint(absX, absY);
         }
 
+        private void ComboBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

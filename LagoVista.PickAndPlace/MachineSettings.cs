@@ -103,7 +103,6 @@ namespace LagoVista.PickAndPlace
         }
 
         ToolNozzle _currentNozzle = new ToolNozzle();
-        [JsonIgnore]
         public ToolNozzle CurrentNozzle
         {
             get { return _currentNozzle; }

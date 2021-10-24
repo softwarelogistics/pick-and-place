@@ -114,5 +114,10 @@ namespace LagoVista.PickAndPlace.App.Controls
                 _lastState = controllerState;
             }
         }
+
+        private void Dummy_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

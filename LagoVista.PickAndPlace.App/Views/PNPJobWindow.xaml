@@ -23,7 +23,7 @@
 
         <Controls:MVCommandBar x:Name="CmdBar" HorizontalAlignment="Left" />
 
-        <TabControl Grid.RowSpan="3" Grid.Column="1">
+        <TabControl Grid.RowSpan="3" Grid.Column="1" PreviewKeyDown="ListView_PreviewKeyDown" >
             <TabItem Header="Machine">
                 <StackPanel >
                     <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
@@ -39,7 +39,7 @@
             </TabItem>
         </TabControl>
 
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" Focusable="False" >
             <TabItem Header="Job">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -144,48 +144,23 @@
                         <ScrollViewer>
                             <StackPanel Margin="10">
                                 <TextBlock Text="Calibrate Machine Locations" FontWeight="Bold"  FontSize="18"/>
-                                <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducual via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
+                                <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducial via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
 
                                 <TextBlock Text="Step 1 - Positioning Camera Location"  FontWeight="Bold" FontSize="16" />
                                 <TextBlock Text="Center the Top Camera over a known location such as a via on a PCB, or drill a hole.  Then press Set Top Camera Location." TextWrapping="Wrap" Margin="0,0,0,5"  />
 
                                 <Grid Margin="0,0,0,5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="80" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="80" />
                                     </Grid.ColumnDefinitions>
                                     <Label Style="{StaticResource ValueLabel}" Content="Top Camera:"  />
-                                    <Label Style="{StaticResource ValueContent}" Content="{Binding ToolAlignmentVM.TopCameraLocation, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
-                                    <Button Command="{Binding ToolAlignmentVM.SetTopCameraLocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="3" />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding ToolAlignmentVM.MarkedTool1Location, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
+                                    <Button Command="{Binding ToolAlignmentVM.MarkTool1LocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="3" />
                                 </Grid>
-
-
-                                <TextBlock Text="Step 2 - Bottom Camera" FontWeight="Bold" FontSize="16" />
-                                <TextBlock Text="Center Place Head over Bottom Facing Camera" TextWrapping="Wrap" Margin="0,0,0,5"  />
-                                <Grid Margin="0,0,0,5"  >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="80" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Style="{StaticResource ValueLabel}" Content="Bottom Camera:"/>
-                                    <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="0,-10,0,0" HorizontalAlignment="Right">
-                                        <TextBlock>
-                                            <TextBlock.Text>
-                                                <MultiBinding StringFormat="{}({0},{1:0.00},{2:0.00})">
-                                                    <Binding Path="BottomCameraLocation.X" />
-                                                    <Binding Path="BottomCameraLocation.Y" />
-                                                    <Binding Path="BottomCameraLocation.Z" />
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </StackPanel>
-
-                                    <Button Command="{Binding ToolAlignmentVM.SetBottomCameraLocationCommand}" Content="Set" Grid.Column="2" />
-                                </Grid>
-
-                                <TextBlock Text="Step 3 - Tool 1 Location"  FontWeight="Bold" FontSize="16" />
+                 
+                                <TextBlock Text="Step 2 - Set Place Head Location"  FontWeight="Bold" FontSize="16" />
                                 <TextBlock Text="Center Tool 1 over the location found in step one and press Set " TextWrapping="Wrap" Margin="0,0,0,5"  />
                                 <Grid Margin="0,0,0,5"  >
                                     <Grid.ColumnDefinitions>
@@ -201,6 +176,31 @@
                                     <Button Command="{Binding ToolAlignmentVM.SetToolOneLocationCommand}" Content="Set" Grid.Column="3" />
                                     
                                 </Grid>
+
+                                <TextBlock Text="Step 3 - Bottom Camera" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Center Place Head over Bottom Facing Camera" TextWrapping="Wrap" Margin="0,0,0,5"  />
+                                <Grid Margin="0,0,0,5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Style="{StaticResource ValueLabel}" Content="Location:"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="0,-10,0,0" HorizontalAlignment="Right" >
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}({0},{1:0.00},{2:0.00})">
+                                                    <Binding Path="ToolAlignmentVM.BottomCameraLocation.X" />
+                                                    <Binding Path="ToolAlignmentVM.BottomCameraLocation.Y" />
+                                                    <Binding Path="ToolAlignmentVM.BottomCameraLocation.Z" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Button Command="{Binding ToolAlignmentVM.SetBottomCameraLocationCommand}" Content="Set" Grid.Column="2" />
+                                </Grid>
+
 
                                 <TextBlock Text="Step 4 - Tool 2 Location (optional)"  FontWeight="Bold" FontSize="16" />
                                 <TextBlock Text="Move Tool 1 over the center of the bottom facing camera and rotate the C Axis." TextWrapping="Wrap" Margin="0,0,0,5"  />
@@ -463,7 +463,18 @@
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding PrevPartCommand}" Content="&lt;=" Style="{StaticResource CommandButton}" />
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding NextPartCommand}" Content="=&gt;" Style="{StaticResource CommandButton}" />
                         </StackPanel>
+
                     </Grid>
+
+                    <StackPanel VerticalAlignment="Bottom" >
+                        <TextBlock Text="Inspect Part Strips" FontSize="32" />
+                        <StackPanel Orientation="Horizontal" >
+                            <Button HorizontalAlignment="Left" Height="64" Width="90" Command="{Binding InspectPrevCommand}" Content="&lt;=" Style="{StaticResource CommandButton}" FontSize="32" />
+                            <Button HorizontalAlignment="Left" Height="64" Width="90" Command="{Binding InspectNextCommand}" Content="=&gt;" Style="{StaticResource CommandButton}" FontSize="32" />
+                        </StackPanel>
+                        <Button HorizontalAlignment="Left" Height="64" Width="200" Command="{Binding SortStripsCommand}" Content="Sort Strips" Style="{StaticResource CommandButton}" FontSize="32" />
+                    </StackPanel>
+
 
                     <Rectangle Grid.Column="3" Fill="LightGray" />
 

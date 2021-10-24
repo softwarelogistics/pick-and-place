@@ -25,6 +25,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 PartStripsViewModel.SetMachine(PnPMachine, _job.PnPMachinePath);
             }
 
+            await ToolAlignmentVM.InitAsync();
             StartCapture();
         }
 

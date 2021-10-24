@@ -136,6 +136,11 @@ namespace LagoVista.PickAndPlace
 
         public string BusyStatus { get; set; } = "-";
 
+        public void GotoPoint(double x, double y, double feedRate)
+        {
+            SendCommand($"G1 X{x.ToDim()} Y{y.ToDim()} F{feedRate}");
+        }
+
         public void GotoPoint(Point2D<double> point, bool rapidMove = true)
         {
             GotoPoint(point.X, point.Y, rapidMove);

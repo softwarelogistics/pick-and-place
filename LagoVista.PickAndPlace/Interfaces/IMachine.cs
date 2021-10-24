@@ -199,6 +199,8 @@ namespace LagoVista.PickAndPlace.Interfaces
 
         void GotoPoint(double x, double y, bool rapidMove = true);
 
+        void GotoPoint(double x, double y, double feedRate);
+
         void GotoPoint(double x, double y, double z, bool rapidMove = true);
 
         void SetWorkspaceHome();

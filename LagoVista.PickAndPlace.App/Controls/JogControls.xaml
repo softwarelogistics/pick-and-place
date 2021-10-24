@@ -27,6 +27,7 @@
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
         <Slider Grid.Row="1" Grid.Column="1"
+                    PreviewKeyDown="Dummy_PreviewKeyUp"
                     Grid.ColumnSpan="2"
                     Minimum="0"
                     Maximum="15000" 
@@ -39,14 +40,14 @@
         <TextBlock Text="XY" Grid.Row="2" FontSize="16" Margin="8,4,4,4" />
         <TextBlock Text="Z" Grid.Row="3" FontSize="16" Margin="8,4,4,4"/>
 
-        <Slider Grid.Row="2" Grid.Column="1"
+        <Slider Grid.Row="2" Grid.Column="1" PreviewKeyDown="Dummy_PreviewKeyUp"
                     Minimum="{Binding XYStepMin}"
                     Maximum="{Binding XYStepMax}" 
                     LargeChange="{Binding XYStepInterval}" 
                     SmallChange="{Binding XYStepInterval}"
                     Value="{Binding XYStepSizeSlider, Mode=TwoWay}" 
                     VerticalAlignment="Center"  />
-        <Slider Grid.Row="3" Grid.Column="1"  
+        <Slider Grid.Row="3" Grid.Column="1"  PreviewKeyDown="Dummy_PreviewKeyUp"
                     Minimum="{Binding ZStepMin}"
                     Maximum="{Binding ZStepMax}" 
                     LargeChange="{Binding Path=ZStepInterval}" 
@@ -63,12 +64,16 @@
         <ComboBox IsReadOnly="True" Grid.Column="4" Grid.Row="2" Margin="4" FontSize="16" 
                       DisplayMemberPath="Value" 
                       SelectedValuePath="Key" 
+                      PreviewKeyUp="Dummy_PreviewKeyUp"
+                      PreviewKeyDown="Dummy_PreviewKeyUp"
                       SelectedValue="{Binding Path=XYStepMode, Mode=TwoWay}"
                       ItemsSource="{Binding StepSizesXY}" />
 
         <ComboBox IsReadOnly="True" Grid.Column="4" Grid.Row="3" Margin="4" FontSize="16"
                       DisplayMemberPath="Value" 
                       SelectedValuePath="Key" 
+                      PreviewKeyUp="Dummy_PreviewKeyUp"
+                      PreviewKeyDown="Dummy_PreviewKeyUp"
                       SelectedValue="{Binding Path=ZStepMode, Mode=TwoWay}"
                       ItemsSource="{Binding StepSizesZ}" />
     </Grid>

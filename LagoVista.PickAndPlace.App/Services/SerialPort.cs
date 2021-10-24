@@ -77,7 +77,7 @@ namespace LagoVista.PickAndPlace.App.Services
                         _serialPort = null;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     /* NOP */
                     _serialPort = null;

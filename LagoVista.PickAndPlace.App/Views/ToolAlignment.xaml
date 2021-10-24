@@ -43,15 +43,16 @@
 
         <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" />
         <Controls:MVAquiredPoints HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <Controls:ImageAdjustments Grid.Column="4" Grid.RowSpan="2" Visibility="{Binding AreToolSettingsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
 
 
         <Grid Grid.Column="1" Grid.RowSpan="2" Background="White" >
             <StackPanel Margin="10">
                 <TextBlock Text="Calibrate Machine Locations" FontWeight="Bold"  FontSize="18"/>
-                <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducual via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
+                <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducial via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
 
-                <TextBlock Text="Step 1 - Positioning Camera Location"  FontWeight="Bold" FontSize="16" />
-                <TextBlock Text="Center the Top Camera over a known location such as a via on a PCB, or drill a hole.  Then press Set Top Camera Location." TextWrapping="Wrap" Margin="0,0,0,5"  />
+                <TextBlock Text="Step 1 - Mark Tool 1 Head Position"  FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="Using clay or chewing gum, press the nozzle of the tool head to make a mark on it " TextWrapping="Wrap" Margin="0,0,0,5"  />
 
                 <Grid Margin="0,0,0,5">
                     <Grid.ColumnDefinitions>
@@ -64,9 +65,21 @@
                     <Button Command="{Binding SetTopCameraLocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="3" />
                 </Grid>
 
+                <TextBlock Text="Step 3 - Tool 1 Location"  FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="Center Tool 1 over the location found in step one and press Set " TextWrapping="Wrap" Margin="0,0,0,5"  />
+                <Grid Margin="0,0,0,5"  >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource ValueLabel}" Content="Tool 1 Offset" />
+                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.Tool1Offset, Converter={StaticResource Point2TextConverter}}" Grid.Column="1"  HorizontalAlignment="Right"  />
+                    <Button Command="{Binding SetToolOneLocationCommand}" Content="Set" Grid.Column="3" />
+                </Grid>
 
-                <TextBlock Text="Step 2 - Bottom Camera" FontWeight="Bold" FontSize="16" />
-                <TextBlock Text="Center Place Head over Bottom Facing Camera" TextWrapping="Wrap" Margin="0,0,0,5"  />
+                <TextBlock Text="Step 1 - Bottom Camera" FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="Switch to tool positioning and " TextWrapping="Wrap" Margin="0,0,0,5"  />
                 <Grid Margin="0,0,0,5"  >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
@@ -85,25 +98,12 @@
                             </TextBlock.Text>
                         </TextBlock>
                     </StackPanel>
-                    
+
                     <Button Command="{Binding SetBottomCameraLocationCommand}" Content="Set" Grid.Column="2" />
                 </Grid>
 
 
 
-                <TextBlock Text="Step 3 - Tool 1 Location"  FontWeight="Bold" FontSize="16" />
-                <TextBlock Text="Center Tool 1 over the location found in step one and press Set " TextWrapping="Wrap" Margin="0,0,0,5"  />
-                <Grid Margin="0,0,0,5"  >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource ValueLabel}" Content="Tool 1 Offset" />
-                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.Tool1Offset, Converter={StaticResource Point2TextConverter}}" Grid.Column="1"  HorizontalAlignment="Right"  />
-                    <Button Command="{Binding SetToolOneLocationCommand}" Content="Set" Grid.Column="3" />
-                </Grid>
-                
                 <TextBlock Text="Step 4 - Tool 2 Location (optional)"  FontWeight="Bold" FontSize="16" />
                 <TextBlock Text="Move Tool 1 over the center of the bottom facing camera and rotate the C Axis." TextWrapping="Wrap" Margin="0,0,0,5"  />
                 <Grid Margin="0,0,0,5"  >
@@ -119,7 +119,10 @@
 
                 <Button Command="{Binding AddNozzleCommand}" HorizontalAlignment="Right">Add</Button>
                 <TextBox Text="{Binding Machine.Settings.CurrentNozzle.Name}" />
-                <ComboBox ItemsSource="{Binding Machine.Settings.Nozzles}" SelectedItem="{Binding Machine.Settings.CurrentNozzle, Mode=TwoWay}" DisplayMemberPath="Name"  />
+                <ComboBox ItemsSource="{Binding Machine.Settings.Nozzles}" 
+                          PreviewKeyDown="ComboBox_PreviewKeyDown"
+                          SelectedItem="{Binding Machine.Settings.CurrentNozzle, Mode=TwoWay}" 
+                          DisplayMemberPath="Name"  />
 
                 <TextBlock Text="Step 5 - Save Move Height" FontWeight="Bold" FontSize="16" />
                 <TextBlock Text="Move the Pick head to the location to be set when the picked component is being moved." TextWrapping="Wrap" Margin="0,0,0,5"  />
@@ -163,8 +166,6 @@
                 <Button Command="{Binding SaveCalibrationCommand}" Content="Save" HorizontalAlignment="Right" />
             </StackPanel>
         </Grid>
-        <Controls:XYJog DataContext="{Binding MachineControls}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-        <Controls:ImageAdjustments Grid.Column="4" Grid.RowSpan="2" Visibility="{Binding AreToolSettingsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
         <Controls:LoadingMask Grid.ColumnSpan="2" Grid.Row="1"   />
         
     </Grid>

@@ -6,7 +6,6 @@ namespace LagoVista.PickAndPlace.UI
 {
     internal class MessageDialog : Window
     {
-        TextBox _textInput;
         TextBlock _help;
 
         public bool isRequired { get; set; }

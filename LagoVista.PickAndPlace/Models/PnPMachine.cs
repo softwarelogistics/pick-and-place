@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace LagoVista.PickAndPlace.Models
 {
@@ -8,6 +9,16 @@ namespace LagoVista.PickAndPlace.Models
         {
             PartStrips = new ObservableCollection<PartStrip>();
             Packages = new ObservableCollection<Package>();
+        }
+
+        public void SortPartStrips()
+        {
+            var orderedStrips = PartStrips.OrderByDescending(str => str.ReferenceHoleY).ToList();
+            PartStrips.Clear();
+            foreach(var strip in orderedStrips)
+            {
+                PartStrips.Add(strip);
+            }
         }
 
         public ObservableCollection<PartStrip> PartStrips{ get; set; }

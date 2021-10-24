@@ -53,10 +53,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public override async Task InitAsync()
         {
-            await LoadProfiles();
+            await LoadProfilesAsync();
         }
 
-        private async Task LoadProfiles()
+        private async Task LoadProfilesAsync()
         {
             var topFileName = CurrentMVProfile.Id == "default" ? "TopCameraVision.json" : $"Top.{CurrentMVProfile.Id}.mv.json";
             var bottomFileName = CurrentMVProfile.Id == "default" ? "BottomCameraVision.json" : $"Bottom.{CurrentMVProfile.Id}.mv.json";
@@ -93,6 +93,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 Profile = _bottomCameraProfile;
             }
+        }
+
+        private async void LoadProfiles()
+        {
+            await LoadProfilesAsync();
         }
 
         public List<EntityHeader> MVProfiles { get; }

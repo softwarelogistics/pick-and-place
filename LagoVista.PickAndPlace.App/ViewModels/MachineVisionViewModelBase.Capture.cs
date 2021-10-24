@@ -37,7 +37,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         private double _lastBottomFocus = -9999;
 
         private double _lastTopExposure = -9999;
-        private double _lastBottomExposure = -9999;
+        //private double _lastBottomExposure = -9999;
 
         private double _lastTopContrast = -9999;
         private double _lastBottomContrast = -9999;

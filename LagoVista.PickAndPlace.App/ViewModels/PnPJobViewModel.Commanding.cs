@@ -7,7 +7,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
     {
         private void AddCommands()
         {
-            SaveCommand = new RelayCommand(() => SaveJob());
+            SaveCommand = new RelayCommand(async () => await SaveJobAsync());
             CloseCommand = new RelayCommand(Close);
             CloneCommand = new RelayCommand(CloneConfiguration);
 

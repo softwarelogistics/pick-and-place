@@ -12,7 +12,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
     public partial class PnPJobViewModel
     {
 
-        public async Task SaveJob()
+        public async Task SaveJobAsync()
         {
             if (String.IsNullOrEmpty(FileName))
             {
@@ -118,7 +118,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public async void Close()
         {
-            await SaveJob();
+            await SaveJobAsync();
             CloseScreen();
         }
 
@@ -138,7 +138,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             RaisePropertyChanged(nameof(YPartInTray));
             RaisePropertyChanged(nameof(SelectedPartStrip));
             GoToPartPositionInTray();
-            await SaveJob();
+            await SaveJobAsync();
         }
 
         public async void MoveToPreviousComponent()
@@ -153,7 +153,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 RaisePropertyChanged(nameof(RotationInTape));
                 RaisePropertyChanged(nameof(YPartInTray));
                 RaisePropertyChanged(nameof(SelectedPartStrip));
-                await SaveJob();
+                await SaveJobAsync();
                 GoToPartPositionInTray();
             }
         }
@@ -170,7 +170,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 RaisePropertyChanged(nameof(RotationInTape));
                 RaisePropertyChanged(nameof(YPartInTray));
                 RaisePropertyChanged(nameof(SelectedPartStrip));
-                await SaveJob();
+                await SaveJobAsync();
                 GoToPartPositionInTray();
             }
         }
@@ -184,7 +184,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 {
                     Job.PnPMachinePath = result;
                     PnPMachine = await PnPMachineManager.GetPnPMachineAsync(result);
-                    await SaveJob();
+                    await SaveJobAsync();
                 }
                 catch
                 {
@@ -215,7 +215,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 try
                 {
                     Job.EagleBRDFilePath = result;
-                    await SaveJob();
+                    await SaveJobAsync();
 
 
                 }

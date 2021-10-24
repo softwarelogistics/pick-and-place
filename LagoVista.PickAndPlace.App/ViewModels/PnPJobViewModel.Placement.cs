@@ -112,7 +112,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                 RaisePropertyChanged(nameof(SelectedPartToBePlaced));
 
-                await SaveJob();
+                await SaveJobAsync();
 
                 _isPlacingParts = false;
 
@@ -125,7 +125,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private string GetGoToPartInTrayGCode()
         {
-            return $"G0 X{XPartInTray} Y{YPartInTray} F{Machine.Settings.FastFeedRate}";
+            var deltaX = Math.Abs(XPartInTray.Value - Machine.MachinePosition.X);
+            var deltaY = Math.Abs(YPartInTray.Value - Machine.MachinePosition.Y);
+            var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+
+            return $"G0 X{XPartInTray} Y{YPartInTray} F{feedRate}";
         }
 
         public void GoToPartPositionInTray()
@@ -149,8 +153,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 Machine.SendCommand(SafeHeightGCodeGCode());
                 Machine.SendCommand(GetGoToPartOnBoardGCode());
 
-                Machine.SendCommand($"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} F{Machine.Settings.FastFeedRate}");
-                Machine.SendCommand($"G1 Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{Machine.Settings.FastFeedRate}");
+                var deltaX = Math.Abs(SelectedPartToBePlaced.X.Value - Machine.MachinePosition.X);
+                var deltaY = Math.Abs(SelectedPartToBePlaced.Y.Value - Machine.MachinePosition.Y);
+
+                var feedRateX = (deltaX < 50 ) ? 300 : Machine.Settings.FastFeedRate;
+                var feedRateY = (deltaY < 50) ? 300 : Machine.Settings.FastFeedRate;
+
+                Machine.SendCommand($"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} F{feedRateX}");
+                Machine.SendCommand($"G1 Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{feedRateY}");
             }
         }
     }

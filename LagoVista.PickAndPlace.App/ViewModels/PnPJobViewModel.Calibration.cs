@@ -122,14 +122,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             _job.BoardOffset = new Point2D<double>(deltaX.Value, deltaY.Value);
             RaisePropertyChanged(nameof(BoardOffset));
-            await SaveJob();
+            await SaveJobAsync();
         }
 
         public async void ClearBoardOffset()
         {
             _job.BoardOffset = new Point2D<double>(0, 0);
             RaisePropertyChanged(nameof(BoardOffset));
-            await SaveJob();
+            await SaveJobAsync();
         }
 
         public async void AlignBottomCamera()

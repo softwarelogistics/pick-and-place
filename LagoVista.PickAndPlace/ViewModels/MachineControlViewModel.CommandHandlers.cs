@@ -251,7 +251,7 @@ namespace LagoVista.PickAndPlace.ViewModels
                     {
                         Machine.SetWorkspaceHome();
                     }
-                    else if(isShift)
+                    else if (isShift)
                     {
                         Machine.HomingCycle();
                     }
@@ -261,10 +261,46 @@ namespace LagoVista.PickAndPlace.ViewModels
                     }
 
                     break;
-                case WindowsKey.Left: Jog(JogDirections.XMinus); break;
-                case WindowsKey.Right: Jog(JogDirections.XPlus); break;
-                case WindowsKey.Up: Jog(JogDirections.YPlus); break;
-                case WindowsKey.Down: Jog(JogDirections.YMinus); break;
+                case WindowsKey.Left:
+                    if (isControl)
+                    {
+                        Jog(JogDirections.CMinus);
+                    }
+                    else
+                    {
+                        Jog(JogDirections.XMinus);
+                    }
+                    break;
+                case WindowsKey.Right:
+                    if (isControl)
+                    {
+                        Jog(JogDirections.CPlus);
+                    }
+                    else
+                    {
+                        Jog(JogDirections.XPlus);
+                    }
+                    break;
+                case WindowsKey.Up:
+                    if (isControl)
+                    {
+                        Jog(JogDirections.T0Minus);
+                    }
+                    else
+                    {
+                        Jog(JogDirections.YPlus);
+                    }
+                    break;
+                case WindowsKey.Down:
+                    if (isControl)
+                    {
+                        Jog(JogDirections.T0Plus);
+                    }
+                    else
+                    {
+                        Jog(JogDirections.YMinus);
+                    }
+                    break;
 
                 case WindowsKey.OemPlus:
                     switch (XYStepMode)
