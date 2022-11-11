@@ -34,7 +34,6 @@ namespace LagoVista.PickAndPlace.Models
 
         public string PartNumber { get; set; }
 
-
         private string _feederId;
         public String FeederId
         {

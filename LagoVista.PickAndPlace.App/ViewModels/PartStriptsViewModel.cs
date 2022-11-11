@@ -1,8 +1,10 @@
 ﻿using LagoVista.Core.Commanding;
+using LagoVista.PickAndPlace.App.Views;
 using LagoVista.PickAndPlace.Interfaces;
 using LagoVista.PickAndPlace.Managers;
 using LagoVista.PickAndPlace.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -79,7 +81,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private bool CanInspectNext()
         {
-            return SelectedPartStrip != PartStrips.Last() || _inspectState != InspectStates.LastPart;
+            return SelectedPartStrip != null && SelectedPartStrip != PartStrips.Last() || _inspectState != InspectStates.LastPart;
         }
 
         private bool CanInspectPrev()
@@ -94,9 +96,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToReferencePoint()
         {
+            _parent.Machine.GotoWorkspaceHome();
+
             var deltaX = Math.Abs(SelectedPartStrip.ReferenceHoleX - Machine.MachinePosition.X);
             var deltaY = Math.Abs(SelectedPartStrip.ReferenceHoleY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+            feedRate = Machine.Settings.FastFeedRate;
 
             _parent.Machine.GotoPoint(SelectedPartStrip.ReferenceHoleX, SelectedPartStrip.ReferenceHoleY, feedRate);
             _inspectState = InspectStates.ReferenceHole;
@@ -104,6 +109,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToCurrentPart()
         {
+            _parent.Machine.GotoWorkspaceHome();
+
             var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
             var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
             var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
@@ -114,6 +121,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
             var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+            feedRate = Machine.Settings.FastFeedRate;
 
             _parent.Machine.GotoPoint(newX, newY, feedRate);
             _inspectState = InspectStates.CurrentPart;
@@ -171,7 +179,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 {
                     GoToCurrentPart();
                 }
-                else if(_inspectState == InspectStates.CurrentPart)
+                else if (_inspectState == InspectStates.CurrentPart)
                 {
                     GoToLastPart();
                 }
@@ -182,7 +190,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     {
                         var nextIdx = idx + 1;
                         SelectedPartStrip = PartStrips[nextIdx];
-                        GoToReferencePoint();                        
+                        GoToReferencePoint();
                     }
                 }
             }
@@ -193,9 +201,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void InspectPrev()
         {
-            if(SelectedPartStrip != null)
+            if (SelectedPartStrip != null)
             {
-                if(_inspectState == InspectStates.ReferenceHole)
+                if (_inspectState == InspectStates.ReferenceHole)
                 {
                     var idx = PartStrips.IndexOf(SelectedPartStrip);
                     if (idx > 0)
@@ -204,7 +212,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         GoToLastPart();
                     }
                 }
-                else if(_inspectState == InspectStates.CurrentPart)
+                else if (_inspectState == InspectStates.CurrentPart)
                 {
                     GoToReferencePoint();
                 }
@@ -226,12 +234,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToFirstPart()
         {
+            _parent.Machine.GotoWorkspaceHome();
+
             SelectedPartStrip.TempPartIndex = 0;
             var newX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole;
             var newY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
             var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
             var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+            feedRate = Machine.Settings.FastFeedRate;
             _parent.Machine.GotoPoint(newX, newY, feedRate);
             RefreshCommandEnabled();
         }
@@ -251,6 +262,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var partLocationRatio = (double)SelectedPartStrip.TempPartIndex / (double)SelectedPartStrip.AvailablePartCount;
             var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
             var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+
+            _parent.Machine.GotoWorkspaceHome();
 
             _parent.Machine.GotoPoint(
                    SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset,
@@ -273,6 +286,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
             var deltaX = _parent.Machine.MachinePosition.X - lastPartX;
             var deltaY = _parent.Machine.MachinePosition.Y - lastPartY;
+
+            SelectedPartStrip.CorrectionFactorX = deltaX;
+            SelectedPartStrip.CorrectionFactorY = deltaY;
+
             Debug.WriteLine("DELTA " + deltaX + " " + deltaY);
             SavePnPMachine();
         }
@@ -296,9 +313,56 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             RefreshCommandEnabled();
         }
 
+        public List<StorageLocation> Units { get; } = new List<StorageLocation>()
+        {
+            new StorageLocation() { Key = "U1", Name = "Unit 1"},
+        };
+
+        public List<StorageLocation> Shelves { get; } = new List<StorageLocation>()
+        {
+            new StorageLocation() { Key = "S1", Name = "Shelf 1"},
+            new StorageLocation() { Key = "S2", Name = "Shelf 2"},
+            new StorageLocation() { Key = "S3", Name = "Shelf 3"},
+            new StorageLocation() { Key = "S4", Name = "Shelf 4"},
+            new StorageLocation() { Key = "S5", Name = "Shelf 5"},
+        };
+
+        public List<StorageLocation> Columns { get; } = new List<StorageLocation>()
+        {
+            new StorageLocation() { Key = "C1", Name = "Column 1"},
+            new StorageLocation() { Key = "C2", Name = "Column 2"},
+            new StorageLocation() { Key = "C3", Name = "Column 3"},
+            new StorageLocation() { Key = "C4", Name = "Column 4"},
+            new StorageLocation() { Key = "C5", Name = "Column 5"},
+        };
+
+        public List<StorageLocation> Rows { get; } = new List<StorageLocation>()
+        {
+            new StorageLocation() { Key = "R1", Name = "Row 1"},
+            new StorageLocation() { Key = "R2", Name = "Row 2"},
+            new StorageLocation() { Key = "R3", Name = "Row 3"},
+            new StorageLocation() { Key = "R4", Name = "Row 4"},
+            new StorageLocation() { Key = "R5", Name = "Row 5"},
+            new StorageLocation() { Key = "R6", Name = "Row 6"},
+        };
+
         public ObservableCollection<PartStrip> PartStrips
         {
-            get => _pnpMachine?.PartStrips;
+            get
+            {
+                if (_pnpMachine != null)
+                {
+                    if (ShowAllParts)
+                        return _pnpMachine?.PartStrips;
+                    else
+                        return new ObservableCollection<PartStrip>(_pnpMachine?.PartStrips.Where(prt => prt.Ready));
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
         }
 
         PartStrip _selectedPartStrip;
@@ -307,18 +371,22 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             get => _selectedPartStrip;
             set
             {
+
                 Set(ref _selectedPartStrip, value);
-                SetStripOriginCommand.RaiseCanExecuteChanged();
-                _selectedPackage = _pnpMachine.Packages.Where(pk => pk.Id == value.PackageId).FirstOrDefault();
-                if (_selectedPackage == null)
+                if (value != null)
                 {
-                    _selectedPackage = PackageDefinitions.First();
+                    SetStripOriginCommand.RaiseCanExecuteChanged();
+                    _selectedPackage = _pnpMachine.Packages.Where(pk => pk.Id == value.PackageId).FirstOrDefault();
+                    if (_selectedPackage == null)
+                    {
+                        _selectedPackage = PackageDefinitions.First();
+                    }
+
+                    RaisePropertyChanged(nameof(SelectedPackage));
+                    RefreshCommandEnabled();
+
+                    GoToCurrentPart();
                 }
-
-                RaisePropertyChanged(nameof(SelectedPackage));
-                RefreshCommandEnabled();
-
-                GoToCurrentPart();
             }
         }
 
@@ -342,6 +410,16 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        private bool _showAllParts = false;
+        public bool ShowAllParts
+        {
+            get => _showAllParts;
+            set
+            {
+                Set(ref _showAllParts, value);
+                RaisePropertyChanged(nameof(PartStrips));
+            }
+        }
 
         ObservableCollection<Package> _packageDefinitions;
         public ObservableCollection<Package> PackageDefinitions

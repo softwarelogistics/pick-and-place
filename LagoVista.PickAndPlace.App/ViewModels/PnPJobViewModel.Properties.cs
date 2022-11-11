@@ -161,6 +161,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public ToolAlignmentViewModel ToolAlignmentVM { get; }
 
 
+
+        Component _selectedComponent;
+        public Component SelectedComponent
+        {
+            get => _selectedComponent;
+            set { Set(ref _selectedComponent, value);  }
+        }
+
         public PartStrip SelectedPartStrip
         {
             get => SelectedPart?.PartStrip;

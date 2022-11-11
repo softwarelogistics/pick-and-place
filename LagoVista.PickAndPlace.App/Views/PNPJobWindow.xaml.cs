@@ -70,7 +70,8 @@ namespace LagoVista.PickAndPlace.App.Views
 
         private void ListView_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = true;
+            if(e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right || e.Key == Key.PageUp || e.Key == Key.PageDown)
+                e.Handled = true;
         }
 
         private void Grid_KeyUp(object sender, KeyEventArgs e)

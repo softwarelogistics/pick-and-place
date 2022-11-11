@@ -92,11 +92,11 @@ namespace LagoVista.PickAndPlace.App.Controls
                {
                    _videoCapture = new VideoCapture(cameraIndex);
 
-                   _videoCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                   _videoCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
 
-                   _videoCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, 33);
-                   _videoCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, 54);
-                   _videoCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Exposure, -7);
+                   _videoCapture.Set(Emgu.CV.CvEnum.CapProp.Brightness, 33);
+                   _videoCapture.Set(Emgu.CV.CvEnum.CapProp.Contrast, 54);
+                   _videoCapture.Set(Emgu.CV.CvEnum.CapProp.Exposure, -7);
                }
                catch (Exception ex)
                {

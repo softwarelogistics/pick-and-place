@@ -97,6 +97,32 @@ namespace LagoVista.PickAndPlace.Models
             set => Set(ref _correctionAngleY, value);
         }
 
+        public string DigiKeyPartNumber { get; set; }
+
+        public int InventoryCount { get; set; }
+
+        public StorageLocation PartUnit { get; set; }
+        public StorageLocation PartShelf { get; set; }
+        public StorageLocation PartColumn { get; set; }
+        public StorageLocation PartRow { get; set; }
+
+        public string Mfg { get; set; }
+        public string MfgId { get; set; }
+
+        public string SupplierPartNumber { get; set; }
+        
+        public string Supplier { get; set; }
+        public string SupplierPage { get; set; }
+
+        public string DataSheet { get; set; }
+
+        private bool _active = true;
+        public bool Ready
+        {
+            get => _active;
+            set => Set(ref _active, value);
+        }
+
         [JsonIgnore]
         public int AvailablePartCount
         {

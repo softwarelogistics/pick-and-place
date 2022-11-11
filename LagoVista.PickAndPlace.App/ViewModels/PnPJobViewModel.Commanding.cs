@@ -53,6 +53,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             SetBottomCameraPositionCommand = new RelayCommand(SetBottomCamera, () => Machine.Connected);
             GoToMachineFiducialCommand = new RelayCommand(GotoMachineFiducial, () => Machine.Connected);
 
+            ExportBOMCommand = new RelayCommand(ExportBOM);
         }
 
         public RelayCommand HomingCycleCommand { get; private set; }
@@ -91,6 +92,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand SetBoardOffsetCommand { get; private set; }
         public RelayCommand ClearBoardOffsetCommand { get; private set; }
         public RelayCommand SetBottomCameraPositionCommand { get; private set; }
+
+        public RelayCommand ExportBOMCommand { get; private set; }
 
 
         public bool CanPlacePart()

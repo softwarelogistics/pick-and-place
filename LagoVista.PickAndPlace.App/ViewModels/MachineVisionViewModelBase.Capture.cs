@@ -58,29 +58,31 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
                 else if (UseTopCamera && _topCameraCapture != null)
                 {
-                    _topCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                    
 
                     if (_lastTopBrightness != _topCameraProfile.Brightness)
                     {
-                        _topCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, _topCameraProfile.Brightness);
+                        _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Brightness, _topCameraProfile.Brightness);
                         _lastTopBrightness = _topCameraProfile.Brightness;
                     }
 
                     if (_lastTopFocus != _topCameraProfile.Focus)
                     {
-                        _topCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Focus, _topCameraProfile.Focus);
+
+                        _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Focus, _topCameraProfile.Focus);
                         _lastTopFocus = _topCameraProfile.Focus;
                     }
 
                     if (_lastTopContrast != _topCameraProfile.Contrast)
                     {
-                        _topCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, _topCameraProfile.Contrast);
+                        _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Contrast, _topCameraProfile.Contrast);
                         _lastTopContrast = _topCameraProfile.Contrast;
                     }
 
                     if (_lastTopExposure != _topCameraProfile.Exposure)
                     {
-                        _topCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Exposure, _topCameraProfile.Exposure);
+                        _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Exposure, _topCameraProfile.Exposure);
                         _lastTopExposure = _topCameraProfile.Exposure;
                     }
 
@@ -123,19 +125,19 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                     if (_lastBottomBrightness != _bottomCameraProfile.Brightness)
                     {
-                        _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, _bottomCameraProfile.Brightness);
+                        _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Brightness, _bottomCameraProfile.Brightness);
                         _lastBottomBrightness = _bottomCameraProfile.Brightness;
                     }
 
                     if (_lastBottomFocus != _bottomCameraProfile.Focus)
                     {
-                        _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Focus, _bottomCameraProfile.Focus);
+                        _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Focus, _bottomCameraProfile.Focus);
                         _lastBottomFocus = _bottomCameraProfile.Focus;
                     }
 
                     if (_lastBottomContrast != _bottomCameraProfile.Contrast)
                     {
-                        _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, _bottomCameraProfile.Contrast);
+                        _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Contrast, _bottomCameraProfile.Contrast);
                         _lastBottomContrast = _bottomCameraProfile.Contrast;
                     }/*
 
@@ -148,22 +150,25 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     if (UseBottomCamera)
                     {
                         using (var originalFrame = _bottomCameraCapture.QueryFrame())
-                        using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
-                        {
-                            PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
-                        }
-
-                        if (PictureInPicture && _topCameraCapture != null)
-                        {
-                            using (var originalFrame = _topCameraCapture.QueryFrame())
+                            if (originalFrame != null)
                             {
-                                SecondaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(originalFrame);
+                                using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
+                                {
+                                    PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
+                                }
+
+                                if (PictureInPicture && _topCameraCapture != null)
+                                {
+                                    using (var innerFrame = _topCameraCapture.QueryFrame())
+                                    {
+                                        SecondaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(innerFrame);
+                                    }
+                                }
+                                else
+                                {
+                                    SecondaryCapturedImage = null;
+                                }
                             }
-                        }
-                        else
-                        {
-                            SecondaryCapturedImage = null;
-                        }
                     }
 
                     HasFrame = true;
@@ -211,8 +216,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     }
                     else
                     {
-                        _topCameraCapture = InitCapture(Machine.Settings.PositioningCamera.CameraIndex);
                         _bottomCameraCapture = InitCapture(Machine.Settings.PartInspectionCamera.CameraIndex);
+                        _topCameraCapture = InitCapture(Machine.Settings.PositioningCamera.CameraIndex);                        
                     }
                     StartImageRecognization();
                 }

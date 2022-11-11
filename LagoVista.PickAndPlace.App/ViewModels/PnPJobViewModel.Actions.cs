@@ -21,11 +21,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 {
                     return;
                 }
-            }
+            }            
 
             await Storage.StoreAsync(Job, FileName);
 
-            if (!String.IsNullOrEmpty(Job.PnPMachinePath))
+            if (!String.IsNullOrEmpty(Job.PnPMachinePath) && PnPMachine != null)
             {
                 await PnPMachineManager.SavePackagesAsync(PnPMachine, Job.PnPMachinePath);
             }
@@ -68,19 +68,22 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 case 0:
                     {
+                        Machine.GotoWorkspaceHome();
                         var gcode = $"G1 X{Machine.Settings.MachineFiducial.X} Y{Machine.Settings.MachineFiducial.Y} F{Machine.Settings.FastFeedRate}";
                         Machine.SendCommand(gcode);
                     }
                     break;
                 case 1:
                     {
-                        var gcode = $"G1 X{Job.BoardFiducial1.X} Y{Job.BoardFiducial1.Y} F{Machine.Settings.FastFeedRate}";
+                        Machine.GotoWorkspaceHome();
+                        var gcode = $"G1 X{Job.BoardFiducial1.X + (Job.BoardFiducial1.X * Machine.Settings.BoardScalerX)} Y{Job.BoardFiducial1.Y + (Job.BoardFiducial1.Y * Machine.Settings.BoardScalerY)} F{Machine.Settings.FastFeedRate}";
                         Machine.SendCommand(gcode);
                     }
                     break;
                 case 2:
                     {
-                        var gcode = $"G1 X{Job.BoardFiducial2.X} Y{Job.BoardFiducial2.Y} F{Machine.Settings.FastFeedRate}";
+                        Machine.GotoWorkspaceHome();
+                        var gcode = $"G1 X{Job.BoardFiducial2.X + (Job.BoardFiducial2.X * Machine.Settings.BoardScalerX)} Y{Job.BoardFiducial2.Y + (Job.BoardFiducial2.Y * Machine.Settings.BoardScalerY)} F{Machine.Settings.FastFeedRate}";
                         Machine.SendCommand(gcode);
                     }
                     break;

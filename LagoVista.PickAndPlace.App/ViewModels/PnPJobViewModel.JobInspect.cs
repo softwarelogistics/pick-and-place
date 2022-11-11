@@ -36,17 +36,19 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
+            if (partStrip != null)
+            {
+                var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX);
+                var y = partStrip.ReferenceHoleY + package.CenterYFromHole;
+                var gcode = $"G0 X{x} Y{y} F{Machine.Settings.FastFeedRate}";
+                Machine.SendCommand(gcode);
+                _isOnLast = false;
 
-            var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX);
-            var y = partStrip.ReferenceHoleY + package.CenterYFromHole;
-            var gcode = $"G0 X{x} Y{y} F{Machine.Settings.FastFeedRate}";
-            Machine.SendCommand(gcode);
-            _isOnLast = false;
+                InspectMessage = $"{partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
+            }
+            }
 
-            InspectMessage = $"{partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
-        }
-
-        private void GoToLastPartInPartsToPlace()
+            private void GoToLastPartInPartsToPlace()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
 

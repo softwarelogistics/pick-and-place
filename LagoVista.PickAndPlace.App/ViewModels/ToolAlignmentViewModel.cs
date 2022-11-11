@@ -20,7 +20,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             MarkTool1LocationCommand = new RelayCommand(MarkTool1Location, () => Machine.Connected);
             SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => Machine.Connected);
-            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation, () => Machine.Settings.PartInspectionCamera != null);
+            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation);
             AddNozzleCommand = new RelayCommand(AddNozzle);
             DeleteNozzleCommand = new RelayCommand(DeleteNozzle);
             SaveCalibrationCommand = new RelayCommand(SaveCalibration, () => IsDirty);

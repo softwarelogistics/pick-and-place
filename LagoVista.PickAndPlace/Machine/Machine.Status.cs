@@ -36,7 +36,8 @@ namespace LagoVista.PickAndPlace
             else if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
             {
                 // 1. capture current position of machine.
-                var currentLocation = MachinePosition;
+                var currentLocationX = MachinePosition.X;
+                var currentLocationY = MachinePosition.Y;
 
                 await Task.Run(() =>
                 {
@@ -93,7 +94,7 @@ namespace LagoVista.PickAndPlace
                     Enqueue("G90");
 
                     // 5. Set the machine location to where it was prior to the move.
-                    Enqueue($"G92 X{currentLocation.X} Y{currentLocation.Y}");
+                    Enqueue($"G92 X{currentLocationX} Y{currentLocationY}");
                 });
             }
 

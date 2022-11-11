@@ -60,7 +60,7 @@ namespace LagoVista.PickAndPlace.App.Controls
                     BoardLayout.Children.Add(ellipse);
                 }
 
-                var outline = new Rectangle();
+                var outline = new System.Windows.Shapes.Rectangle();
                 outline.Stroke = Brushes.Black;
                 outline.StrokeThickness = 2;
                 outline.SetValue(Canvas.TopProperty, manager.Project.ScrapTopBottom * 10);

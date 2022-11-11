@@ -49,5 +49,15 @@ namespace LagoVista.PickAndPlace.App.Services
         public void TrackEvent(string message, Dictionary<string, string> parameters)
         {
         }
+
+        public void TrackMetric(string kind, string name, MetricType metricType, double count, params KeyValuePair<string, string>[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TrackMetric(string kind, string name, MetricType metricType, int count, params KeyValuePair<string, string>[] args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

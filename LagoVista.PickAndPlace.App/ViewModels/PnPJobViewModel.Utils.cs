@@ -4,6 +4,7 @@ using LagoVista.PickAndPlace.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.PickAndPlace.App.ViewModels
@@ -50,12 +51,29 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
+        public void ExportBOM()
+        {
+            var bldr = new StringBuilder();
+
+            foreach(var partByValue in SelectedBuildFlavor.Components.Where(prt=>prt.Included).GroupBy(prt=>prt.Value))
+            {
+                var value = partByValue.Key;
+                bldr.Append($"{value}\t");
+                foreach(var part in partByValue)
+                    bldr.Append($"{part.Name}, ");
+
+                bldr.AppendLine();
+           }
+
+            System.IO.File.WriteAllText(@$"X:\PartList {SelectedBuildFlavor.Name}.txt", bldr.ToString());
+        }
+
         private void PopulateConfigurationParts()
         {
             ConfigurationParts.Clear();
             if (SelectedBuildFlavor != null)
             {
-                var commonParts = SelectedBuildFlavor.Components.Where(prt => prt.Included).GroupBy(prt => prt.Key);
+                var commonParts = SelectedBuildFlavor.Components.Where(prt => prt.Included).GroupBy(prt => prt.Key.ToLower());
 
                 foreach (var entry in commonParts)
                 {

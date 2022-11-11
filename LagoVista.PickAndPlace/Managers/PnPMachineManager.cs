@@ -9,7 +9,7 @@ namespace LagoVista.PickAndPlace.Managers
         public static void ResolvePart(PnPMachine machine, PlaceableParts part)
         {
             // todo for common parts, we may have more then one strip, if so pick one with most parts.
-            var strip = machine.PartStrips.Where(str => str.PackageName == part.Package && str.Value == part.Value).SingleOrDefault();
+            var strip = machine.PartStrips.Where(str => str.PackageName == part.Package && str.Value == part.Value && str.Ready).SingleOrDefault();
             part.PartStrip = strip;
         }
 

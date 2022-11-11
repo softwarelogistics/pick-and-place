@@ -40,6 +40,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             if (_partIndex < SelectedPart.Parts.Count)
             {
+                
+
                 _isPlacingParts = true;
                 PlaceCurrentPartCommand.RaiseCanExecuteChanged();
                 PlaceAllPartsCommand.RaiseCanExecuteChanged();
@@ -53,6 +55,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
 
                 await Machine.SetViewTypeAsync(ViewTypes.Tool1);
+                Machine.SendCommand($"G1 X0 Y0 F{Machine.Settings.FastFeedRate}");
 
                 if (_selectPartToBePlaced == null)
                 {
@@ -81,6 +84,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     cmds.Add(WaitForComplete());
                 }
 
+                cmds.Add($"G0 X0 Y0 F{Machine.Settings.FastFeedRate}");
                 cmds.Add(GetGoToPartOnBoardGCode());
                 cmds.Add(PlaceHeightGCode(SelectedPartPackage));
                 cmds.Add(WaitForComplete());
@@ -90,9 +94,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                 cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
                 cmds.Add(WaitForComplete());
-
+                
                 await SendInstructionSequenceAsync(cmds);
-
+                
                 if (!multiple)
                 {
                     Machine.Vacuum1On = false;
@@ -125,9 +129,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private string GetGoToPartInTrayGCode()
         {
+            Machine.SendCommand($"G1 X0 Y0 F{Machine.Settings.FastFeedRate}");
             var deltaX = Math.Abs(XPartInTray.Value - Machine.MachinePosition.X);
             var deltaY = Math.Abs(YPartInTray.Value - Machine.MachinePosition.Y);
-            var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+            var feedRate = Machine.Settings.FastFeedRate;
 
             return $"G0 X{XPartInTray} Y{YPartInTray} F{feedRate}";
         }
@@ -146,21 +151,35 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             return $"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{Machine.Settings.FastFeedRate}";
         }
 
+        private String GetGoToPartOnBoardGCodeX()
+        {
+            var offset = SelectedPartToBePlaced.X - _job.BoardOffset.X;
+            return $"G1 X{offset + (offset  * Machine.Settings.BoardScalerX)}  F{Machine.Settings.FastFeedRate}";
+        }
+
+        private String GetGoToPartOnBoardGCodeY()
+        {
+            var offset = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y);
+            return $"G1 Y{offset + (offset * Machine.Settings.BoardScalerY)} F{Machine.Settings.FastFeedRate}";
+        }
+
         public void GoToPartOnBoard()
         {
             if (SelectedPartToBePlaced != null)
             {
                 Machine.SendCommand(SafeHeightGCodeGCode());
-                Machine.SendCommand(GetGoToPartOnBoardGCode());
+                Machine.SendCommand($"G1 X0 Y0 F{Machine.Settings.FastFeedRate}");
+                Machine.SendCommand(GetGoToPartOnBoardGCodeX());
+                Machine.SendCommand(GetGoToPartOnBoardGCodeY());
 
                 var deltaX = Math.Abs(SelectedPartToBePlaced.X.Value - Machine.MachinePosition.X);
                 var deltaY = Math.Abs(SelectedPartToBePlaced.Y.Value - Machine.MachinePosition.Y);
 
-                var feedRateX = (deltaX < 50 ) ? 300 : Machine.Settings.FastFeedRate;
-                var feedRateY = (deltaY < 50) ? 300 : Machine.Settings.FastFeedRate;
+                //var feedRateX = (deltaX < 50 ) ? 300 : Machine.Settings.FastFeedRate;
+                //var feedRateY = (deltaY < 50) ? 300 : Machine.Settings.FastFeedRate;
 
-                Machine.SendCommand($"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} F{feedRateX}");
-                Machine.SendCommand($"G1 Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{feedRateY}");
+                //Machine.SendCommand($"G1 X{SelectedPartToBePlaced.X - _job.BoardOffset.X} F{feedRateX}");
+                //Machine.SendCommand($"G1 Y{SelectedPartToBePlaced.Y - _job.BoardOffset.Y} F{feedRateY}");
             }
         }
     }
