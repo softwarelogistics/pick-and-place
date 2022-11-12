@@ -186,7 +186,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 Y = size.Height / 2
             };
 
-            Circle(destImage, center.X, center.Y, Profile.TargetImageRadius, System.Drawing.Color.Yellow);
 
             Line(destImage, 0, center.Y, center.X - Profile.TargetImageRadius, center.Y, System.Drawing.Color.Yellow);
             Line(destImage, center.X + Profile.TargetImageRadius, center.Y, size.Width, center.Y, System.Drawing.Color.Yellow);
@@ -196,8 +195,24 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             Line(destImage, center.X - Profile.TargetImageRadius, center.Y, center.X + Profile.TargetImageRadius, center.Y, System.Drawing.Color.FromArgb(0x7f, 0xFF, 0xFF, 0XFF));
             Line(destImage, center.X, center.Y - Profile.TargetImageRadius, center.X, center.Y + Profile.TargetImageRadius, System.Drawing.Color.FromArgb(0x7f, 0xFF, 0xFF, 0XFF));
+
+            if(CurrentMVProfile.Id == "squarepart")
+            {
+                Line(destImage, center.X - PartSizeWidth, center.Y - PartSizeHeight, center.X - PartSizeWidth, center.Y + PartSizeHeight, System.Drawing.Color.Yellow);
+                Line(destImage, center.X + PartSizeWidth, center.Y - PartSizeHeight, center.X + PartSizeWidth, center.Y + PartSizeHeight, System.Drawing.Color.Yellow);
+
+                Line(destImage, center.X - PartSizeWidth, center.Y + PartSizeHeight, center.X + PartSizeWidth, center.Y + PartSizeHeight, System.Drawing.Color.Yellow);
+                Line(destImage, center.X - PartSizeWidth, center.Y - PartSizeHeight, center.X + PartSizeWidth, center.Y - PartSizeHeight, System.Drawing.Color.Yellow);
+            }
+            else
+            {
+                Circle(destImage, center.X, center.Y, Profile.TargetImageRadius, System.Drawing.Color.Yellow);
+            }
         }
         #endregion
+
+        public int PartSizeWidth { get; set; } = 12;
+        public int PartSizeHeight { get; set; } = 24;
 
         protected Point2D<double> RequestedPosition
         {

@@ -43,6 +43,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             CalibrateBottomCameraCommand = new RelayCommand(() => CalibrateBottomCamera());
 
+
+
             NextInspectCommand = new RelayCommand(NextInspect,() => _inspectIndex < ConfigurationParts.Count - 1);
             PrevInspectCommand = new RelayCommand(PrevInspect, () => _inspectIndex > 0);
             FirstInspectCommand = new RelayCommand(FirstInspect, () => _inspectIndex > 0);

@@ -59,20 +59,6 @@ namespace LagoVista.PickAndPlace
             set { Set(ref _fastFeedRate, value); }
         }
 
-        private double _baordScalerX;
-        public double BoardScalerX
-        {
-            get { return _baordScalerX; }
-            set { Set(ref _baordScalerX, value); }
-        }
-
-        private double _baordScalerY;
-        public double BoardScalerY
-        {
-            get { return _baordScalerY; }
-            set { Set(ref _baordScalerY, value); }
-        }
-
         SerialPortInfo _currentSerialPort;
         public SerialPortInfo CurrentSerialPort
         {
@@ -93,6 +79,14 @@ namespace LagoVista.PickAndPlace
             get { return _ipAddress; }
             set { Set(ref _ipAddress, value); }
         }
+
+        private Point2D<double> _partStripScaler = new Point2D<double>() { X = 1.0, Y = 1.0 };
+        public Point2D<double> PartStripScaler
+        {
+            get => _partStripScaler;
+            set => Set(ref _partStripScaler, value);
+        }
+
 
         [JsonIgnore]
         public double ToolSafeMoveHeight

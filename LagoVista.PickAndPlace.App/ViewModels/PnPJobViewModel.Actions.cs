@@ -32,25 +32,34 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             _isDirty = false;
             SaveCommand.RaiseCanExecuteChanged();
-
+ 
             SaveProfile();
         }
 
-        private void SetFiducialCalibration(object obj)
+        private async void SetFiducialCalibration(object obj)
         {
             var idx = Convert.ToInt32(obj);
             switch (idx)
             {
                 case 1:
                     {
-                        var gcode = $"G92 X{Job.BoardFiducial1.X} Y{Job.BoardFiducial1.Y}";
-                        Machine.SendCommand(gcode);
+                        var boardOffset = new Point2D<double>()
+                        {
+                            X = Job.BoardFiducial1.X - Machine.NormalizedPosition.X,
+                            Y = Job.BoardFiducial1.Y - Machine.NormalizedPosition.Y
+                        };
+
+                        Job.BoardOffset = boardOffset;
+                        await SaveJobAsync();
                     }
                     break;
                 case 2:
                     {
-                        var gcode = $"G92 X{Job.BoardFiducial2.X} Y{Job.BoardFiducial2.Y}";
-                        Machine.SendCommand(gcode);
+                        var scaler = new Point2D<double>();
+                        scaler.X = 1 - (Job.BoardFiducial2.X - (Machine.NormalizedPosition.X + Job.BoardOffset.X)) / Job.BoardFiducial2.X;
+                        scaler.Y = 1 - (Job.BoardFiducial2.Y - (Machine.NormalizedPosition.Y + Job.BoardOffset.Y)) / Job.BoardFiducial2.Y;
+                        Job.BoardScaler = scaler;
+                        await SaveJobAsync();
                     }
                     break;
             }
@@ -76,14 +85,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 case 1:
                     {
                         Machine.GotoWorkspaceHome();
-                        var gcode = $"G1 X{Job.BoardFiducial1.X + (Job.BoardFiducial1.X * Machine.Settings.BoardScalerX)} Y{Job.BoardFiducial1.Y + (Job.BoardFiducial1.Y * Machine.Settings.BoardScalerY)} F{Machine.Settings.FastFeedRate}";
+                        var gcode = $"G1 X{Job.BoardFiducial1.X * Job.BoardScaler.X} Y{Job.BoardFiducial1.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
                         Machine.SendCommand(gcode);
                     }
                     break;
                 case 2:
                     {
                         Machine.GotoWorkspaceHome();
-                        var gcode = $"G1 X{Job.BoardFiducial2.X + (Job.BoardFiducial2.X * Machine.Settings.BoardScalerX)} Y{Job.BoardFiducial2.Y + (Job.BoardFiducial2.Y * Machine.Settings.BoardScalerY)} F{Machine.Settings.FastFeedRate}";
+                        var gcode = $"G1 X{Job.BoardFiducial2.X * Job.BoardScaler.X} Y{Job.BoardFiducial2.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
                         Machine.SendCommand(gcode);
                     }
                     break;

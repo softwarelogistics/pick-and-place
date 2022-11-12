@@ -136,7 +136,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             get;
         }
 
-        public PartStriptsViewModel PartStripsViewModel
+        public PartStripsViewModel PartStripsViewModel
         {
             get;
         }

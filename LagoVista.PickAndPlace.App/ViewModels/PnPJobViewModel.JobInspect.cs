@@ -28,36 +28,39 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public void FirstInspect()
         {
             InspectIndex = 0;
+            NextInspect();
         }
 
         private void GoToFirstPartInPartsToPlace()
-        {
+        {            
             Machine.SendCommand(SafeHeightGCodeGCode());
+            Machine.GotoWorkspaceHome();
 
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
             if (partStrip != null)
             {
-                var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX);
-                var y = partStrip.ReferenceHoleY + package.CenterYFromHole;
+                var x = (partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX)) * Machine.Settings.PartStripScaler.X;
+                var y = (partStrip.ReferenceHoleY + package.CenterYFromHole) * Machine.Settings.PartStripScaler.Y;
                 var gcode = $"G0 X{x} Y{y} F{Machine.Settings.FastFeedRate}";
                 Machine.SendCommand(gcode);
                 _isOnLast = false;
 
-                InspectMessage = $"{partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
+                InspectMessage = $"CUrrent - {partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
             }
             }
 
-            private void GoToLastPartInPartsToPlace()
+        private void GoToLastPartInPartsToPlace()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
+            Machine.GotoWorkspaceHome();
 
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
 
             var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX) + ((SelectedInspectPart.Parts.Count - 1) * package.SpacingX);
             var y = partStrip.ReferenceHoleY + package.CenterYFromHole;
-            var gcode = $"G0 X{x} Y{y} F{Machine.Settings.FastFeedRate}";
+            var gcode = $"G0 X{x * Machine.Settings.PartStripScaler.X} Y{y * Machine.Settings.PartStripScaler.Y} F{Machine.Settings.FastFeedRate}";
             Machine.SendCommand(gcode);
             _isOnLast = true;
 

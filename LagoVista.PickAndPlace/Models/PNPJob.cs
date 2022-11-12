@@ -26,6 +26,7 @@ namespace LagoVista.PickAndPlace.Models
             BoardFiducial1 = new Point2D<double>();
             BoardFiducial2 = new Point2D<double>();
             BoardOffset = new Point2D<double>();
+            BoardScaler = new Point2D<double>() { X = 1.0, Y = 1.0 };            
         }
 
         private Point2D<double> _boardFiducial1;
@@ -47,6 +48,13 @@ namespace LagoVista.PickAndPlace.Models
         {
             get => _boardFiducial2;
             set => Set(ref _boardFiducial2, value);
+        }
+
+        private Point2D<double> _boardScaler;
+        public Point2D<double> BoardScaler
+        {
+            get => _boardScaler;
+            set => Set(ref _boardScaler, value);
         }
 
         private string _pnpMachinePath;

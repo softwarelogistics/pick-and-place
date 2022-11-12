@@ -29,13 +29,26 @@
                     <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
                     <Controls:JogControls  DataContext="{Binding MachineControls}"  />
                     <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
+                        <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
+                        <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
+                    <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
+                        <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
+                        <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
+                        <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
+                        <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4a) GoTo Board Fiducial 1" Width="200" />
+                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"  Style="{StaticResource CommandButton}" Content="4b) Set Board Fiducial 1" Width="200" />
+                        <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" Width="200" />
+                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"  Style="{StaticResource CommandButton}" Content="5b) Calibrate Fiducial 2" Width="200" />
+                        <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="6) Bottom Camera" Width="200" />
+                        <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="7) Calibrate Bottom Camera" Width="200" />
+                        <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="8) Set Bottom Camera" Width="200" />
+                        <Button Command="{Binding GoToMachineFiducialCommand }" Style="{StaticResource CommandButton}" Content="9) Move To Machine Fiducial" Width="200" />
+                        <Button Command="{Binding ExportBOMCommand }" Style="{StaticResource CommandButton}" Content=" - Export BOM" Width="200" />
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Image">
-                <Grid>
-                    <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
-                    <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
-                </Grid>
+                
             </TabItem>
         </TabControl>
 
@@ -50,6 +63,9 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.ColumnSpan="4">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -95,16 +111,16 @@
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.Y, Mode=TwoWay}"  UnitType="Size " Grid.Row="5" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
 
                         <Label Content="Board Scaler X" Grid.Row="6" Margin="0,0,0,26" Grid.RowSpan="2" />
-                        <Controls:MaskingTextBox Text="{Binding Machine.Settings.BoardScalerX, Mode=TwoWay}"  UnitType="Size"  Grid.Row="6" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
-                        <Label Content="Board Scaler Y" Grid.Row="7" Margin="0,0,0,440" Grid.RowSpan="2" />
-                        <Controls:MaskingTextBox Text="{Binding Machine.Settings.BoardScalerY, Mode=TwoWay}"  UnitType="Size"  Grid.Row="7" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardScaler.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="6" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
+                        <Label Content="Board Scaler Y" Grid.Row="7" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Controls:MaskingTextBox Text="{Binding Job.BoardScaler.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="7" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
 
+                        <Label Content="PartStrip Scaler X" Grid.Row="8" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Controls:MaskingTextBox Text="{Binding Machine.Settings.PartStripScaler.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="8" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
+                        <Label Content="PartStrip Scaler Y" Grid.Row="9" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Controls:MaskingTextBox Text="{Binding Machine.Settings.PartStripScaler.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="9" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
 
-                        <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown"  Grid.Column="4" VerticalAlignment="Center"  Stretch="Uniform" Grid.Row="0" />
-                        <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="320" Height="240" Grid.Row="8" Stretch="Uniform" Grid.RowSpan="2" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,220" />
-
-
-                        <StackPanel Grid.Row="8" Grid.ColumnSpan="3" Margin="0,0,0,220" Grid.RowSpan="2">
+                        <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                             <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                             <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
                             <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
@@ -117,7 +133,13 @@
                             <Button Command="{Binding ExportBOMCommand }" Style="{StaticResource CommandButton}" Content=" - Export BOM" Width="200" />
                         </StackPanel>
 
-                        <ListBox Grid.Row="8" HorizontalAlignment="Left" Grid.Column="4" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" Grid.RowSpan="2" />
+                        <ListBox Grid.Row="11" HorizontalAlignment="Left" Grid.Column="4" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" Grid.RowSpan="2" />
+                        
+                        <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"  Grid.RowSpan="13"  MouseDown="WebCamImage_MouseDown"  Grid.Column="4" VerticalAlignment="Center"  Stretch="Uniform" Grid.Row="0" />
+                        <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="640" Height="480" Grid.Row="10" Stretch="Uniform" Grid.RowSpan="4" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,220" />
+
+
+                        
                     </Grid>
                 </Grid>
 
@@ -479,7 +501,9 @@
                                 <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
                             </StackPanel>
                             <TextBlock Text="Last part is correction calibrated, got to last part, center the part and press set for the correction." TextWrapping="Wrap"   Margin="5" />
-                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartUncalibratedCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
+                            <StackPanel>
+                                <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartUncalibratedCommand}" Content="Last Part Raw" Style="{StaticResource CommandButton}" />
+                            </StackPanel>
                         </StackPanel>
 
 
@@ -490,7 +514,7 @@
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding NextPartCommand}" Content="=&gt;" Style="{StaticResource CommandButton}" />
                         </StackPanel>
 
-                        <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="5">
+                        <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="5" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="120" />
@@ -534,6 +558,11 @@
 
                             <Label Content="Supplier Page" Grid.Column="1" Grid.Row="7" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
                             <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding SelectedPartStrip.SupplierPage}"  />
+                            <Button Grid.Column="3" Grid.Row="7" Command="{Binding ShowLinkCommand}" CommandParameter="supplierpage" HorizontalAlignment="Right" Width="40" Padding="10">
+                                <Button.Content>
+                                    <fa:ImageAwesome Icon="Link" />
+                                </Button.Content>
+                            </Button>
 
                             <Label Content="Manufacturer" Grid.Column="1" Grid.Row="8" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
                             <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding SelectedPartStrip.Mfg}"  />
@@ -542,7 +571,12 @@
                             <TextBox Grid.Column="3" Grid.Row="9" Text="{Binding SelectedPartStrip.MfgId}"  />
 
                             <Label Content="Data Sheet" Grid.Column="1" Grid.Row="10" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                            <TextBox Grid.Column="3" Grid.Row="10" Text="{Binding SelectedPartStrip.DataSheet}"  />
+                            <TextBox Grid.Column="3" Grid.Row="10" Text="{Binding SelectedPartStrip.DataSheet}" Margin="0,0,40,0"  />
+                            <Button Grid.Column="3" Grid.Row="10"  Command="{Binding ShowLinkCommand}" CommandParameter="datasheet" HorizontalAlignment="Right" Width="40" Padding="10">
+                                <Button.Content>
+                                    <fa:ImageAwesome Icon="Link" />
+                                </Button.Content>
+                            </Button>
                         </Grid>
                     </Grid>
 

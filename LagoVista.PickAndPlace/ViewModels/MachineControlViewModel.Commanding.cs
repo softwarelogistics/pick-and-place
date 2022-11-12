@@ -23,6 +23,9 @@ namespace LagoVista.PickAndPlace.ViewModels
             SetToPickHeightCommand = new RelayCommand((obj) => SetToPickHeight(), CanJog);
             SetToPlaceHeightCommand = new RelayCommand((obj) => SetToBoardHeight(), CanJog);
 
+            SetWorkspaceHomeCommand = new RelayCommand((obj) => Machine.SetWorkspaceHome(), CanJog);
+            GotoWorkspaceHomeCommand = new RelayCommand((obj) => Machine.GotoWorkspaceHome(), CanJog);
+
             Machine.PropertyChanged += Machine_PropertyChanged;
         }
 
@@ -92,6 +95,9 @@ namespace LagoVista.PickAndPlace.ViewModels
                 SetCameraCommand.RaiseCanExecuteChanged();
                 SetTool1Command.RaiseCanExecuteChanged();
 
+                GotoWorkspaceHomeCommand.RaiseCanExecuteChanged();
+                SetWorkspaceHomeCommand.RaiseCanExecuteChanged();
+                
                 SetToMoveHeightCommand.RaiseCanExecuteChanged();
                 SetToPickHeightCommand.RaiseCanExecuteChanged();
                 SetToPlaceHeightCommand.RaiseCanExecuteChanged();
@@ -191,5 +197,8 @@ namespace LagoVista.PickAndPlace.ViewModels
 
         public RelayCommand SetCameraCommand { get; private set; }
         public RelayCommand SetTool1Command { get; private set; }
+
+        public RelayCommand SetWorkspaceHomeCommand { get; private set; }
+        public RelayCommand GotoWorkspaceHomeCommand { get; private set; }
     }
 }

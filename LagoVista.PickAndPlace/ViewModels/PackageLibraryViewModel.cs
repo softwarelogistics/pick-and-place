@@ -124,7 +124,6 @@ namespace LagoVista.PickAndPlace.ViewModels
                     return;
                 }
             }
-
             await PnPMachineManager.SavePackagesAsync(_pnpMachine, _fileName);
 
             _isDirty = false;
