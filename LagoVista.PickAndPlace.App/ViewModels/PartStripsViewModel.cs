@@ -310,6 +310,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
             _parent.SelectMVProfile("squarepart");
 
+            _parent.Machine.GotoWorkspaceHome();
+
             var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
             var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
             _parent.Machine.GotoPoint(lastPartX, lastPartY);

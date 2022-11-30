@@ -73,12 +73,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             ShowTopCamera = true;
 
+            
+
             switch (idx)
             {
                 case 0:
                     {
                         Machine.GotoWorkspaceHome();
                         var gcode = $"G1 X{Machine.Settings.MachineFiducial.X} Y{Machine.Settings.MachineFiducial.Y} F{Machine.Settings.FastFeedRate}";
+                        SelectMVProfile("mchfiducual");
                         Machine.SendCommand(gcode);
                     }
                     break;
@@ -86,6 +89,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     {
                         Machine.GotoWorkspaceHome();
                         var gcode = $"G1 X{Job.BoardFiducial1.X * Job.BoardScaler.X} Y{Job.BoardFiducial1.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+                        SelectMVProfile("brdfiducual");
                         Machine.SendCommand(gcode);
                     }
                     break;
@@ -93,6 +97,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     {
                         Machine.GotoWorkspaceHome();
                         var gcode = $"G1 X{Job.BoardFiducial2.X * Job.BoardScaler.X} Y{Job.BoardFiducial2.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+                        SelectMVProfile("brdfiducual");
                         Machine.SendCommand(gcode);
                     }
                     break;
@@ -126,7 +131,21 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             ShowTopCamera = true;
         }
 
-   
+        public void GoToInspectPartRefHole()
+        {
+            Machine.GotoWorkspaceHome();
+            ShowCircles = true;
+            ShowLines = false;
+            ShowPolygons = false;
+            ShowRectangles = false;
+            ShowHarrisCorners = false;
+
+            SelectMVProfile("tapehole");
+
+            Machine.GotoPoint(SelectedInspectPart.PartStrip.ReferenceHoleX * Machine.Settings.PartStripScaler.X, SelectedInspectPart.PartStrip.ReferenceHoleY * Machine.Settings.PartStripScaler.Y, Machine.Settings.FastFeedRate);
+        }
+
+
 
         public async void Close()
         {

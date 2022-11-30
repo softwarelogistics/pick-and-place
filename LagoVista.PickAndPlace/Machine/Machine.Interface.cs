@@ -270,10 +270,15 @@ namespace LagoVista.PickAndPlace
             Enqueue("M53");
         }
 
-        public void SetWorkspaceHome()
+        public async void SetWorkspaceHome()
         {
             if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
             {
+                Settings.DefaultWorkspaceHome.X -= this.WorkspacePosition.X;
+                Settings.DefaultWorkspaceHome.Y -= this.WorkspacePosition.Y;
+
+                await this.MachineRepo.SaveAsync();
+
                 Enqueue("G92 X0 Y0");
             }
             else

@@ -43,14 +43,27 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             CalibrateBottomCameraCommand = new RelayCommand(() => CalibrateBottomCamera());
 
+            AbortMVLocatorCommand = new RelayCommand(() => AbortMVLocator());
 
-
-            NextInspectCommand = new RelayCommand(NextInspect,() => _inspectIndex < ConfigurationParts.Count - 1);
+            NextInspectCommand = new RelayCommand(NextInspect, () => _inspectIndex < ConfigurationParts.Count - 1);
             PrevInspectCommand = new RelayCommand(PrevInspect, () => _inspectIndex > 0);
             FirstInspectCommand = new RelayCommand(FirstInspect, () => _inspectIndex > 0);
 
             SetBoardOffsetCommand = new RelayCommand(SetBoardOffset, () => SelectedPartToBePlaced != null);
             ClearBoardOffsetCommand = new RelayCommand(ClearBoardOffset, () => SelectedPartToBePlaced != null);
+
+            GoToInspectPartRefHoleCommand = new RelayCommand(() =>
+            {
+                GoToInspectPartRefHole();
+            },() => SelectedInspectPart != null);
+
+            SetInspectPartRefHoleCommand = new RelayCommand(() =>
+            {
+                SelectedInspectPart.PartStrip.ReferenceHoleX = Machine.MachinePosition.X * (1 / Machine.Settings.PartStripScaler.X);
+                SelectedInspectPart.PartStrip.ReferenceHoleY = Machine.MachinePosition.Y * (1 / Machine.Settings.PartStripScaler.Y);
+            }, () => SelectedInspectPart != null);
+
+            GoToInspectedPartCommand = new RelayCommand(GoToFirstPartInPartsToPlace, ()=> SelectedInspectPart != null);
 
             SetBottomCameraPositionCommand = new RelayCommand(SetBottomCamera, () => Machine.Connected);
             GoToMachineFiducialCommand = new RelayCommand(GotoMachineFiducial, () => Machine.Connected);
@@ -89,13 +102,20 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public RelayCommand FirstInspectCommand { get; private set; }
         public RelayCommand NextInspectCommand { get; private set; }
-        public RelayCommand PrevInspectCommand { get; private set;  }
+        public RelayCommand PrevInspectCommand { get; private set; }
+
+
+        public RelayCommand GoToInspectPartRefHoleCommand { get; private set; }
+        public RelayCommand SetInspectPartRefHoleCommand { get; private set; }
+        public RelayCommand GoToInspectedPartCommand { get; private set; }
 
         public RelayCommand SetBoardOffsetCommand { get; private set; }
         public RelayCommand ClearBoardOffsetCommand { get; private set; }
         public RelayCommand SetBottomCameraPositionCommand { get; private set; }
 
         public RelayCommand ExportBOMCommand { get; private set; }
+
+        public RelayCommand AbortMVLocatorCommand { get; private set; }
 
 
         public bool CanPlacePart()

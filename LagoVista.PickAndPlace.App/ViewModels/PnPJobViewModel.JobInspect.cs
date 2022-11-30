@@ -36,12 +36,29 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.GotoWorkspaceHome();
 
+            ShowCircles = false;
+            ShowRectangles = true;
+            ShowPolygons = false;
+            ShowLines = false;
+            ShowHarrisCorners = true;
+
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
             if (partStrip != null)
             {
-                var x = (partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX)) * Machine.Settings.PartStripScaler.X;
-                var y = (partStrip.ReferenceHoleY + package.CenterYFromHole) * Machine.Settings.PartStripScaler.Y;
+                SelectMVProfile("squarepart");
+                PartSizeWidth = Convert.ToInt32(package.Width * 5);
+                PartSizeHeight = Convert.ToInt32(package.Length * 5);
+
+                var partLocationRatio = (double)partStrip.CurrentPartIndex / (double)partStrip.AvailablePartCount;
+                var xOffset = partStrip.CorrectionFactorX * partLocationRatio;
+                var yOffset = partStrip.CorrectionFactorY * partLocationRatio;
+
+
+                var x = ((partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX)) * Machine.Settings.PartStripScaler.X) + xOffset;
+                var y = ((partStrip.ReferenceHoleY + package.CenterYFromHole) * Machine.Settings.PartStripScaler.Y) + yOffset;
+
+
                 var gcode = $"G0 X{x} Y{y} F{Machine.Settings.FastFeedRate}";
                 Machine.SendCommand(gcode);
                 _isOnLast = false;
@@ -145,7 +162,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 if (value != null)
                 {
                     _inspectIndex = ConfigurationParts.IndexOf(value);
-                    GoToFirstPartInPartsToPlace();
+                    GoToInspectPartRefHoleCommand.RaiseCanExecuteChanged();
+                    SetInspectPartRefHoleCommand.RaiseCanExecuteChanged();
+                    GoToInspectedPartCommand.RaiseCanExecuteChanged();
+                    GoToInspectPartRefHole();
                 }
             }
         }

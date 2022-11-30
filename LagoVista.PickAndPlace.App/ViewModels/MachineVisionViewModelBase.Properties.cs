@@ -170,7 +170,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     Profile = _topCameraProfile;
                     ShowBottomCamera = false;
                     Machine.BottomLightOn = false;
-                    Machine.TopLightOn = true;
+                    //Machine.TopLightOn = true;
                 }
 
                 Set(ref _showTopCamera, value);
@@ -189,7 +189,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 {
                     Profile = _bottomCameraProfile;
                     ShowTopCamera = false;
-                    Machine.BottomLightOn = true;
+                    //Machine.BottomLightOn = true;
                     Machine.TopLightOn = false;
                 }
 

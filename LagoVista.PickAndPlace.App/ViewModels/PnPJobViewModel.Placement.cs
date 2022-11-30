@@ -84,6 +84,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     cmds.Add(WaitForComplete());
                 }
 
+                cmds.Add($"G90");
                 cmds.Add($"G0 X0 Y0 F{Machine.Settings.FastFeedRate}");
                 cmds.Add(GetGoToPartOnBoardGCodeX());
                 cmds.Add(GetGoToPartOnBoardGCodeY());
@@ -94,14 +95,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 cmds.Add(SafeHeightGCodeGCode()); // Return to move height.
 
                 cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
-                cmds.Add(WaitForComplete());
-                
+                cmds.Add(WaitForComplete());                
+
                 await SendInstructionSequenceAsync(cmds);
                 
                 if (!multiple)
                 {
                     Machine.Vacuum1On = false;
                     Machine.Vacuum2On = false;
+                    
                 }
 
                 SelectedPartStrip.CurrentPartIndex++;

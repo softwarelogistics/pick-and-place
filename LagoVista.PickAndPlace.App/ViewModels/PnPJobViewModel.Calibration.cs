@@ -10,13 +10,23 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 {
     public partial class PnPJobViewModel
     {
+        private void AbortMVLocator()
+        {
+            _mvLocatorState = MVLocatorState.Idle;
+            Machine.TopLightOn = false;
+            Machine.BottomLightOn = false;
+            ShowCircles = false;
+            ShowPolygons = false;
+            ShowLines = false;
+        }
+
         public async void PerformMachineAlignment()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
             _mvLocatorState = MVLocatorState.Idle;
 
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
-            Machine.TopLightOn = true;
+            Machine.TopLightOn = false;
 
             Machine.GotoWorkspaceHome();
 

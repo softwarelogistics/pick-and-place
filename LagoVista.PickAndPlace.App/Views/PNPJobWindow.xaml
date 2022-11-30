@@ -711,6 +711,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -736,7 +737,21 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Image Grid.Column="1" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown" Grid.RowSpan="3" VerticalAlignment="Top"  Stretch="Uniform" HorizontalAlignment="Left" />
+                    <StackPanel Grid.Row="3" Visibility="{Binding SelectedInspectPart, Converter={StaticResource NoTNullToVisibilityConverter}}">
+                        <TextBlock Text="{Binding SelectedInspectPart.Value}" />
+                        <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="1) Align Machine" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource CommandButton}" Content="2a) Go To Ref Hole" Command="{Binding GoToInspectPartRefHoleCommand}" />
+                            <Button Style="{StaticResource CommandButton}" Content="2b) Set Ref Hole" Command="{Binding SetInspectPartRefHoleCommand}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource CommandButton}" Content="3) GoTo Current Part" Command="{Binding GoToInspectedPartCommand}" />
+                            <TextBlock  VerticalAlignment="Center" Text="Current Index:"> </TextBlock>
+                            <TextBox Width="40" Text="{Binding SelectedInspectPart.PartStrip.CurrentPartIndex, Mode=TwoWay}" Height="24" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Image Grid.Column="1" Source="{Binding PrimaryCapturedImage}"   MouseDown="WebCamImage_MouseDown" Grid.RowSpan="4" VerticalAlignment="Top"  Stretch="Uniform" HorizontalAlignment="Left" />
 
                 </Grid>
             </TabItem>
