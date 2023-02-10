@@ -72,7 +72,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
 
             ShowTopCamera = true;
-
             
 
             switch (idx)
@@ -133,7 +132,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToInspectPartRefHole()
         {
-            Machine.GotoWorkspaceHome();
             ShowCircles = true;
             ShowLines = false;
             ShowPolygons = false;

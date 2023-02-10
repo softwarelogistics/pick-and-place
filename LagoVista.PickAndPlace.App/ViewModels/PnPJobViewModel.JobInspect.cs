@@ -34,7 +34,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         private void GoToFirstPartInPartsToPlace()
         {            
             Machine.SendCommand(SafeHeightGCodeGCode());
-            Machine.GotoWorkspaceHome();
 
             ShowCircles = false;
             ShowRectangles = true;

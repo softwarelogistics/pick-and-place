@@ -22,7 +22,7 @@ namespace LagoVista.GCode.Parser
 
         //TODO: Removed compiled options
         private Regex GCodeSplitter = new Regex(@"([A-Z])\s*(\-?\d+\.?\d*)");
-        private double[] MotionCommands = new double[] { 0, 1, 2, 3, 4, 38.2, 38.3, 38.4, 38.5, 20, 21, 90, 91 };
+        private double[] MotionCommands = new double[] { 0, 1, 2, 3, 4, 28, 38.2, 38.3, 38.4, 38.5, 20, 21, 90, 91 };
         private string ValidWords = "GMXYZSTPIJKFER";
         public List<GCodeCommand> Commands;
 
@@ -396,6 +396,9 @@ namespace LagoVista.GCode.Parser
                         }
 
                         return probeCommand;
+                    case 7:
+                    case 21:
+                    case 28:
                     case 17: /* XY Plane Selection */
                     case 80: /* Cancel Canned Cycle */
                     case 98: /* Return to initial Z Position */

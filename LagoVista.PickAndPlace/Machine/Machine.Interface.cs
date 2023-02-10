@@ -274,8 +274,8 @@ namespace LagoVista.PickAndPlace
         {
             if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
             {
-                Settings.DefaultWorkspaceHome.X -= this.WorkspacePosition.X;
-                Settings.DefaultWorkspaceHome.Y -= this.WorkspacePosition.Y;
+                //Settings.DefaultWorkspaceHome.X -= this.NormalizedPosition.X;
+//                Settings.DefaultWorkspaceHome.Y -= this.NormalizedPosition.Y;
 
                 await this.MachineRepo.SaveAsync();
 

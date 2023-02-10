@@ -166,9 +166,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             if (SelectedPartToBePlaced != null)
             {
                 Machine.SendCommand(SafeHeightGCodeGCode());
-                Machine.SendCommand($"G1 X0 Y0 F{Machine.Settings.FastFeedRate}");
-                Machine.SendCommand(GetGoToPartOnBoardGCodeX());
-                Machine.SendCommand(GetGoToPartOnBoardGCodeY());
+
+                var offsetY = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y);
+                var offsetX = SelectedPartToBePlaced.X - _job.BoardOffset.X;
+                var gcode = $"G1 X{offsetX * Job.BoardScaler.X} Y{offsetY * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+
+                Machine.SendCommand(gcode);
             }
         }
     }

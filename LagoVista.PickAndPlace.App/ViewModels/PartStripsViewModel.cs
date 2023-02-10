@@ -141,8 +141,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToReferencePoint()
         {
-            _parent.Machine.GotoWorkspaceHome();
-
             var deltaX = Math.Abs(SelectedPartStrip.ReferenceHoleX - Machine.MachinePosition.X);
             var deltaY = Math.Abs(SelectedPartStrip.ReferenceHoleY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
@@ -156,8 +154,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToCurrentPart()
         {
-            _parent.Machine.GotoWorkspaceHome();
-
             _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
             _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
 
@@ -198,7 +194,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             RefreshCommandEnabled();
         }
 
-        public void NextPart()
+        public void NextPart()          
         {
             if (SelectedPartStrip.TempPartIndex < SelectedPartStrip.AvailablePartCount)
             {
@@ -286,8 +282,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToFirstPart()
         {
-            _parent.Machine.GotoWorkspaceHome();
-
             _parent.SelectMVProfile("squarepart");
 
             _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
@@ -310,7 +304,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
             _parent.SelectMVProfile("squarepart");
 
-            _parent.Machine.GotoWorkspaceHome();
 
             var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
             var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
@@ -328,7 +321,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
             var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
 
-            _parent.Machine.GotoWorkspaceHome();
 
             _parent.Machine.GotoPoint(
                    (SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset) * Machine.Settings.PartStripScaler.X,

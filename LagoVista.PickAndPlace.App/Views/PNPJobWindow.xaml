@@ -34,6 +34,7 @@
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                         <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
+                        <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
                         <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
                         <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4a) GoTo Board Fiducial 1" Width="200" />
                         <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"  Style="{StaticResource CommandButton}" Content="4b) Set Board Fiducial 1" Width="200" />
@@ -98,16 +99,16 @@
                         </StackPanel>
 
 
-                        <Label Content="Fiducual 1 - X" Grid.Row="2" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Label Content="Fiducial 1 - X" Grid.Row="2" Margin="0,0,0,26" Grid.RowSpan="2" />
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="2" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
                         <Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="90,10,50,10" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1" Grid.ColumnSpan="2"></Button>
 
-                        <Label Content="Fiducual 1 - Y" Grid.Row="3" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Label Content="Fiducial 1 - Y" Grid.Row="3" Margin="0,0,0,26" Grid.RowSpan="2" />
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial1.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="3" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
-                        <Label Content="Fiducual 2 - X" Grid.Row="4" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Label Content="Fiducial 2 - X" Grid.Row="4" Margin="0,0,0,26" Grid.RowSpan="2" />
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.X, Mode=TwoWay}"  UnitType="Size"  Grid.Row="4" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
                         <Button Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Width="60" Style="{StaticResource CommandButton}" Content="Set" Margin="90,10,50,10" Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2" Grid.ColumnSpan="2"></Button>
-                        <Label Content="Fiducual 2 - Y" Grid.Row="5" Margin="0,0,0,26" Grid.RowSpan="2" />
+                        <Label Content="Fiducial 2 - Y" Grid.Row="5" Margin="0,0,0,26" Grid.RowSpan="2" />
                         <Controls:MaskingTextBox Text="{Binding Job.BoardFiducial2.Y, Mode=TwoWay}"  UnitType="Size " Grid.Row="5" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
 
                         <Label Content="Board Scaler X" Grid.Row="6" Margin="0,0,0,26" Grid.RowSpan="2" />
@@ -123,6 +124,7 @@
                         <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                             <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                             <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
+                            <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
                             <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
                             <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4) Board Fiducial 1" Width="200" />
                             <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" Width="200" />
@@ -741,7 +743,7 @@
                         <TextBlock Text="{Binding SelectedInspectPart.Value}" />
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="1) Align Machine" />
                         <StackPanel Orientation="Horizontal">
-                            <Button Style="{StaticResource CommandButton}" Content="2a) Go To Ref Hole" Command="{Binding GoToInspectPartRefHoleCommand}" />
+                            <Button Style="{StaticResource CommandButton}" Content="2a) Strip Ref Hole" Command="{Binding GoToInspectPartRefHoleCommand}" />
                             <Button Style="{StaticResource CommandButton}" Content="2b) Set Ref Hole" Command="{Binding SetInspectPartRefHoleCommand}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -889,6 +891,7 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Label Content="Part to be placed" FontWeight="Bold" Grid.ColumnSpan="2" />
 
@@ -902,8 +905,13 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-
                             <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Command="{Binding PlaceCurrentPartCommand}" Content="Place Part" Width="70" Style="{StaticResource CommandButton}"></Button>
+                                <Button Command="{Binding PlaceAllPartsCommand}" Content="Place All" Width="70" Style="{StaticResource CommandButton}"></Button>
+                                <Button Command="{Binding PausePlacmentCommand}" Content="Pause" Width="70" Style="{StaticResource CommandButton}"></Button>
+                                <Button Command="{Binding SetBoardOffsetCommand}" Content="Set Offset" Width="70" Style="{StaticResource CommandButton}"></Button>
+                            </StackPanel>
+                            <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Command="{Binding PlaceCurrentPartCommand}" Content="Place Part" Width="70" Style="{StaticResource CommandButton}"></Button>
                                 <Button Command="{Binding PlaceAllPartsCommand}" Content="Place All" Width="70" Style="{StaticResource CommandButton}"></Button>
                                 <Button Command="{Binding PausePlacmentCommand}" Content="Pause" Width="70" Style="{StaticResource CommandButton}"></Button>

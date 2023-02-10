@@ -91,7 +91,7 @@ namespace LagoVista.PickAndPlace
                     }
 
                     // 4. set the machine back to absolute points
-                    Enqueue("G90");
+                    Enqueue("G90");                    
 
                     // 5. Set the machine location to where it was prior to the move.
                     Enqueue($"G92 X{currentLocationX} Y{currentLocationY}");

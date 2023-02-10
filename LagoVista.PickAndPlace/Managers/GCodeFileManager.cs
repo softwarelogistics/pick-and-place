@@ -126,4 +126,4 @@ namespace LagoVista.PickAndPlace.Managers
             }
         }
     }
-}
+}           

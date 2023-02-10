@@ -136,14 +136,20 @@ namespace LagoVista.PickAndPlace.ViewModels
 
         public void SetCamera()
         {
-            //Machine.ViewType = ViewTypes.Camera;
+            Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.SetViewTypeAsync(ViewTypes.Camera);
         }
 
+        private string SafeHeightGCodeGCode()
+        {
+            return $"G0 Z{Machine.Settings.ToolSafeMoveHeight} F{Machine.Settings.FastFeedRate}";
+        }
+
+
         public void SetTool1()
         {
+            Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.SetViewTypeAsync(ViewTypes.Tool1);
-            //Machine.ViewType = ViewTypes.Tool1;
         }
 
 

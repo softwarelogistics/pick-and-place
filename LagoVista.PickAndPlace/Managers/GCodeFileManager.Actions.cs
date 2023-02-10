@@ -80,6 +80,7 @@ namespace LagoVista.PickAndPlace.Managers
 
         public void StartJob()
         {
+            ResetJob();            
             _machine.SetMode(OperatingMode.SendingGCodeFile);
         }
 

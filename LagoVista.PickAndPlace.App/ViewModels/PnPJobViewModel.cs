@@ -31,6 +31,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             BoardFidicual2,
             Default,
             NozzleCalibration,
+
         }
 
         MVLocatorState _mvLocatorState = MVLocatorState.Default;

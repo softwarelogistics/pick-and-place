@@ -46,6 +46,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             GoToFiducial(0);
         }
 
+        public async void SetMachineFiducial()
+        {
+            Machine.Settings.MachineFiducial.X = Machine.NormalizedPosition.X;
+            Machine.Settings.MachineFiducial.Y = Machine.NormalizedPosition.Y;
+            await Machine.MachineRepo.SaveAsync();
+        }
+
         private void FinalizeCameraCalibration()
         {
             _mvLocatorState = MVLocatorState.Idle;
