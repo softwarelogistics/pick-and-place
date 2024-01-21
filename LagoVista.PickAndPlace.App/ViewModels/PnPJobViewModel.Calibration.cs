@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace LagoVista.PickAndPlace.App.ViewModels
 {
@@ -48,9 +49,51 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public async void SetMachineFiducial()
         {
-            Machine.Settings.MachineFiducial.X = Machine.NormalizedPosition.X;
-            Machine.Settings.MachineFiducial.Y = Machine.NormalizedPosition.Y;
+            if (MessageBox.Show("Are you sure you want to reset the machine fiducial?", "Reset?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Machine.Settings.MachineFiducial.X = Machine.NormalizedPosition.X;
+                Machine.Settings.MachineFiducial.Y = Machine.NormalizedPosition.Y;
+            }
             await Machine.MachineRepo.SaveAsync();
+        }
+
+        public async Task GoToRefPoint()
+        {
+            SelectMVProfile("tapehold");
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
+            Machine.SendCommand($"G0 X{SelectedPartStrip.ReferenceHoleX} Y{SelectedPartStrip.ReferenceHoleY}");            
+        }
+
+        public async Task SetRefPoint()
+        {
+            SelectedPartStrip.ReferenceHoleX = Machine.MachinePosition.X;
+            SelectedPartStrip.ReferenceHoleY = Machine.MachinePosition.Y;
+            await SaveJobAsync();
+        }
+
+        public async Task GoToCurrentPartInPartStrip()
+        {
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
+          
+            PartSizeWidth = Convert.ToInt32(SelectedPartPackage.Width * 5);
+            PartSizeHeight = Convert.ToInt32(SelectedPartPackage.Length * 5);
+
+            SelectMVProfile("squarepart");
+
+            var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+            var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+            var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+
+            var newX = SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole + xOffset;
+            var newY = SelectedPartStrip.ReferenceHoleY + SelectedPartPackage.CenterYFromHole + yOffset;
+
+            var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
+            var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
+            var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+            feedRate = Machine.Settings.FastFeedRate;
+
+            Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
         }
 
         private void FinalizeCameraCalibration()

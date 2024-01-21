@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace LagoVista.PCB.Eagle.Models
@@ -17,6 +13,7 @@ namespace LagoVista.PCB.Eagle.Models
         public double? X { get; set; }
         public double? Y { get; set; }
         public string Rotate { get; set; }
+        public bool Polarized { get; set; }
         public bool Included { get; set; }
         public string Function { get; set; }
         public string Notes { get; set; }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LagoVista.PickAndPlace.App.ViewModels
 {
@@ -38,8 +39,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             NextPartCommand = new RelayCommand(NextPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.AvailablePartCount > SelectedPartStrip.TempPartIndex);
             PrevPartCommand = new RelayCommand(PrevPart, () => SelectedPartStrip != null && SelectedPackage != null && SelectedPartStrip.TempPartIndex > 0);
 
-            GoToCurrentPartCommand = new RelayCommand(GoToCurrentPart, () => SelectedPartStrip != null && SelectedPackage != null);
-            GoToReferencePointCommand = new RelayCommand(GoToReferencePoint, () => SelectedPartStrip != null);
+            GoToCurrentPartCommand = new RelayCommand(() => GoToCurrentPart(), () => SelectedPartStrip != null && SelectedPackage != null);
+            GoToReferencePointCommand = new RelayCommand(() => GoToReferencePoint(), () => SelectedPartStrip != null);
 
             SetCurrentPartIndexCommand = new RelayCommand(SetCurrentPartIndex, () => SelectedPartStrip != null);
 
@@ -139,8 +140,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             await PnPMachineManager.SavePackagesAsync(_pnpMachine, _pnpJobFileName);
         }
 
-        public void GoToReferencePoint()
+        public async Task GoToReferencePoint()
         {
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
             var deltaX = Math.Abs(SelectedPartStrip.ReferenceHoleX - Machine.MachinePosition.X);
             var deltaY = Math.Abs(SelectedPartStrip.ReferenceHoleY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
@@ -152,8 +154,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _inspectState = InspectStates.ReferenceHole;
         }
 
-        public void GoToCurrentPart()
+        public async Task GoToCurrentPart()
         {
+            await Machine.SetViewTypeAsync(ViewTypes.Camera);
+
             _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
             _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
 

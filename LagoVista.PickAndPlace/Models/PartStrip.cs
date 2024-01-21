@@ -97,6 +97,13 @@ namespace LagoVista.PickAndPlace.Models
             set => Set(ref _correctionAngleY, value);
         }
 
+        private bool _polarized;
+        public bool Polarized
+        {
+            get => _polarized;
+            set => Set(ref _polarized, value);
+        }
+
         public string DigiKeyPartNumber { get; set; }
 
         public int InventoryCount { get; set; }

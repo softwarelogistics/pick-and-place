@@ -45,7 +45,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 cRotation = -90;
 
             var scaledAngle = cRotation;
-            return $"G0 E{scaledAngle} F5000";
+            return $"G0 E{scaledAngle} F10000";
         }
 
         private string WaitForComplete()
@@ -57,7 +57,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             switch (Machine.Settings.MachineType)
             {
-                case FirmwareTypes.Repeteir_PnP: return $"M42 P29 S{(value ? 255 : 0)}";
+                case FirmwareTypes.Repeteir_PnP: return $"M42 P29 S{(value ? 0 : 255)}";
                 case FirmwareTypes.LagoVista_PnP: return $"M64 S{(value ? 255 : 0)}";
             }
 

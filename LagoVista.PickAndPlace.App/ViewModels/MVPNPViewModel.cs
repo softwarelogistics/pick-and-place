@@ -118,7 +118,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             bldr.AppendLine("T0");
             bldr.AppendLine("G28 Z");
             bldr.AppendLine("M62 P1");
-            bldr.AppendLine("M64 P0"); /* Close Exahust */
+            bldr.AppendLine("M64 P0"); /* Close Exhaust */
             bldr.AppendLine("M63 P0");
             bldr.AppendLine("M60 P1");
             bldr.AppendLine("G04 P500");

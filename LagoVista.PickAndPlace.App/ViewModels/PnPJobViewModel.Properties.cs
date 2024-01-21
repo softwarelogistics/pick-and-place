@@ -241,6 +241,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 ResetCurrentComponentCommand.RaiseCanExecuteChanged();
                 PlaceCurrentPartCommand.RaiseCanExecuteChanged();
                 PlaceAllPartsCommand.RaiseCanExecuteChanged();
+                GoToCurrentPartInStripCommand.RaiseCanExecuteChanged();
+                GoToRefHoleCommand.RaiseCanExecuteChanged();
+                SetRefHoleCommand.RaiseCanExecuteChanged();
             }
         }
 

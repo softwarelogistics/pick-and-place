@@ -29,8 +29,8 @@
                     <Controls:PnPMachineLocation DataContext="{Binding MachineControls}" />
                     <Controls:JogControls  DataContext="{Binding MachineControls}"  />
                     <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
-                        <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
-                        <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
+                    <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
+                    <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                         <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
@@ -49,7 +49,7 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Image">
-                
+
             </TabItem>
         </TabControl>
 
@@ -136,12 +136,12 @@
                         </StackPanel>
 
                         <ListBox Grid.Row="11" HorizontalAlignment="Left" Grid.Column="4" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" Grid.RowSpan="2" />
-                        
+
                         <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"  Grid.RowSpan="13"  MouseDown="WebCamImage_MouseDown"  Grid.Column="4" VerticalAlignment="Center"  Stretch="Uniform" Grid.Row="0" />
                         <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="640" Height="480" Grid.Row="10" Stretch="Uniform" Grid.RowSpan="4" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,220" />
 
 
-                        
+
                     </Grid>
                 </Grid>
 
@@ -434,47 +434,50 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="25*" />
-                            <ColumnDefinition Width="79*"/>
+                            <ColumnDefinition Width="37*" />
+                            <ColumnDefinition Width="7*"/>
+                            <ColumnDefinition Width="111*"/>
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox ItemsSource="{Binding PackageDefinitions}" SelectedItem="{Binding SelectedPackage, Mode=TwoWay}" DisplayMemberPath="Name" Grid.ColumnSpan="3" Grid.Column="2" />
+                        <Label Content="Package" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding PackageDefinitions}" SelectedItem="{Binding SelectedPackage, Mode=TwoWay}" DisplayMemberPath="Name" Grid.ColumnSpan="4" Grid.Column="2" Margin="2,2,2,2" />
 
-                        <Label Content="Value" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBox Text="{Binding SelectedPartStrip.Value, Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right" />
+                        <Label Content="Value" Grid.Column="1" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding SelectedPartStrip.Value, Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="2" HorizontalContentAlignment="Right" Margin="2,2,2,2" />
 
-                        <Label Content="Length" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBox Text="{Binding SelectedPartStrip.StripLength, Mode=TwoWay}" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right"/>
+                        <Label Content="Length" Grid.Column="1" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding SelectedPartStrip.StripLength, Mode=TwoWay}" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="2" HorizontalContentAlignment="Right" Margin="2,2,2,2"/>
 
-                        <Label Content="Current Part Idx" Grid.Column="1" Grid.Row="7" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <TextBox Text="{Binding SelectedPartStrip.CurrentPartIndex, Mode=TwoWay}" Grid.Row="7" Grid.ColumnSpan="2" Grid.Column="2" HorizontalContentAlignment="Right"/>
-                        <Button Grid.Row="7" Grid.Column="6" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetCurrentPartIndexCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+                        <Label Content="Current Part Idx" Grid.Column="1" Grid.Row="7" FontWeight="Bold" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding SelectedPartStrip.CurrentPartIndex, Mode=TwoWay}" Grid.Row="7" Grid.ColumnSpan="3" Grid.Column="2" HorizontalContentAlignment="Right" Margin="2,2,2,2"/>
+                        <Button Grid.Row="7" Grid.Column="5" HorizontalAlignment="Center" Height="20" Width="100" Command="{Binding SetCurrentPartIndexCommand}" Content="Set" Style="{StaticResource CommandButton}" Margin="0,6,0,6" />
 
-                        <Label Content="Ref Hol" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-                        <Button Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetStripOriginCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+                        <Label Content="Ref Hol" Grid.Column="1" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" />
+                        <Button Grid.Row="3" Grid.Column="5" HorizontalAlignment="Center" Height="20" Width="100" Command="{Binding SetStripOriginCommand}" Content="Set" Style="{StaticResource CommandButton}" Margin="0,7,0,7" />
 
-                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.ReferenceHoleX, Mode=TwoWay, StringFormat=0.00}" 
+                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="3" Text="{Binding SelectedPartStrip.ReferenceHoleX, Mode=TwoWay, StringFormat=0.00}" 
                                   Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
-                        <TextBox  Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.ReferenceHoleY, Mode=TwoWay, StringFormat=0.00}" 
-                                  Width="60" TextAlignment="Right" HorizontalAlignment="Right" />
-
-                        <Label Content="Correction" Grid.Column="1" Grid.Row="6" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
-
-                        <TextBox  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding SelectedPartStrip.CorrectionFactorX, Mode=TwoWay, StringFormat=0.00}" 
+                        <TextBox  Grid.Column="4" Grid.Row="3" VerticalAlignment="Center" Margin="51,0,0,0" Text="{Binding  SelectedPartStrip.ReferenceHoleY, Mode=TwoWay, StringFormat=0.00}" 
                                   Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
-                        <TextBox  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Text="{Binding  SelectedPartStrip.CorrectionFactorY, Mode=TwoWay, StringFormat=0.00}" 
-                                  Width="60" TextAlignment="Right" HorizontalAlignment="Right" />
 
-                        <Button Grid.Row="6" Grid.Column="4" HorizontalAlignment="Left" Height="20" Width="100" Command="{Binding SetCorrectionCommand}" Content="Set" Style="{StaticResource CommandButton}" />
+                        <Label Content="Correction" Grid.Column="1" Grid.Row="6" FontWeight="Bold" VerticalAlignment="Center" />
 
-                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="8"/>
-                        <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="8" VerticalAlignment="Center" Margin="0,5" >
+                        <TextBox  Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="3" Text="{Binding SelectedPartStrip.CorrectionFactorX, Mode=TwoWay, StringFormat=0.00}" 
+                                  Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
+                        <TextBox  Grid.Column="4" Grid.Row="6" VerticalAlignment="Center" Margin="51,0,0,0" Text="{Binding  SelectedPartStrip.CorrectionFactorY, Mode=TwoWay, StringFormat=0.00}" 
+                                  Width="60" TextAlignment="Right" HorizontalAlignment="Left" />
+
+                        <Button Grid.Row="6" Grid.Column="5" HorizontalAlignment="Center" Height="20" Width="100" Command="{Binding SetCorrectionCommand}" Content="Set" Style="{StaticResource CommandButton}" Margin="0,7,0,7" />
+
+                        <Label Content="Package Spec" Grid.Column="1" FontWeight="Bold" Grid.Row="8" Margin="0,0,0,32" Grid.RowSpan="2"/>
+                        <TextBlock Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="8" VerticalAlignment="Center" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x tape={0}, y tape={1}, r={2}">
                                     <Binding Path="SelectedPackage.CenterXFromHole" />
@@ -484,9 +487,9 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <Label Content="{Binding SelectedPartStrip.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="7"/>
+                        <Label Content="{Binding SelectedPartStrip.SelectedRow}" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="7" Margin="0,0,0,32" Grid.RowSpan="2"/>
 
-                        <TextBlock  Grid.Column="2" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" >
+                        <TextBlock  Grid.Column="2" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="3" >
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{} x={0:0.00}, y={1:0.00}">
                                     <Binding Path="CurrentPartX" />
@@ -495,7 +498,10 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="5"  >
+                        <Label Content="Polarized" Grid.Column="1" Grid.Row="9" FontWeight="Bold" VerticalAlignment="Center" />
+                        <CheckBox Grid.Row="9" Grid.Column="2" IsChecked="{Binding SelectedPartStrip.Polarized, Mode=TwoWay}" VerticalAlignment="Center"></CheckBox>
+                        
+                        <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="6" Margin="0,0,0,64" Grid.RowSpan="2"  >
                             <StackPanel Orientation="Horizontal">
                                 <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToReferencePointCommand}" Content="Ref. Hole" Style="{StaticResource CommandButton}" />
                                 <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToFirstPartCommand}" Content="First Part" Style="{StaticResource CommandButton}" />
@@ -503,20 +509,17 @@
                                 <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
                             </StackPanel>
                             <TextBlock Text="Last part is correction calibrated, got to last part, center the part and press set for the correction." TextWrapping="Wrap"   Margin="5" />
-                            <StackPanel>
-                                <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartUncalibratedCommand}" Content="Last Part Raw" Style="{StaticResource CommandButton}" />
-                            </StackPanel>
+                            <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToLastPartUncalibratedCommand}" Content="Last Part Raw" Style="{StaticResource CommandButton}" />
                         </StackPanel>
 
 
-                        <TextBlock Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PartInStripMsg}"  />
-                        <StackPanel Grid.Row="10" Grid.Column="4"  Orientation="Horizontal">
-
+                        <TextBlock Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding PartInStripMsg}" Margin="0,0,0,367" Grid.RowSpan="2"  />
+                        <StackPanel Grid.Row="11" Grid.Column="4"  Orientation="Horizontal" Grid.ColumnSpan="2" Margin="111,0,0,367" Grid.RowSpan="2">
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding PrevPartCommand}" Content="&lt;=" Style="{StaticResource CommandButton}" />
                             <Button HorizontalAlignment="Left" Height="20" Width="30" Command="{Binding NextPartCommand}" Content="=&gt;" Style="{StaticResource CommandButton}" />
                         </StackPanel>
 
-                        <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="5" >
+                        <Grid Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="6" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="120" />
@@ -740,7 +743,10 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="3" Visibility="{Binding SelectedInspectPart, Converter={StaticResource NoTNullToVisibilityConverter}}">
-                        <TextBlock Text="{Binding SelectedInspectPart.Value}" />
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Part to Inspect:" ></Label>
+                            <TextBlock Text="{Binding SelectedInspectPart.Value}" />
+                        </StackPanel>
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="1) Align Machine" />
                         <StackPanel Orientation="Horizontal">
                             <Button Style="{StaticResource CommandButton}" Content="2a) Strip Ref Hole" Command="{Binding GoToInspectPartRefHoleCommand}" />
@@ -748,7 +754,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button Style="{StaticResource CommandButton}" Content="3) GoTo Current Part" Command="{Binding GoToInspectedPartCommand}" />
-                            <TextBlock  VerticalAlignment="Center" Text="Current Index:"> </TextBlock>
+                            <TextBlock  VerticalAlignment="Center" Text="Current Index:"></TextBlock>
                             <TextBox Width="40" Text="{Binding SelectedInspectPart.PartStrip.CurrentPartIndex, Mode=TwoWay}" Height="24" HorizontalContentAlignment="Right"/>
                         </StackPanel>
                     </StackPanel>
@@ -845,7 +851,8 @@
                                 <fa:ImageAwesome  Icon="Remove" Margin="2" Width="10" Height="10" />
                             </Button>
 
-                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" Grid.Row="6" HorizontalAlignment="Center">
+                            <StackPanel Grid.ColumnSpan="5" Grid.Row="6" >
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
                                     ToolTip="Reset to first component"
                                     Grid.Row="4" Grid.Column="0" Command="{Binding ResetCurrentComponentCommand}">
@@ -875,6 +882,13 @@
                                         <fa:ImageAwesome  Icon="Forward"  Margin="10"  />
                                     </Button.Content>
                                 </Button>
+                            </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Command="{Binding GoToRefHoleCommand}" Content="Ref Hole" Width="100" Style="{StaticResource CommandButton}"></Button>
+                                    <Button Command="{Binding SetRefHoleCommand}" Content="Set Ref Hole" Width="100" Style="{StaticResource CommandButton}"></Button>
+                                    <Button Command="{Binding GoToCurrentPartInStripCommand}" Content="Current Part" Width="100" Style="{StaticResource CommandButton}"></Button>
+                                </StackPanel>
+                                
                             </StackPanel>
                         </Grid>
 
@@ -911,12 +925,7 @@
                                 <Button Command="{Binding PausePlacmentCommand}" Content="Pause" Width="70" Style="{StaticResource CommandButton}"></Button>
                                 <Button Command="{Binding SetBoardOffsetCommand}" Content="Set Offset" Width="70" Style="{StaticResource CommandButton}"></Button>
                             </StackPanel>
-                            <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Command="{Binding PlaceCurrentPartCommand}" Content="Place Part" Width="70" Style="{StaticResource CommandButton}"></Button>
-                                <Button Command="{Binding PlaceAllPartsCommand}" Content="Place All" Width="70" Style="{StaticResource CommandButton}"></Button>
-                                <Button Command="{Binding PausePlacmentCommand}" Content="Pause" Width="70" Style="{StaticResource CommandButton}"></Button>
-                                <Button Command="{Binding SetBoardOffsetCommand}" Content="Set Offset" Width="70" Style="{StaticResource CommandButton}"></Button>
-                            </StackPanel>
+                  
                         </Grid>
 
                         <DataGrid PreviewKeyDown="ListView_PreviewKeyDown" Grid.Row="3" ItemsSource="{Binding SelectedPart.Parts}" CanUserSortColumns="False" SelectedItem="{Binding SelectedPartToBePlaced}"

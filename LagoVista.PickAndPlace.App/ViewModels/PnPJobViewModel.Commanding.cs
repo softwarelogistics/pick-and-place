@@ -13,7 +13,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             PeformMachineAlignmentCommand = new RelayCommand(PerformMachineAlignment);
 
-            GoToPartOnBoardCommand = new RelayCommand(GoToPartOnBoard);
+            GoToPartOnBoardCommand = new RelayCommand(() => GoToPartOnBoard());
             GoToPartPositionInTrayCommand = new RelayCommand(GoToPartPositionInTray);
 
             SelectMachineFileCommand = new RelayCommand(SelectMachineFile);
@@ -70,6 +70,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             SetMachineFiducialCommand = new RelayCommand(SetMachineFiducial, () => Machine.Connected);
 
             ExportBOMCommand = new RelayCommand(ExportBOM);
+
+
+            GoToRefHoleCommand = new RelayCommand(() => GoToRefPoint(), () => SelectedPartStrip != null);
+            SetRefHoleCommand = new RelayCommand(() => SetRefPoint(), () => SelectedPartStrip != null);
+            GoToCurrentPartInStripCommand = new  RelayCommand(() => GoToCurrentPartInPartStrip(), () => SelectedPartStrip != null);
         }
 
         public RelayCommand HomingCycleCommand { get; private set; }
@@ -106,6 +111,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand NextInspectCommand { get; private set; }
         public RelayCommand PrevInspectCommand { get; private set; }
 
+
+        public RelayCommand GoToRefHoleCommand { get; set; }
+        public RelayCommand SetRefHoleCommand { get; set; }
+        public RelayCommand GoToCurrentPartInStripCommand { get; set; }
 
         public RelayCommand GoToInspectPartRefHoleCommand { get; private set; }
         public RelayCommand SetInspectPartRefHoleCommand { get; private set; }

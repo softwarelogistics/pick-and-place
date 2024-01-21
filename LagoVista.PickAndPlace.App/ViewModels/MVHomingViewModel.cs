@@ -60,12 +60,22 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void EndStopHomingCycle()
         {
+            _state = States.Idle;
+            ShowCircles = false;
+            ShowRectangles = false;
+            ShowPolygons = false;
+            ShowLines = false;
             Machine.HomingCycle();
         }
 
         public async void BeginMVHomingCycle()
         {
             Machine.PCBManager.Tool1Navigation = true;
+            ShowCircles = false;
+            ShowRectangles = false;
+            ShowPolygons = false;
+            ShowLines = false;
+
             _state = States.MVHoming;
             Machine.GotoPoint(Machine.Settings.DefaultWorkspaceHome.X, Machine.Settings.DefaultWorkspaceHome.Y, true);
             await Machine.MachineRepo.SaveAsync();

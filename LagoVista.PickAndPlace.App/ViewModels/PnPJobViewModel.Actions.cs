@@ -132,15 +132,18 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToInspectPartRefHole()
         {
-            ShowCircles = true;
-            ShowLines = false;
-            ShowPolygons = false;
-            ShowRectangles = false;
-            ShowHarrisCorners = false;
+            if (SelectedInspectPart.PartStrip != null)
+            {
+                ShowCircles = true;
+                ShowLines = false;
+                ShowPolygons = false;
+                ShowRectangles = false;
+                ShowHarrisCorners = false;
 
-            SelectMVProfile("tapehole");
+                SelectMVProfile("tapehole");
 
-            Machine.GotoPoint(SelectedInspectPart.PartStrip.ReferenceHoleX * Machine.Settings.PartStripScaler.X, SelectedInspectPart.PartStrip.ReferenceHoleY * Machine.Settings.PartStripScaler.Y, Machine.Settings.FastFeedRate);
+                Machine.GotoPoint(SelectedInspectPart.PartStrip.ReferenceHoleX * Machine.Settings.PartStripScaler.X, SelectedInspectPart.PartStrip.ReferenceHoleY * Machine.Settings.PartStripScaler.Y, Machine.Settings.FastFeedRate);
+            }
         }
 
 

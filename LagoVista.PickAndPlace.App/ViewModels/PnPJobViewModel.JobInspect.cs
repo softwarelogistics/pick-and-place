@@ -32,20 +32,20 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
 
         private void GoToFirstPartInPartsToPlace()
-        {            
+        {
             Machine.SendCommand(SafeHeightGCodeGCode());
-
-            ShowCircles = false;
-            ShowRectangles = true;
-            ShowPolygons = false;
-            ShowLines = false;
-            ShowHarrisCorners = true;
 
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
             if (partStrip != null)
             {
+                ShowCircles = false;
+                ShowRectangles = true;
+                ShowPolygons = false;
+                ShowLines = false;
+                ShowHarrisCorners = true;
                 SelectMVProfile("squarepart");
+
                 PartSizeWidth = Convert.ToInt32(package.Width * 5);
                 PartSizeHeight = Convert.ToInt32(package.Length * 5);
 
@@ -62,35 +62,45 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 Machine.SendCommand(gcode);
                 _isOnLast = false;
 
-                InspectMessage = $"CUrrent - {partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
+                InspectMessage = $"Current - {partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex + 1} of {ConfigurationParts.Count}.";
             }
-            }
+        }
 
         private void GoToLastPartInPartsToPlace()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
-            Machine.GotoWorkspaceHome();
+
+            ShowCircles = false;
+            ShowRectangles = true;
+            ShowPolygons = false;
+            ShowLines = false;
+            ShowHarrisCorners = true;
+            SelectMVProfile("squarepart");
 
             var package = _pnpMachine.Packages.Where(pck => pck.Name == SelectedInspectPart.Package).FirstOrDefault();
             var partStrip = SelectedInspectPart.PartStrip;
 
-            var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX) + ((SelectedInspectPart.Parts.Count - 1) * package.SpacingX);
-            var y = partStrip.ReferenceHoleY + package.CenterYFromHole;
+            var partLocationRatio = (double)partStrip.CurrentPartIndex / (double)partStrip.AvailablePartCount;
+            var xOffset = partStrip.CorrectionFactorX * partLocationRatio;
+            var yOffset = partStrip.CorrectionFactorY * partLocationRatio;
+
+            var x = partStrip.ReferenceHoleX + package.CenterXFromHole + (partStrip.CurrentPartIndex * package.SpacingX) + ((SelectedInspectPart.Parts.Count - 1) * package.SpacingX) + xOffset;
+            var y = partStrip.ReferenceHoleY + package.CenterYFromHole + yOffset;
             var gcode = $"G0 X{x * Machine.Settings.PartStripScaler.X} Y{y * Machine.Settings.PartStripScaler.Y} F{Machine.Settings.FastFeedRate}";
             Machine.SendCommand(gcode);
             _isOnLast = true;
 
-            InspectMessage = $"Last {partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex} of {ConfigurationParts.Count}.";
+            InspectMessage = $"Last {partStrip.Value} with package {partStrip.PackageName}, {_inspectIndex + 1} of {ConfigurationParts.Count}.";
         }
 
         public void NextInspect()
         {
-            if(_selectedInspectPart == null)
+            if (_selectedInspectPart == null)
             {
                 _selectedInspectPart = ConfigurationParts[InspectIndex];
             }
 
-            if(SelectedInspectPart.Parts.Count == 1 || _isOnLast)
+            if (SelectedInspectPart.Parts.Count == 1 || _isOnLast)
             {
                 if (_inspectIndex < ConfigurationParts.Count - 1)
                 {
@@ -101,7 +111,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     PrevInspectCommand.RaiseCanExecuteChanged();
                     FirstInspectCommand.RaiseCanExecuteChanged();
 
-                    GoToFirstPartInPartsToPlace();                    
+                    GoToFirstPartInPartsToPlace();
                 }
             }
             else

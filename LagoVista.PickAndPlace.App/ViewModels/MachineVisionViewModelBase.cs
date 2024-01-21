@@ -58,8 +58,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private async Task LoadProfilesAsync()
         {
-            var topFileName = CurrentMVProfile.Id == "default" ? "TopCameraVision.json" : $"Top.{CurrentMVProfile.Id}.mv.json";
-            var bottomFileName = CurrentMVProfile.Id == "default" ? "BottomCameraVision.json" : $"Bottom.{CurrentMVProfile.Id}.mv.json";
+            var topFileName = CurrentMVProfile?.Id  == "default" || CurrentMVProfile == null ? "TopCameraVision.json" : $"Top.{CurrentMVProfile.Id}.mv.json";
+            var bottomFileName = CurrentMVProfile?.Id == "default" || CurrentMVProfile == null? "BottomCameraVision.json" : $"Bottom.{CurrentMVProfile.Id}.mv.json";
 
             _topCameraProfile = await Storage.GetAsync<Models.VisionProfile>(topFileName);
             _bottomCameraProfile = await Storage.GetAsync<Models.VisionProfile>(bottomFileName);
@@ -196,7 +196,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             Line(destImage, center.X - Profile.TargetImageRadius, center.Y, center.X + Profile.TargetImageRadius, center.Y, System.Drawing.Color.FromArgb(0x7f, 0xFF, 0xFF, 0XFF));
             Line(destImage, center.X, center.Y - Profile.TargetImageRadius, center.X, center.Y + Profile.TargetImageRadius, System.Drawing.Color.FromArgb(0x7f, 0xFF, 0xFF, 0XFF));
 
-            if(CurrentMVProfile.Id == "squarepart")
+            if(CurrentMVProfile?.Id == "squarepart")
             {
                 Line(destImage, center.X - PartSizeWidth, center.Y - PartSizeHeight, center.X - PartSizeWidth, center.Y + PartSizeHeight, System.Drawing.Color.Yellow);
                 Line(destImage, center.X + PartSizeWidth, center.Y - PartSizeHeight, center.X + PartSizeWidth, center.Y + PartSizeHeight, System.Drawing.Color.Yellow);
