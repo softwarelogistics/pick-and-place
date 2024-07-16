@@ -142,7 +142,7 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -162,6 +162,9 @@
                     <TextBox IsEnabled="{Binding CanSetIPAddress}" Grid.Row="1"  Text="{Binding Settings.IPAddress, Mode=TwoWay}" />
                     <Label Content="IPAddress" Grid.Row="1" />
 
+
+
+                    <Label Grid.Row="2" Content="Serial Port" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" 
                           SelectedValuePath="Id"
                           IsEnabled="{Binding CanSelectSerialPort}"
@@ -169,24 +172,32 @@
                           SelectedValue="{Binding Path=SelectedPortId, Mode=TwoWay}"
                           ItemsSource="{Binding Path=SerialPorts}"  />
 
-                    <Label Grid.Row="2" Content="Serial Port" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
 
-                    <TextBox Grid.Row="3"  Text="{Binding Settings.CurrentSerialPort.BaudRate, Mode=TwoWay}" />
+                    <Label Grid.Row="3" Content="Vacuum Serial Port" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+                    <ComboBox Grid.Row="3" Grid.Column="1" 
+                        SelectedValuePath="Id"
+                        IsEnabled="{Binding CanSelectSerialPort}"
+                        DisplayMemberPath="Name"
+                        SelectedValue="{Binding Path=SelectedPort2Id, Mode=TwoWay}"
+                        ItemsSource="{Binding Path=SerialPorts}"  />
+
+                    
+                    <TextBox Grid.Row="4"  Text="{Binding Settings.CurrentSerialPort.BaudRate, Mode=TwoWay}" />
                     <Label  IsEnabled="{Binding CanChangeMachineConfig}"
-                        Content="BaudRate" Grid.Row="3" />
-                    <Label Content="bps" Grid.Row="3" Grid.Column="2" />
+                        Content="BaudRate" Grid.Row="4" />
+                    <Label Content="bps" Grid.Row="4" Grid.Column="2" />
 
-                    <TextBox Text="{Binding Settings.ControllerBufferSize, Mode=TwoWay}" Grid.Row="4" Grid.Column="1"/>
-                    <Label Content="Controller Buffer" Grid.Row="4"  />
-                    <Label Content="bytes" Grid.Row="4" Grid.Column="2" />
+                    <TextBox Text="{Binding Settings.ControllerBufferSize, Mode=TwoWay}" Grid.Row="5" Grid.Column="1"/>
+                    <Label Content="Controller Buffer" Grid.Row="5"  />
+                    <Label Content="bytes" Grid.Row="5" Grid.Column="2" />
 
-                    <Label Content="Idle Status Poll Interval" Grid.Row="6" />
-                    <TextBox Text="{Binding Settings.StatusPollIntervalIdle}" Grid.Row="6"/>
-                    <Label Content="ms" Grid.Row="6" Grid.Column="2" />
-
-                    <TextBox  Text="{Binding Settings.StatusPollIntervalRunning}" Grid.Row="7"/>
-                    <Label Content="Active Status Poll Interval" Grid.Row="7"  />
+                    <Label Content="Idle Status Poll Interval" Grid.Row="7" />
+                    <TextBox Text="{Binding Settings.StatusPollIntervalIdle}" Grid.Row="7"/>
                     <Label Content="ms" Grid.Row="7" Grid.Column="2" />
+
+                    <TextBox  Text="{Binding Settings.StatusPollIntervalRunning}" Grid.Row="8"/>
+                    <Label Content="Active Status Poll Interval" Grid.Row="8"  />
+                    <Label Content="ms" Grid.Row="8" Grid.Column="2" />
                 </Grid>
             </TabItem>
 
@@ -224,6 +235,7 @@
                           SelectedValuePath="Id"
                           SelectedValue="{Binding PositioningCameraId, Mode=TwoWay}"/>
                     <Label Content="Bottom/Inspection Camera" Grid.Row="1" />
+                    
                     <ComboBox ItemsSource="{Binding Cameras}" 
                               Grid.Row="1"
                           DisplayMemberPath="Name"

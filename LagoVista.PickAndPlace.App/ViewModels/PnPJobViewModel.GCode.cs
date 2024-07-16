@@ -63,5 +63,16 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             throw new Exception($"Can't produce vacuum GCode for machien type: {Machine.Settings.MachineType} .");
         }
+
+        private string ProducePuffGCode(bool value)
+        {
+            switch (Machine.Settings.MachineType)
+            {
+                case FirmwareTypes.Repeteir_PnP:
+                    return ($"D40 {(value ? 255 : 0)}\n");
+            }
+
+            throw new Exception($"Can't produce vacuum GCode for machien type: {Machine.Settings.MachineType} .");
+        }
     }
 }

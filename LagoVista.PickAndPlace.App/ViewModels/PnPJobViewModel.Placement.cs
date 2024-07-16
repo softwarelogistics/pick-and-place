@@ -22,8 +22,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             Machine.LocationUpdateEnabled = true;
 
-            Machine.Vacuum1On = false;
-            Machine.Vacuum2On = false;
+            Machine.VacuumPump = false;
+            Machine.PuffPump = false;
         }
 
         public async void PlacePart()
@@ -53,10 +53,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 SetRefHoleCommand.RaiseCanExecuteChanged();
                 GoToCurrentPartInStripCommand.RaiseCanExecuteChanged();
 
-                if (!Machine.Vacuum1On || !Machine.Vacuum2On)
+                if (!Machine.VacuumPump || !Machine.PuffPump)
                 {
-                    Machine.Vacuum1On = true;
-                    Machine.Vacuum2On = true;
+                    Machine.VacuumPump = true;
+                    Machine.PuffPump = true;
                     await Task.Delay(1000);
                 }
 
@@ -110,8 +110,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 
                 if (!multiple)
                 {
-                    Machine.Vacuum1On = false;
-                    Machine.Vacuum2On = false;
+                    Machine.VacuumPump = false;
+                    Machine.PuffPump = false;
                     
                 }
 

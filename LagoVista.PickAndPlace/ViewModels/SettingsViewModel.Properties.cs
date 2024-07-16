@@ -29,6 +29,24 @@ namespace LagoVista.PickAndPlace.ViewModels
             }
         }
 
+        public String SelectedPort2Id
+        {
+            get { return Settings.SerialPort2?.Id; }
+            set
+            {
+                var port = SerialPorts.Where(prt => prt.Id == value).FirstOrDefault();
+                if (port == null)
+                    port = SerialPorts.First();
+                else
+                {
+                    port.BaudRate = 115200;
+                }
+
+                Settings.SerialPort2 = port;
+            }
+        }
+
+
         public ObservableCollection<String> ConnectionTypes { get; private set; }
         public ObservableCollection<String> MachineTypes { get; private set; }
         public ObservableCollection<String> GCodeJogCommands { get; private set; }

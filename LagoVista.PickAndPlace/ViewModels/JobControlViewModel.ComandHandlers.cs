@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.IOC;
+using LagoVista.Core.PlatformSupport;
 using LagoVista.PickAndPlace.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -136,7 +137,12 @@ namespace LagoVista.PickAndPlace.ViewModels
                 }
                 else if(Machine.Settings.ConnectionType == ConnectionTypes.Serial_Port)
                 {
-                    await Machine.ConnectAsync(DeviceManager.CreateSerialPort(Machine.Settings.CurrentSerialPort));
+                    ISerialPort port2 = null;
+                    if(Machine.Settings.SerialPort2 != null) {
+                        port2 = DeviceManager.CreateSerialPort(Machine.Settings.SerialPort2);
+                    }
+
+                    await Machine.ConnectAsync(DeviceManager.CreateSerialPort(Machine.Settings.CurrentSerialPort), port2);
                 }
                 else
                 {

@@ -62,9 +62,10 @@ namespace LagoVista.PickAndPlace.Interfaces
 
         bool TopLightOn { get; set; }
         bool BottomLightOn { get; set; }
-        bool Vacuum1On { get; set; }
-        bool Vacuum2On { get; set; }
-        bool SolendoidOn { get; set; }
+        bool VacuumPump { get; set; }
+        bool PuffPump { get; set; }
+        bool VacuumSolendoid { get; set; }
+        bool PuffSolenoid { get; set; }
 
         /// <summary>
         /// Current mode of the machine, such as Connected, Running a Job, etc....
@@ -149,7 +150,7 @@ namespace LagoVista.PickAndPlace.Interfaces
         /// </summary>
         /// <param name="serialPort"></param>
         /// <returns></returns>
-        Task ConnectAsync(ISerialPort serialPort);
+        Task ConnectAsync(ISerialPort serialPort, ISerialPort serialPort1 = null);
 
 
         /// <summary>

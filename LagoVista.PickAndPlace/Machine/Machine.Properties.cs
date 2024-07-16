@@ -233,7 +233,7 @@ namespace LagoVista.PickAndPlace
                 {
                     switch (Settings.MachineType)
                     {
-                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P31 S{(value ? 255 : 0)}"); break;
+                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P31 S{(value ? 0 : 255)}"); break;
                         case FirmwareTypes.LagoVista_PnP: Enqueue($"M60 S{(value ? 255 : 0)}"); break;
                     }
 
@@ -253,7 +253,7 @@ namespace LagoVista.PickAndPlace
                 {
                     switch (Settings.MachineType)
                     {
-                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P33 S{(value ? 255 : 0)}"); break;
+                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P33 S{(value ? 0 : 255)}"); break;
                         case FirmwareTypes.LagoVista_PnP: Enqueue($"M61 S{(value ? 255 : 0)}"); break;
                     }
 
@@ -263,62 +263,120 @@ namespace LagoVista.PickAndPlace
             }
         }
 
-        private bool _vacuum1On = false;
-        public bool Vacuum1On
+        private bool _vacuumPump = false;
+        public bool VacuumPump
         {
-            get { return _vacuum1On; }
+            get { return _vacuumPump; }
             set
             {
-                if (_vacuum1On != value)
+                if (_vacuumPump != value)
                 {
                     switch (Settings.MachineType)
                     {
-                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P25 S{(value ? 255 : 0)}"); break;
-                        case FirmwareTypes.LagoVista_PnP: Enqueue($"M64 S{(value ? 255 : 0)}"); break;
+                        case FirmwareTypes.Repeteir_PnP:
+                            Enqueue($"M42 P10 S{(value ? 255 : 0)}");
+                            break;
+                        case FirmwareTypes.LagoVista_PnP:
+                            Enqueue($"M64 S{(value ? 255 : 0)}");
+                            
+                            break;
                     }
 
-                    _vacuum1On = value;
+                    _vacuumPump = value;
                     RaisePropertyChanged();
                 }
             }
         }
 
-        private bool _vacuum2On = false;
-        public bool Vacuum2On
+        private bool _puffPump = false;
+        public bool PuffPump
         {
-            get { return _vacuum2On; }
+            get { return _puffPump; }
             set
             {
-                if (_vacuum2On != value)
+                if (_puffPump != value)
                 {
                     switch (Settings.MachineType)
                     {
-                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P27 S{(value ? 255 : 0)}"); break;
-                        case FirmwareTypes.LagoVista_PnP: Enqueue($"M63 S{(value ? 255 : 0)}"); break;
+                        case FirmwareTypes.Repeteir_PnP: 
+                            Enqueue($"M42 P07 S{(value ? 255 : 0)}");
+                            break;
+                        case FirmwareTypes.LagoVista_PnP: 
+                            Enqueue($"M63 S{(value ? 255 : 0)}");                            
+                            break;
                     }
                 }
 
-                _vacuum2On = value;
+                _puffPump = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _headSolenoid = false;
+        public bool HeadSolenoid
+        {
+            get { return _headSolenoid; }
+            set
+            {
+                if (_headSolenoid != value)
+                {
+                    switch (Settings.MachineType)
+                    {
+                        case FirmwareTypes.Repeteir_PnP:
+                            Enqueue($"M42 P23 S{(value ? 255 : 0)}");
+                            break;
+                    }
+                }
+
+                _headSolenoid = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        private bool _solendoidOn = false;
-        public bool SolendoidOn
+        private bool _puffSolenoid = false;
+        public bool PuffSolenoid
         {
-            get { return _solendoidOn; }
+            get { return _puffSolenoid; }
             set
             {
-                if (_solendoidOn != value)
+                if (_puffSolenoid != value)
                 {
                     switch (Settings.MachineType)
                     {
-                        case FirmwareTypes.Repeteir_PnP: Enqueue($"M42 P29 S{(value ? 255 : 0)}"); break;
-                        case FirmwareTypes.LagoVista_PnP: Enqueue($"M64 S{(value ? 255 : 0)}"); break;
+                        case FirmwareTypes.Repeteir_PnP:
+                                Enqueue($"M42 P23 S{(value ? 255 : 0)}");
+                            break;
+                    }
+                }
+
+                _puffSolenoid = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool _vacuumSolenoid = false;
+        public bool VacuumSolendoid
+        {
+            get { return _vacuumSolenoid; }
+            set
+            {
+                if (_vacuumSolenoid != value)
+                {
+                    switch (Settings.MachineType)
+                    {
+                        case FirmwareTypes.Repeteir_PnP:
+                            Enqueue($"M42 P27 S{(value ? 255 : 0)}");
+                            
+                            break;
+                        case FirmwareTypes.LagoVista_PnP:
+                            
+                            Enqueue($"M64 S{(value ? 255 : 0)}"); 
+                            break;
                     }
 
-                    _solendoidOn = value;
+                    _vacuumSolenoid = value;
                     RaisePropertyChanged();
                 }
             }

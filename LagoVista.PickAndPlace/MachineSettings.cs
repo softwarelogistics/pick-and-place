@@ -66,6 +66,14 @@ namespace LagoVista.PickAndPlace
             set { Set(ref _currentSerialPort, value); }
         }
 
+
+        SerialPortInfo _serialPort2;
+        public SerialPortInfo SerialPort2
+        {
+            get { return _serialPort2; }
+            set { Set(ref _serialPort2, value); }
+        }
+
         ConnectionTypes _connectionType;
         public ConnectionTypes ConnectionType
         {

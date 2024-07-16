@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="196" d:DesignWidth="1000">
+             d:DesignHeight="196" d:DesignWidth="1048">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -21,6 +21,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
+                
             </Grid.ColumnDefinitions>
             <Grid.Resources>
                 <Style TargetType="fa:ImageAwesome">
@@ -232,21 +233,26 @@
                         <Image Source="/imgs/BottomLight.png" />
                     </ToggleButton.Content>
                 </ToggleButton>
-                <ToggleButton IsChecked="{Binding Machine.Vacuum1On, Mode=TwoWay}" ToolTip="Vacuum Pump">
+                <ToggleButton IsChecked="{Binding Machine.VacuumPump, Mode=TwoWay}" ToolTip="Vacuum Pump">
                     <ToggleButton.Content>
                         <Image Source="/imgs/Vacuum1.png" />
                     </ToggleButton.Content>
                 </ToggleButton>
-                <ToggleButton IsChecked="{Binding Machine.Vacuum2On, Mode=TwoWay}" ToolTip="Vacuum Pump">
+                <ToggleButton IsChecked="{Binding Machine.PuffPump, Mode=TwoWay}" ToolTip="Puff Pump">
                     <ToggleButton.Content>
                         <Image Source="/imgs/Vacuum2.png" />
                     </ToggleButton.Content>
                 </ToggleButton>
-                <ToggleButton IsChecked="{Binding Machine.SolendoidOn, Mode=TwoWay}" ToolTip="Exhaust Solenoid">
+                <ToggleButton IsChecked="{Binding Machine.VacuumSolendoid, Mode=TwoWay}" ToolTip="Vacuum Solenoid">
                     <ToggleButton.Content>
                         <Image Source="/imgs/Solenoid.png" />
                     </ToggleButton.Content>
-                </ToggleButton>                
+                </ToggleButton>
+                <ToggleButton IsChecked="{Binding Machine.PuffSolenoid, Mode=TwoWay}" ToolTip="Puff Solenoid">
+                    <ToggleButton.Content>
+                        <Image Source="/imgs/ExhaustSolenoid.png" />
+                    </ToggleButton.Content>
+                </ToggleButton>
             </StackPanel>
         </Grid>
     </Grid>

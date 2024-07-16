@@ -155,13 +155,13 @@ namespace LagoVista.PickAndPlace
             {
                 _bottomLightOn = accMessage.Groups["bottomLight"].Value == "1";
                 _topLightOn = accMessage.Groups["topLight"].Value == "1";
-                _vacuum1On = accMessage.Groups["vacuum1"].Value == "1";
-                _vacuum2On = accMessage.Groups["vacuum2"].Value == "1";
-                _solendoidOn = accMessage.Groups["solenoid"].Value == "1";
+                _vacuumPump = accMessage.Groups["vacuum1"].Value == "1";
+                _puffPump = accMessage.Groups["vacuum2"].Value == "1";
+                _vacuumSolenoid = accMessage.Groups["solenoid"].Value == "1";
 
-                RaisePropertyChanged(nameof(SolendoidOn));
-                RaisePropertyChanged(nameof(Vacuum1On));
-                RaisePropertyChanged(nameof(Vacuum2On));
+                RaisePropertyChanged(nameof(VacuumSolendoid));
+                RaisePropertyChanged(nameof(VacuumPump));
+                RaisePropertyChanged(nameof(PuffPump));
                 RaisePropertyChanged(nameof(BottomLightOn));
                 RaisePropertyChanged(nameof(TopLightOn));
 
@@ -310,16 +310,16 @@ namespace LagoVista.PickAndPlace
                         break;
 
                     case 25:
-                        _vacuum1On = state > 0;
-                        RaisePropertyChanged(nameof(Vacuum1On));
+                        _vacuumPump = state > 0;
+                        RaisePropertyChanged(nameof(VacuumPump));
                         break;
                     case 27:
-                        _vacuum2On = state > 0;
-                        RaisePropertyChanged(nameof(Vacuum2On));
+                        _puffPump = state > 0;
+                        RaisePropertyChanged(nameof(PuffPump));
                         break;
                     case 29:
-                        _solendoidOn = state > 0;
-                        RaisePropertyChanged(nameof(SolendoidOn));
+                        _vacuumSolenoid = state > 0;
+                        RaisePropertyChanged(nameof(VacuumSolendoid));
                         break;
                     case 31:
                         _topLightOn = state > 0;

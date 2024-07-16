@@ -11,11 +11,14 @@ namespace LagoVista.PickAndPlace
     public partial class Machine
     {
         ISerialPort _port;
+        ISerialPort _vacuumPort;
+
         ISocketClient _socketClient;
 
-        public async Task ConnectAsync(ISerialPort port)
+        public async Task ConnectAsync(ISerialPort port, ISerialPort port2 = null)
         {
             var pnpPort = port as IPnPSerialPort;
+            var vacuumPort = port2 as IPnPSerialPort;
 
             if (Connected)
                 throw new Exception("Can't Connect: Already Connected");
@@ -30,6 +33,7 @@ namespace LagoVista.PickAndPlace
                     AddStatusMessage(StatusMessageTypes.Warning, $"Could not open serial port");
                     return;
                 }
+
 
                 Connected = true;
 
@@ -197,9 +201,9 @@ namespace LagoVista.PickAndPlace
                     else if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
                         _toSendPriority.Enqueue("M112");
 
-                    Vacuum1On = false;
-                    Vacuum2On = false;
-                    SolendoidOn = false;
+                    VacuumPump = false;
+                    PuffPump = false;
+                    VacuumSolendoid = false;
                 }
 
                 UnacknowledgedBytesSent = 0;
@@ -275,7 +279,7 @@ namespace LagoVista.PickAndPlace
             if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
             {
                 //Settings.DefaultWorkspaceHome.X -= this.NormalizedPosition.X;
-//                Settings.DefaultWorkspaceHome.Y -= this.NormalizedPosition.Y;
+                //                Settings.DefaultWorkspaceHome.Y -= this.NormalizedPosition.Y;
 
                 await this.MachineRepo.SaveAsync();
 
@@ -319,9 +323,9 @@ namespace LagoVista.PickAndPlace
             }
             else
             {
-                Vacuum1On = false;
-                Vacuum2On = false;
-                SolendoidOn = false;
+                VacuumPump = false;
+                PuffPump = false;
+                VacuumSolendoid = false;
                 Enqueue("G28");
                 if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
                 {
@@ -373,6 +377,6 @@ namespace LagoVista.PickAndPlace
         public void LaserOn()
         {
             Enqueue("M3");
-        }        
+        }
     }
 }
