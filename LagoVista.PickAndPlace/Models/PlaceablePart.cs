@@ -13,5 +13,8 @@ namespace LagoVista.PickAndPlace.Models
         public string Value { get; set; }
 
         public PartStrip PartStrip { get; set; }
+
+        public string StripFeederPackage { get; set; }
+        public string StripFeeder { get; set; }
     }
 }

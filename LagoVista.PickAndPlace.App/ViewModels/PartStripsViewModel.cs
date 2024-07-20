@@ -16,6 +16,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
     {
         private MachineVisionViewModelBase _parent;
         private PnPMachine _pnpMachine;
+        private StripFeederViewModel _stripFeederVM;
         private string _pnpJobFileName;
         private PnPJob _job;
 
@@ -26,7 +27,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             LastPart,
         }
 
-        public PartStripsViewModel(IMachine machine, MachineVisionViewModelBase parent, PnPJob job) : base(machine)
+        public PartStripsViewModel(IMachine machine, MachineVisionViewModelBase parent, PnPJob job, StripFeederViewModel stripFeederVM) : base(machine)
         {
             _parent = parent;
             _job = job;
@@ -50,6 +51,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             SortStripsCommand = new RelayCommand(() => _pnpMachine?.SortPartStrips());
 
             ShowLinkCommand = RelayCommand<string>.Create((type) => ShowLink(type));
+            _stripFeederVM = stripFeederVM;
         }
 
         private void RefreshCommandEnabled()
@@ -150,7 +152,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             _parent.SelectMVProfile("tapehole");
 
-            _parent.Machine.GotoPoint(SelectedPartStrip.ReferenceHoleX * Machine.Settings.PartStripScaler.X, SelectedPartStrip.ReferenceHoleY * Machine.Settings.PartStripScaler.Y, feedRate);
+            var partLocation = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.ReferenceHole);
+            if(partLocation != null)
+                _parent.Machine.GotoPoint(partLocation.X, partLocation.Y, feedRate);
+            else
+                _parent.Machine.GotoPoint(SelectedPartStrip.ReferenceHoleX * Machine.Settings.PartStripScaler.X, SelectedPartStrip.ReferenceHoleY * Machine.Settings.PartStripScaler.Y, feedRate);
+
             _inspectState = InspectStates.ReferenceHole;
         }
 
@@ -175,7 +182,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
             feedRate = Machine.Settings.FastFeedRate;
 
-            _parent.Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X,  newY * Machine.Settings.PartStripScaler.Y, feedRate);
+            var partLocation = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.CurrentPart);
+            if (partLocation != null)
+                _parent.Machine.GotoPoint(partLocation.X, partLocation.Y, feedRate);
+            else
+                _parent.Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
+
             _inspectState = InspectStates.CurrentPart;
         }
 
@@ -298,7 +310,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
             feedRate = Machine.Settings.FastFeedRate;
-            _parent.Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
+
+            var partLocation = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.FirstPart);
+            if(partLocation != null)
+                _parent.Machine.GotoPoint(partLocation.X, partLocation.Y, feedRate);
+            else
+                _parent.Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
+
             RefreshCommandEnabled();
         }
 
@@ -307,7 +325,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
             _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
             _parent.SelectMVProfile("squarepart");
-
 
             var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
             var lastPartY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole;
@@ -326,9 +343,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
 
 
-            _parent.Machine.GotoPoint(
+            var location = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.LastPart);
+            if(location != null)
+                _parent.Machine.GotoPoint(location.X, location.Y);
+            else
+                _parent.Machine.GotoPoint(
                    (SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset) * Machine.Settings.PartStripScaler.X,
                    (SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset) * Machine.Settings.PartStripScaler.Y);
+
 
             RefreshCommandEnabled();
             _inspectState = InspectStates.LastPart;

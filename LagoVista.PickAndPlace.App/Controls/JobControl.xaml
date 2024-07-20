@@ -144,6 +144,11 @@
                         <fa:ImageAwesome Icon="Home" ToolTip="Homing Cycle" />
                     </Button.Content>
                 </Button>
+                <Button  Command="{Binding HomeViaOriginCommand}"  >
+                    <Button.Content>
+                        <fa:ImageAwesome Icon="Home" ToolTip="Homing Via Origin" />
+                    </Button.Content>
+                </Button>
                 <Button ToolTip="Soft Reset"  Command="{Binding SoftResetCommand}" >
                     <Button.Content>
                         <fa:ImageAwesome Icon="Recycle" />

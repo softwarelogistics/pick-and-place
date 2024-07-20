@@ -24,6 +24,13 @@ namespace LagoVista.PickAndPlace
         public double ArcToLineSegmentLength { get; set; }
         public double SplitSegmentLength { get; set; }
 
+        private Point2D<double> _knownCalibrationPoint = new Point2D<double>();
+        public Point2D<double> KnownCalibrationPoint
+        {
+            get { return _knownCalibrationPoint; }
+            set { Set(ref _knownCalibrationPoint, value); }
+        }
+
         private Point2D<double> _tool1Offset = new Point2D<double>();
         public Point2D<double> Tool1Offset
         {
@@ -36,6 +43,14 @@ namespace LagoVista.PickAndPlace
         {
             get { return _tool2Offset; }
             set { Set(ref _tool2Offset, value); }
+        }
+
+
+        private Point2D<double> _pcbOffset = new Point2D<double>();
+        public Point2D<double> PCBOffset
+        {
+            get { return _pcbOffset; }
+            set { Set(ref _pcbOffset, value); }
         }
 
         private Point3D<double> _defaultWorkspaceHome = new Point3D<double>();

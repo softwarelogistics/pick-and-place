@@ -61,7 +61,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             SelectMVProfile("tapehold");
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
-            Machine.SendCommand($"G0 X{SelectedPartStrip.ReferenceHoleX} Y{SelectedPartStrip.ReferenceHoleY}");            
+
+            var position = StripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.ReferenceHole);
+            if(position != null)
+                Machine.SendCommand($"G0 X{position.X}, Y{position.Y}");
+            else
+                Machine.SendCommand($"G0 X{SelectedPartStrip.ReferenceHoleX} Y{SelectedPartStrip.ReferenceHoleY}");            
         }
 
         public async Task SetRefPoint()
@@ -75,25 +80,33 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
-          
+
             PartSizeWidth = Convert.ToInt32(SelectedPartPackage.Width * 5);
             PartSizeHeight = Convert.ToInt32(SelectedPartPackage.Length * 5);
 
             SelectMVProfile("squarepart");
 
-            var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
-            var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
-            var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+            var partPosition = StripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.CurrentPart);
+            if (partPosition != null)
+            {
+                Machine.GotoPoint(partPosition.X, partPosition.Y, Machine.Settings.FastFeedRate);
+            }
+            else
+            { 
+                var partLocationRatio = (double)SelectedPartStrip.CurrentPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+                var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+                var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
 
-            var newX = SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole + xOffset;
-            var newY = SelectedPartStrip.ReferenceHoleY + SelectedPartPackage.CenterYFromHole + yOffset;
+                var newX = SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.CurrentPartIndex * SelectedPartPackage.SpacingX) + SelectedPartPackage.CenterXFromHole + xOffset;
+                var newY = SelectedPartStrip.ReferenceHoleY + SelectedPartPackage.CenterYFromHole + yOffset;
 
-            var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
-            var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
-            var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
-            feedRate = Machine.Settings.FastFeedRate;
+                var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
+                var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
+                var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+                feedRate = Machine.Settings.FastFeedRate;
 
-            Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
+                Machine.GotoPoint(newX * Machine.Settings.PartStripScaler.X, newY * Machine.Settings.PartStripScaler.Y, feedRate);
+            }
         }
 
         private void FinalizeCameraCalibration()
@@ -177,8 +190,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public async void SetBoardOffset()
         {
-            var deltaX = SelectedPartToBePlaced.X - Machine.MachinePosition.X;
-            var deltaY = SelectedPartToBePlaced.Y - Machine.MachinePosition.Y;
+            var deltaX = (SelectedPartToBePlaced.X - Machine.MachinePosition.X) + Machine.Settings.PCBOffset.X;
+            var deltaY = (SelectedPartToBePlaced.Y - Machine.MachinePosition.Y) + Machine.Settings.PCBOffset.Y;
 
             _job.BoardOffset = new Point2D<double>(deltaX.Value, deltaY.Value);
             RaisePropertyChanged(nameof(BoardOffset));

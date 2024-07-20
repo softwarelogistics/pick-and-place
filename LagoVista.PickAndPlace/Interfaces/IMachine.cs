@@ -181,6 +181,8 @@ namespace LagoVista.PickAndPlace.Interfaces
 
         void HomingCycle();
 
+        void HomeViaOrigin();
+
         void SetFavorite1();
 
         void SetFavorite2();

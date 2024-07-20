@@ -18,8 +18,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public MVHomingViewModel(IMachine machine) : base(machine)
         {
             EndStopHomingCycleCommand = new RelayCommand(EndStopHomingCycle, () => HasFrame);
-            BeginMVHomingCycleCommand = new RelayCommand(BeginMVHomingCycle, () => HasFrame);
-            
+            BeginMVHomingCycleCommand = new RelayCommand(BeginMVHomingCycle, () => HasFrame);            
             GoToFiducialHomeCommand = new RelayCommand(GoToFiducialHome, () => HasFrame);
 
             CalibrateFiducialHomeCommand = new RelayCommand(CalibrateFiducialHome, () => HasFrame);

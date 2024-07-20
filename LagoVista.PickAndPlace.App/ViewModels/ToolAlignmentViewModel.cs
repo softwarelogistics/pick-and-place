@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Commanding;
 using LagoVista.Core.Models.Drawing;
 using LagoVista.PickAndPlace.Interfaces;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,19 +12,30 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public ToolAlignmentViewModel(IMachine machine) : base(machine)
         {
 
-            SetToolOneMovePositionCommand = new RelayCommand(SetTool1MovePosition, () => Machine.Connected);
-            SetToolOnePickPositionCommand = new RelayCommand(SetTool1PickPosition, () => Machine.Connected);
-            SetToolOnePlacePositionCommand = new RelayCommand(SetTool1PlacePosition, () => Machine.Connected);
+            SetToolOneMovePositionCommand = new RelayCommand(SetTool1MovePosition, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            SetToolOnePickPositionCommand = new RelayCommand(SetTool1PickPosition, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            SetToolOnePlacePositionCommand = new RelayCommand(SetTool1PlacePosition, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
 
-            SetToolOneLocationCommand = new RelayCommand(SetTool1Location, () => Machine.Connected && MarkedTool1Location != null);
-            SetToolTwoLocationCommand = new RelayCommand(SetTool2Location, () => Machine.Connected && MarkedTool1Location != null);
+            SetToolOneLocationCommand = new RelayCommand(SetTool1Location, () => Machine.Connected && Machine.Settings.KnownCalibrationPoint != null && Machine.ViewType == ViewTypes.Camera);
+            SetToolTwoLocationCommand = new RelayCommand(SetTool2Location, () => Machine.Connected && Machine.Settings.KnownCalibrationPoint != null && Machine.ViewType == ViewTypes.Camera);
 
-            MarkTool1LocationCommand = new RelayCommand(MarkTool1Location, () => Machine.Connected);
-            SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => Machine.Connected);
-            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation);
+            MarkTool1LocationCommand = new RelayCommand(MarkTool1Location, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            GoToMarkTool1LocationCommand = new RelayCommand(GoToMarkTook1Location, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            GoToolOneLocationCommand = new RelayCommand(GoToolOneLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+
             AddNozzleCommand = new RelayCommand(AddNozzle);
             DeleteNozzleCommand = new RelayCommand(DeleteNozzle);
             SaveCalibrationCommand = new RelayCommand(SaveCalibration, () => IsDirty);
+
+            Machine.PropertyChanged += Machine_PropertyChanged;
+        }
+
+        private void Machine_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Machine.ViewType))
+                CaptureEnded();
         }
 
         public override async Task InitAsync()
@@ -78,6 +90,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         protected override void CaptureStarted()
         {
+            MarkTool1LocationCommand.RaiseCanExecuteChanged();
             SetToolOneLocationCommand.RaiseCanExecuteChanged();
             SetToolTwoLocationCommand.RaiseCanExecuteChanged();
             SetTopCameraLocationCommand.RaiseCanExecuteChanged();
@@ -89,6 +102,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         protected override void CaptureEnded()
         {
+            MarkTool1LocationCommand.RaiseCanExecuteChanged();
             SetToolOneLocationCommand.RaiseCanExecuteChanged();
             SetToolTwoLocationCommand.RaiseCanExecuteChanged();
             SetTopCameraLocationCommand.RaiseCanExecuteChanged();
@@ -166,12 +180,25 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             IsDirty = true;
         }
 
+        public void GoToMarkTook1Location()
+        {
+            Machine.SendCommand($"G0 Z{Machine.Settings.ToolSafeMoveHeight} F5000");
+            Machine.GotoPoint(Machine.Settings.KnownCalibrationPoint);
+        }
+
+        public void GoToolOneLocation()
+        {
+            Machine.SendCommand($"G0 Z{Machine.Settings.ToolSafeMoveHeight} F5000");
+            Machine.GotoPoint(Machine.MachinePosition.X - Machine.Settings.Tool1Offset.X, Machine.MachinePosition.Y - Machine.Settings.Tool1Offset.Y);
+        }
+
         public void MarkTool1Location()
         {
-            MarkedTool1Location = new Point2D<double>()
+            
+            Machine.Settings.KnownCalibrationPoint = new Point2D<double>()
             {
-                X = Machine.MachinePosition.X,
-                Y = Machine.MachinePosition.Y,
+                X = Math.Round(Machine.MachinePosition.X, 2),
+                Y = Math.Round(Machine.MachinePosition.Y, 2),
             };
 
             SetToolOneLocationCommand.RaiseCanExecuteChanged();
@@ -187,8 +214,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             Machine.Settings.Tool1Offset = new Point2D<double>()
             {
-                X = Machine.MachinePosition.X - MarkedTool1Location.X,
-                Y = Machine.MachinePosition.Y - MarkedTool1Location.Y,
+                X = -Math.Round(Machine.MachinePosition.X - Machine.Settings.KnownCalibrationPoint.X, 2),
+                Y = -Math.Round(Machine.MachinePosition.Y - Machine.Settings.KnownCalibrationPoint.Y, 2),
             };
 
             IsDirty = true;
@@ -203,8 +230,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             Machine.Settings.Tool2Offset = new Point2D<double>()
             {
-                X = MarkedTool1Location.X - Machine.MachinePosition.X,
-                Y = MarkedTool1Location.Y - Machine.MachinePosition.Y,
+                X = -Machine.Settings.KnownCalibrationPoint.X - Machine.MachinePosition.X,
+                Y = -Machine.Settings.KnownCalibrationPoint.Y - Machine.MachinePosition.Y,
             };
 
             IsDirty = true;
@@ -236,6 +263,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand SetToolOnePickPositionCommand { get; private set; }
         public RelayCommand SaveCalibrationCommand { get; private set; }
         public RelayCommand MarkTool1LocationCommand { get; private set; }
+        public RelayCommand GoToMarkTool1LocationCommand { get; private set; }
+        public RelayCommand GoToolOneLocationCommand { get; private set; }
+
         public RelayCommand AddNozzleCommand { get; private set; }
         public RelayCommand DeleteNozzleCommand { get; private set; }
 
@@ -251,13 +281,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             get { return _bottomCameraLocation; }
             set { Set(ref _bottomCameraLocation, value); }
-        }
-
-        Point2D<double> _markedTool1Location;
-        public Point2D<double> MarkedTool1Location
-        {
-            get { return _markedTool1Location; }
-            set { Set(ref _markedTool1Location, value); }
         }
     }
 }

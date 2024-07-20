@@ -65,10 +65,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 job.BuildFlavors.Add(SelectedBuildFlavor);
             }
 
+            StripFeederVM = new StripFeederViewModel(machine);
             PackageLibraryVM = new PackageLibraryViewModel();
-            PartStripsViewModel = new PartStripsViewModel(machine, this, job);
+            PartStripsViewModel = new PartStripsViewModel(machine, this, job, StripFeederVM);
             ToolAlignmentVM = new ToolAlignmentViewModel(machine);
-
+            
             GoToFiducial1Command = new RelayCommand(() => GoToFiducial(1));
             GoToFiducial2Command = new RelayCommand(() => GoToFiducial(2));
 

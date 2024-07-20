@@ -331,6 +331,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Content="Tool Offset X" />
@@ -340,6 +342,14 @@
                     <Label Grid.Row="1" Content="Tool Offset Y" />
                     <TextBox Text="{Binding Settings.Tool1Offset.Y}"  Grid.Row="1" />
                     <Label Content="mm" Grid.Row="1" Grid.Column="3" />
+
+                    <Label Grid.Row="2" Content="PCB Origin X" />
+                    <TextBox Text="{Binding Settings.PCBOffset.X}"  Grid.Row="2" />
+                    <Label Content="mm" Grid.Row="2" Grid.Column="3" />
+
+                    <Label Grid.Row="3" Content="PCB Origin Y" />
+                    <TextBox Text="{Binding Settings.PCBOffset.Y}"  Grid.Row="3" />
+                    <Label Content="mm" Grid.Row="3" Grid.Column="3" />
 
 
                 </Grid>

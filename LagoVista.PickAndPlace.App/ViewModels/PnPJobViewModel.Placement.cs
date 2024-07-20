@@ -12,7 +12,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             _partIndex = 0;
             Machine.LocationUpdateEnabled = false;
-
+            await Machine.SetViewTypeAsync(ViewTypes.Tool1);
             // Make sure any pending location requests have completed.
             await Task.Delay(1000);
             while (SelectedPart != null && !_isPaused && _partIndex < SelectedPart.Parts.Count)
@@ -33,8 +33,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 _partIndex = 0;
             }
-            
 
+
+            await Machine.SetViewTypeAsync(ViewTypes.Tool1);
             // Make sure any pending location requests have completed.
             await Task.Delay(1000);
             await PlacePartAsync();
@@ -58,9 +59,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     Machine.VacuumPump = true;
                     Machine.PuffPump = true;
                     await Task.Delay(1000);
-                }
-
-                await Machine.SetViewTypeAsync(ViewTypes.Tool1);
+                }                
 
                 if (_selectPartToBePlaced == null)
                 {
@@ -77,9 +76,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 //cmds.Add(WaitForComplete());
                 //cmds.Add(WaitForComplete());
                 cmds.Add(ProduceVacuumGCode(true)); // Turn on solenoid 
-                cmds.Add(DwellGCode(500)); // Wait 500ms to pickup part.
+                cmds.Add(DwellGCode(1500)); // Wait 500ms to pickup part.
                 cmds.Add(PickHeightGCode()); // Move to pick height                
-                cmds.Add(DwellGCode(050)); // Wait 500ms to pickup part.
+                cmds.Add(DwellGCode(1500)); // Wait 500ms to pickup part.
                 cmds.Add(SafeHeightGCodeGCode()); // Go to move height
 
                 var cRotation = SelectedPartToBePlaced.RotateAngle + SelectedPartPackage.RotationInTape;
@@ -89,20 +88,17 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         cRotation -= 360;
                     cmds.Add(RotationGCode(cRotation));
                   //  cmds.Add(WaitForComplete());
-                }
+                }              
 
-                cmds.Add($"G90");
-
-                var offsetY = SelectedPartToBePlaced.Y - _job.BoardOffset.Y;
-                var offsetX = SelectedPartToBePlaced.X - _job.BoardOffset.X;
-                cmds.Add($"G1 X{offsetX * Job.BoardScaler.X} Y{offsetY * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}");
+                cmds.Add(GetGoToPartOnBoardGCode());
 
                 cmds.Add(PlaceHeightGCode(SelectedPartPackage));
                 //cmds.Add(WaitForComplete());
                 cmds.Add(ProduceVacuumGCode(false));
+                cmds.Add(ProducePuffGCode(true));
                 cmds.Add(DwellGCode(50)); // Wait 500ms to let placed part settle in
                 cmds.Add(SafeHeightGCodeGCode()); // Return to move height.
-
+                cmds.Add(ProducePuffGCode(false));
                 cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
                 //cmds.Add(WaitForComplete());                
 
@@ -141,11 +137,18 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private string GetGoToPartInTrayGCode()
         {
-            var deltaX = Math.Abs(XPartInTray.Value - Machine.MachinePosition.X);
-            var deltaY = Math.Abs(YPartInTray.Value - Machine.MachinePosition.Y);
-            var feedRate = Machine.Settings.FastFeedRate;
-
-            return $"G0 X{XPartInTray * Machine.Settings.PartStripScaler.X} Y{YPartInTray * Machine.Settings.PartStripScaler.Y} F{feedRate}";
+            var location = StripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.CurrentPart);
+            if (location != null)
+            {
+                return $"G0 X{location.X} Y{location.Y} F{Machine.Settings.FastFeedRate}";
+            }
+            else
+            {
+                var deltaX = Math.Abs(XPartInTray.Value - Machine.MachinePosition.X);
+                var deltaY = Math.Abs(YPartInTray.Value - Machine.MachinePosition.Y);
+                var feedRate = Machine.Settings.FastFeedRate;
+                return $"G0 X{XPartInTray * Machine.Settings.PartStripScaler.X} Y{YPartInTray * Machine.Settings.PartStripScaler.Y} F{feedRate}";
+            }
         }
 
         public void GoToPartPositionInTray()
@@ -159,14 +162,21 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private String GetGoToPartOnBoardGCodeX()
         {
-            var offset = SelectedPartToBePlaced.X - _job.BoardOffset.X;
+            var offset = (SelectedPartToBePlaced.X - _job.BoardOffset.X) + Machine.Settings.PCBOffset.X;
             return $"G1 X{offset * Job.BoardScaler.X}  F{Machine.Settings.FastFeedRate}";
         }
 
         private String GetGoToPartOnBoardGCodeY()
         {
-            var offset = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y);
+            var offset = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y) + Machine.Settings.PCBOffset.Y;
             return $"G1 Y{offset * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+        }
+
+        private String GetGoToPartOnBoardGCode()
+        {
+            var offsetX = (SelectedPartToBePlaced.X - _job.BoardOffset.X) + Machine.Settings.PCBOffset.X;
+            var offsetY = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y) + Machine.Settings.PCBOffset.Y;
+            return $"G1 X{offsetX}  Y{offsetY} F{Machine.Settings.FastFeedRate}";
         }
 
         public async Task GoToPartOnBoard()
@@ -176,8 +186,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 await Machine.SetViewTypeAsync(ViewTypes.Camera);
                 Machine.SendCommand(SafeHeightGCodeGCode());
 
-                var offsetY = SelectedPartToBePlaced.Y - _job.BoardOffset.Y;
-                var offsetX = SelectedPartToBePlaced.X - _job.BoardOffset.X;
+                var offsetY = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y) + Machine.Settings.PCBOffset.Y;
+                var offsetX = (SelectedPartToBePlaced.X - _job.BoardOffset.X) + Machine.Settings.PCBOffset.X;
                 var gcode = $"G1 X{offsetX * Job.BoardScaler.X} Y{offsetY * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
 
                 Machine.SendCommand(gcode);

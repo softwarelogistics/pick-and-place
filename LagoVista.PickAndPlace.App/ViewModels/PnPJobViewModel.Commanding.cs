@@ -11,6 +11,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             CloseCommand = new RelayCommand(Close);
             CloneCommand = new RelayCommand(CloneConfiguration);
 
+            PrintManualPlaceCommand = new RelayCommand(PrintManualPlace);
             PeformMachineAlignmentCommand = new RelayCommand(PerformMachineAlignment);
 
             GoToPartOnBoardCommand = new RelayCommand(() => GoToPartOnBoard());
@@ -28,7 +29,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             ResetCurrentComponentCommand = new RelayCommand(ResetCurrentComponent, () => SelectedPartStrip != null);
 
             GoToWorkHomeCommand = new RelayCommand(() => GotoWorkspaceHome());
+            HomeViaOriginCommand = new RelayCommand(() => HomeViaOrigin());
             SetWorkHomeCommand = new RelayCommand(() => Machine.SetWorkspaceHome());
+            GoToPCBOriginCommand = new RelayCommand(() => GoToPCBOrigin());
 
             MoveToPreviousComponentInTapeCommand = new RelayCommand(MoveToPreviousComponent, () => SelectedPartStrip != null && SelectedPartStrip.CurrentPartIndex > 0);
             MoveToNextComponentInTapeCommand = new RelayCommand(MoveToNextComponentInTape, () => SelectedPartStrip != null && SelectedPartStrip.CurrentPartIndex < SelectedPartStrip.ReferenceHoleX);
@@ -82,6 +85,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand AddFeederCommand { get; private set; }
         public RelayCommand RefreshConfigurationPartsCommand { get; private set; }
         public RelayCommand CloneCommand { get; private set; }
+        public RelayCommand PrintManualPlaceCommand { get; private set; }
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand GoToMachineFiducialCommand { get; private set; }
         public RelayCommand SetMachineFiducialCommand { get; private set; }
@@ -95,6 +99,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand PausePlacmentCommand { get; set; }
         public RelayCommand MoveToNextComponentInTapeCommand { get; set; }
         public RelayCommand GoToWorkHomeCommand { get; set; }
+        public RelayCommand GoToPCBOriginCommand { get; set; }
+        public RelayCommand HomeViaOriginCommand { get; set; }
         public RelayCommand SetWorkHomeCommand { get; set; }
         public RelayCommand CloseCommand { get; set; }
         public RelayCommand PlaceCurrentPartCommand { get; set; }

@@ -15,6 +15,7 @@ namespace LagoVista.PCB.Eagle.Models
         public string Rotate { get; set; }
         public bool Polarized { get; set; }
         public bool Included { get; set; }
+        public bool ManualPlace { get; set; }
         public string Function { get; set; }
         public string Notes { get; set; }
       

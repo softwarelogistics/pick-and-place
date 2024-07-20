@@ -97,6 +97,11 @@ namespace LagoVista.PickAndPlace.ViewModels
             Machine.HomingCycle();
         }
 
+        public void HomeViaOrigin()
+        {
+            Machine.HomeViaOrigin();
+        }
+
         public void StartProbe()
         {
             Machine.ProbingManager.StartProbe();

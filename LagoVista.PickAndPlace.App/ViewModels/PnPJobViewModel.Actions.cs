@@ -87,7 +87,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 case 1:
                     {
                         Machine.GotoWorkspaceHome();
-                        var gcode = $"G1 X{Job.BoardFiducial1.X * Job.BoardScaler.X} Y{Job.BoardFiducial1.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+                        var gcode = $"G1 X{(Job.BoardFiducial1.X * Job.BoardScaler.X) + Machine.Settings.PCBOffset.X} Y{(Job.BoardFiducial1.Y * Job.BoardScaler.Y) + Machine.Settings.PCBOffset.Y} F{Machine.Settings.FastFeedRate}";
                         SelectMVProfile("brdfiducual");
                         Machine.SendCommand(gcode);
                     }
@@ -95,7 +95,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 case 2:
                     {
                         Machine.GotoWorkspaceHome();
-                        var gcode = $"G1 X{Job.BoardFiducial2.X * Job.BoardScaler.X} Y{Job.BoardFiducial2.Y * Job.BoardScaler.Y} F{Machine.Settings.FastFeedRate}";
+                        var gcode = $"G1 X{(Job.BoardFiducial2.X * Job.BoardScaler.X) + Machine.Settings.PCBOffset.X} Y{(Job.BoardFiducial2.Y * Job.BoardScaler.Y) + Machine.Settings.PCBOffset.X} F{Machine.Settings.FastFeedRate}";
                         SelectMVProfile("brdfiducual");
                         Machine.SendCommand(gcode);
                     }
@@ -126,8 +126,28 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.GotoWorkspaceHome();
+            ShowTopCamera = false;
+            ShowBottomCamera = true;            
+        }
+
+        public void HomeViaOrigin()
+        {
+            Machine.SendCommand(SafeHeightGCodeGCode());
+            Machine.HomeViaOrigin();
+            ShowTopCamera = false;
+            ShowBottomCamera = true;
+            Machine.BottomLightOn = true;
+            Machine.TopLightOn = false;
+       }
+
+        public void GoToPCBOrigin()
+        {
+            Machine.SendCommand(SafeHeightGCodeGCode());
+            Machine.GotoPoint(Machine.Settings.PCBOffset.X, Machine.Settings.PCBOffset.Y, Machine.Settings.FastFeedRate);
             ShowBottomCamera = false;
             ShowTopCamera = true;
+            Machine.BottomLightOn = false;
+            Machine.TopLightOn = true;
         }
 
         public void GoToInspectPartRefHole()
@@ -160,6 +180,20 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var clonedFlavor = SelectedBuildFlavor.Clone(clonedName);
             BuildFlavors.Add(clonedFlavor);
             SelectedBuildFlavor = clonedFlavor;
+        }
+
+        public async void PrintManualPlace()
+        {
+            var manualParts = SelectedBuildFlavor.Components.Where(prt => prt.ManualPlace);
+            var bldr = new StringBuilder();
+            foreach (var manualPart in manualParts)
+                bldr.AppendLine($"{manualPart.Name}\t\t{manualPart.Value}");
+
+            var file = await Popups.ShowSaveFileAsync("txt");
+            if(!String.IsNullOrEmpty(file))
+            {
+                System.IO.File.WriteAllText(file, bldr.ToString());
+            }
         }
 
         public async void ResetCurrentComponent()

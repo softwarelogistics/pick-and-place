@@ -57,7 +57,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             switch (Machine.Settings.MachineType)
             {
-                case FirmwareTypes.Repeteir_PnP: return $"M42 P29 S{(value ? 0 : 255)}";
+                case FirmwareTypes.Repeteir_PnP: return $"M42 P27 S{(value ? 255 : 0)}";
                 case FirmwareTypes.LagoVista_PnP: return $"M64 S{(value ? 255 : 0)}";
             }
 
@@ -69,7 +69,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             switch (Machine.Settings.MachineType)
             {
                 case FirmwareTypes.Repeteir_PnP:
-                    return ($"D40 {(value ? 255 : 0)}\n");
+                    return ($"M42 P23 S{(value ? 255 : 0)}\n");
             }
 
             throw new Exception($"Can't produce vacuum GCode for machien type: {Machine.Settings.MachineType} .");

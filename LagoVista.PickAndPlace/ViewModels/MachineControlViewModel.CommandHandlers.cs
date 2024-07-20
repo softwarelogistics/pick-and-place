@@ -261,6 +261,7 @@ namespace LagoVista.PickAndPlace.ViewModels
                     }
 
                     break;
+
                 case WindowsKey.Left:
                     if (isControl)
                     {
@@ -303,6 +304,7 @@ namespace LagoVista.PickAndPlace.ViewModels
                     break;
 
                 case WindowsKey.OemPlus:
+
                     switch (XYStepMode)
                     {
                         case StepModes.XLarge:
@@ -360,42 +362,90 @@ namespace LagoVista.PickAndPlace.ViewModels
                     break;
 
                 case WindowsKey.PageUp:
-                    switch (XYStepMode)
+                    if (isControl)
                     {
-                        case StepModes.XLarge:
-                            break;
-                        case StepModes.Large:
-                            XYStepMode = StepModes.XLarge;
-                            break;
-                        case StepModes.Medium:
-                            XYStepMode = StepModes.Large;
-                            break;
-                        case StepModes.Small:
-                            XYStepMode = StepModes.Medium;
-                            break;
-                        case StepModes.Micro:
-                            XYStepMode = StepModes.Small;
-                            break;
+                        switch (ZStepMode)
+                        {
+                            case StepModes.XLarge:
+                                break;
+                            case StepModes.Large:
+                                break;
+                            case StepModes.Medium:
+                                ZStepMode = StepModes.Large;
+                                break;
+                            case StepModes.Small:
+                                ZStepMode = StepModes.Medium;
+                                break;
+                            case StepModes.Micro:
+                                ZStepMode = StepModes.Small;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (XYStepMode)
+                        {
+                            case StepModes.XLarge:
+                                break;
+                            case StepModes.Large:
+                                XYStepMode = StepModes.XLarge;
+                                break;
+                            case StepModes.Medium:
+                                XYStepMode = StepModes.Large;
+                                break;
+                            case StepModes.Small:
+                                XYStepMode = StepModes.Medium;
+                                break;
+                            case StepModes.Micro:
+                                XYStepMode = StepModes.Small;
+                                break;
+                        }
                     }
                     break;
                 case WindowsKey.PageDown:
-                    switch (XYStepMode)
+                    if (isControl)
                     {
-                        case StepModes.XLarge:
-                            XYStepMode = StepModes.Large;
-                            break;
-                        case StepModes.Large:
-                            XYStepMode = StepModes.Medium;
-                            break;
-                        case StepModes.Medium:
-                            XYStepMode = StepModes.Small;
-                            break;
-                        case StepModes.Small:
-                            XYStepMode = StepModes.Micro;
-                            break;
-                        case StepModes.Micro:
-                            break;
-                    };
+                        switch (ZStepMode)
+                        {
+                            case StepModes.XLarge:
+                                ZStepMode = StepModes.Large;
+                                break;
+                            case StepModes.Large:
+                                ZStepMode = StepModes.Medium;
+                                break;
+                            case StepModes.Medium:
+                                ZStepMode = StepModes.Small;
+                                break;
+                            case StepModes.Small:
+                                ZStepMode = StepModes.Micro;
+
+                                break;
+                            case StepModes.Micro:
+                                break;
+                        };
+                    }
+                    else
+                    {
+                        switch (XYStepMode)
+                        {
+                            case StepModes.XLarge:
+                                XYStepMode = StepModes.Large;
+                                break;
+                            case StepModes.Large:
+                                XYStepMode = StepModes.Medium;
+                                break;
+                            case StepModes.Medium:
+                                XYStepMode = StepModes.Small;
+                                break;
+                            case StepModes.Small:
+
+                                XYStepMode = StepModes.Micro;
+
+                                break;
+                            case StepModes.Micro:
+                                break;
+                        };
+                    }
                     break;
             }
         }

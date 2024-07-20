@@ -79,12 +79,15 @@ namespace LagoVista.PickAndPlace.Models
 
         public Task OpenAsync()
         {
+            if (System.IO.File.Exists(EagleBRDFilePath))
+            {
+                var doc = XDocument.Load(EagleBRDFilePath);
+                _board = EagleParser.ReadPCB(doc);
+                return Task.CompletedTask;
+            }
 
-            var doc = XDocument.Load(EagleBRDFilePath);
-
-            _board = EagleParser.ReadPCB(doc);
-
-            return Task.FromResult(default(object));
+            return Task.CompletedTask;
+            
         }
     }
 }

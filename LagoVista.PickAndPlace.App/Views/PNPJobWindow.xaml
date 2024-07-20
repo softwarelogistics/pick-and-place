@@ -33,18 +33,20 @@
                     <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                         <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
+                        <Button Command="{Binding HomeViaOriginCommand}" Style="{StaticResource CommandButton}" Content="1a) Home Via Origin" Width="200"/>
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
                         <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
                         <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
-                        <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4a) GoTo Board Fiducial 1" Width="200" />
-                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"  Style="{StaticResource CommandButton}" Content="4b) Set Board Fiducial 1" Width="200" />
-                        <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" Width="200" />
-                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"  Style="{StaticResource CommandButton}" Content="5b) Calibrate Fiducial 2" Width="200" />
-                        <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="6) Bottom Camera" Width="200" />
-                        <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="7) Calibrate Bottom Camera" Width="200" />
-                        <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="8) Set Bottom Camera" Width="200" />
-                        <Button Command="{Binding GoToMachineFiducialCommand }" Style="{StaticResource CommandButton}" Content="9) Move To Machine Fiducial" Width="200" />
-                        <Button Command="{Binding ExportBOMCommand }" Style="{StaticResource CommandButton}" Content=" - Export BOM" Width="200" />
+                        <Button Command="{Binding GoToPCBOriginCommand}" Style="{StaticResource CommandButton}" Content="4) Go To PCB Origin" Width="200" />
+                        <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="5a) GoTo Board Fiducial 1" Width="200" />
+                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="1"  Style="{StaticResource CommandButton}" Content="5b) Set Board Fiducial 1" Width="200" />
+                        <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="6a) Board Fiducial 2" Width="200" />
+                        <Button Command="{Binding SetFiducialCalibrationCommand}" CommandParameter="2"  Style="{StaticResource CommandButton}" Content="6b) Calibrate Fiducial 2" Width="200" />
+                        <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="7) Bottom Camera" Width="200" />
+                        <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="8) Calibrate Bottom Camera" Width="200" />
+                        <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="9) Set Bottom Camera" Width="200" />
+                        <Button Command="{Binding GoToMachineFiducialCommand }" Style="{StaticResource CommandButton}" Content="10) Move To Machine Fiducial" Width="200" />
+                        <Button Command="{Binding ExportBOMCommand }" Style="{StaticResource CommandButton}" Content="11) Export BOM" Width="200" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>
@@ -123,6 +125,7 @@
 
                         <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                             <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
+                            <Button Command="{Binding HomeViaOriginCommand}" Style="{StaticResource CommandButton}" Content="1a) Home Via Origin" Width="200"/>
                             <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
                             <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
                             <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
@@ -179,36 +182,40 @@
                             <StackPanel Margin="10">
                                 <TextBlock Text="Calibrate Machine Locations" FontWeight="Bold"  FontSize="18"/>
                                 <TextBlock Text="Before Beginning, Make Sure you have set the Home Position over the Homing Fiducial via Machine Vision" Margin="0,0,0,5" TextWrapping="Wrap" />
+                                <TextBlock Text="NOTE: To use the tool calibration mode you must use camera navigation." Margin="0,0,0,5" TextWrapping="Wrap" />
 
                                 <TextBlock Text="Step 1 - Positioning Camera Location"  FontWeight="Bold" FontSize="16" />
                                 <TextBlock Text="Center the Top Camera over a known location such as a via on a PCB, or drill a hole.  Then press Set Top Camera Location." TextWrapping="Wrap" Margin="0,0,0,5"  />
 
                                 <Grid Margin="0,0,0,5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="75" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Style="{StaticResource ValueLabel}" Content="Top Camera:"  />
-                                    <Label Style="{StaticResource ValueContent}" Content="{Binding ToolAlignmentVM.MarkedTool1Location, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
-                                    <Button Command="{Binding ToolAlignmentVM.MarkTool1LocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="3" />
+                                    <Label Style="{StaticResource ValueLabel}" Content="Known Ref:"  />
+                                    <Label Style="{StaticResource ValueContent}" Content="{Binding Machine.Settings.KnownCalibrationPoint, Converter={StaticResource Point2TextConverter}}" Grid.Column="1" />
+                                    <Button Command="{Binding ToolAlignmentVM.MarkTool1LocationCommand}" Content="Set" Margin="0,0,0,0" Grid.Column="2" />
+                                    <Button Command="{Binding ToolAlignmentVM.GoToMarkTool1LocationCommand}" Content="Go" Margin="0,0,0,0" Grid.Column="3" />
                                 </Grid>
 
                                 <TextBlock Text="Step 2 - Set Place Head Location"  FontWeight="Bold" FontSize="16" />
                                 <TextBlock Text="Center Tool 1 over the location found in step one and press Set " TextWrapping="Wrap" Margin="0,0,0,5"  />
                                 <Grid Margin="0,0,0,5"  >
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Style="{StaticResource ValueLabel}" Content="Tool 1 Offset" />
+                                    <Label Style="{StaticResource ValueLabel}" Content="Offset" />
                                     <TextBox Text="{Binding Machine.Settings.Tool1Offset.X, Mode=TwoWay}" Grid.Column="1" Height="18" TextAlignment="Right" />
                                     <TextBox Text="{Binding Machine.Settings.Tool1Offset.Y, Mode=TwoWay}" Grid.Column="2" Height="18" TextAlignment="Right" />
-                                    <Button Command="{Binding ToolAlignmentVM.SetToolOneLocationCommand}" Content="Set" Grid.Column="3" />
-
+                                    <Button Command="{Binding ToolAlignmentVM.SetToolOneLocationCommand}" Margin="0,0,0,0" Content="Set" Grid.Column="3" />
+                                    <Button Command="{Binding ToolAlignmentVM.GoToolOneLocationCommand}" Margin="0,0,0,0" Content="Go" Grid.Column="4" />
                                 </Grid>
 
                                 <TextBlock Text="Step 3 - Bottom Camera" FontWeight="Bold" FontSize="16" />
@@ -326,13 +333,15 @@
 
                     <StackPanel Grid.Column="2" Grid.RowSpan="3" Orientation="Horizontal" >
                         <Button Command="{Binding SaveJobCommand}" Width="60" Margin="10" Content="Save" />
+                        <Button Command="{Binding PrintManualPlaceCommand}" Width="60" Margin="10" Content="Manual" />
                         <Button Command="{Binding CloneCommand}" Width="60" Margin="10" Content="Clone" />
                     </StackPanel>
 
                     <DataGrid AutoGenerateColumns="False" Grid.ColumnSpan="3" CanUserDeleteRows="False" Grid.Row="3" PreviewKeyDown="ListView_PreviewKeyDown" CanUserAddRows="False" ItemsSource="{Binding SelectedBuildFlavor.Components}" HorizontalContentAlignment="Stretch" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Width="60" IsReadOnly="true" Binding="{Binding Name}"  />
-                            <DataGridCheckBoxColumn Header="Include" Width="60" Binding="{Binding Included, Mode=TwoWay}"  />
+                            <DataGridCheckBoxColumn Header="Place" Width="60" Binding="{Binding Included, Mode=TwoWay}"  />
+                            <DataGridCheckBoxColumn Header="Manual" Width="60" Binding="{Binding ManualPlace, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Value" Width="80" Binding="{Binding Value, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Package Name" Width="80" Binding="{Binding PackageName, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Function" Width="160" Binding="{Binding Function, Mode=TwoWay}"  />
@@ -346,12 +355,17 @@
                         </Button.Content>
                     </Button>
 
-                    <DataGrid AutoGenerateColumns="False" PreviewKeyDown="ListView_PreviewKeyDown" CanUserAddRows="false" CanUserDeleteRows="False" Grid.Column="3" LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding ConfigurationParts}" Grid.Row="3" HorizontalContentAlignment="Stretch" >
+                    <DataGrid AutoGenerateColumns="False" PreviewKeyDown="ListView_PreviewKeyDown" CanUserAddRows="false" CanUserDeleteRows="False" Grid.Column="3" 
+                              LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding ConfigurationParts}" Grid.Row="3" HorizontalContentAlignment="Stretch" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Value" Width="120" IsReadOnly="true" Binding="{Binding Value, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Package" IsReadOnly="true" Width="120" Binding="{Binding Package, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Count" IsReadOnly="true" Width="40" Binding="{Binding Count, Mode=TwoWay}"  />
                             <DataGridTextColumn Header="Available" Width="80" IsReadOnly="true" Binding="{Binding Path=PartStrip.AvailablePartCount}"  />
+                            
+                            <DataGridTextColumn Header="Available" Width="80" IsReadOnly="true" Binding="{Binding Path=PartStrip.AvailablePartCount}"  />
+                            <DataGridTextColumn Header="Available" Width="180" IsReadOnly="true" Binding="{Binding Path=StripFeederPackage}"  />
+                            <DataGridTextColumn Header="Available" Width="180" IsReadOnly="true" Binding="{Binding Path=StripFeeder}"  />
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -500,7 +514,7 @@
 
                         <Label Content="Polarized" Grid.Column="1" Grid.Row="9" FontWeight="Bold" VerticalAlignment="Center" />
                         <CheckBox Grid.Row="9" Grid.Column="2" IsChecked="{Binding SelectedPartStrip.Polarized, Mode=TwoWay}" VerticalAlignment="Center"></CheckBox>
-                        
+
                         <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="6" Margin="0,0,0,64" Grid.RowSpan="2"  >
                             <StackPanel Orientation="Horizontal">
                                 <Button HorizontalAlignment="Left" Height="20" Width="80" Command="{Binding GoToReferencePointCommand}" Content="Ref. Hole" Style="{StaticResource CommandButton}" />
@@ -599,6 +613,129 @@
 
                     <Image x:Name="WebCamImage2" Source="{Binding DataContext.PrimaryCapturedImage, ElementName=MainView}" MouseDown="WebCamImage2_MouseDown"  Grid.Column="3" VerticalAlignment="Top"  Stretch="Uniform" />
                 </Grid>
+            </TabItem>
+
+            <TabItem Header="Strip Feeders" DataContext="{Binding StripFeederVM}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="250"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="600"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource CommandButton}" HorizontalAlignment="Right" Grid.Row="0" Command="{Binding AddStripFeederPackageCommand}">Add Strip Feeder Section</Button>
+                    
+                    <DataGrid Grid.Row="1" PreviewKeyDown="ListView_PreviewKeyDown" ItemsSource="{Binding StripFeederPackages}" CanUserAddRows="false" AutoGenerateColumns="False" 
+                              SelectedItem="{Binding CurrentStripFeederPackage}" Visibility="{Binding StripFeederPackages, Converter={StaticResource NoTNullToVisibilityConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Left X" Width="120" Binding="{Binding LeftX, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Bottom Y" Width="120" Binding="{Binding BottomY, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Default Ref X" Width="120" Binding="{Binding DefaultRefHoleXOffset, Mode=TwoWay}"  />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Grid Grid.Row="2" Visibility="{Binding CurrentStripFeederPackage, Converter={StaticResource NoTNullToVisibilityConverter}}" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Name" Grid.Column="0" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding CurrentStripFeederPackage.Name}"  />
+                        <Button Command="{Binding GoToStripFeederPackageCommand}" Grid.Row="0" Grid.Column="2" Style="{StaticResource CommandButton}" Width="80" Height="20" >Go</Button>
+                        
+                        <Label Content="Bottom Left" Grid.Column="0" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                            <TextBox Width="80" Text="{Binding CurrentStripFeederPackage.LeftX}"  />
+                            <TextBox Width="80" Text="{Binding CurrentStripFeederPackage.BottomY}"  />
+                        </StackPanel>
+                        <Button Command="{Binding SetStripFeederPackageBottomLeftCommand}" Grid.Row="1" Grid.Column="2" Style="{StaticResource CommandButton}" Width="80" Height="20" >Set</Button>
+
+                        <Label Content="Default X Offset" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="2" Width="80" Text="{Binding CurrentStripFeederPackage.DefaultRefHoleXOffset}"  />
+                        <Button Command="{Binding SetStripFeederPackageSefaultXCommand}" Grid.Row="2" Grid.Column="2" Style="{StaticResource CommandButton}" Width="80" Height="20" >Set</Button>
+
+                        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Right">
+                            <Button Height="20" Width="80" Command="{Binding SaveStripFeederPackageCommand}" Content="Save" Style="{StaticResource CommandButton}" />
+                            <Button Height="20" Width="80" Command="{Binding CancelStripFeederPackageCommand}" Content="Cancel" Style="{StaticResource CommandButton}" />
+                        </StackPanel>
+                     </Grid>
+
+
+                    <Button Style="{StaticResource CommandButton}" HorizontalAlignment="Right" Grid.Row="3" Command="{Binding AddStripFeederCommand}"
+                            Visibility="{Binding CurrentStripFeederPackage, Converter={StaticResource NoTNullToVisibilityConverter}}">Add Strip Feeder</Button>
+
+                    <DataGrid  Grid.Row="4" PreviewKeyDown="ListView_PreviewKeyDown" ItemsSource="{Binding Path=CurrentStripFeederPackage.StripFeeders}" CanUserAddRows="false" 
+                               AutoGenerateColumns="False" SelectedItem="{Binding CurrentStripFeeder}"
+                              Visibility="{Binding CurrentStripFeederPackage, Converter={StaticResource NoTNullToVisibilityConverter}}" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Index" Width="80" Binding="{Binding Index, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Ref Hole X" Width="70" Binding="{Binding RefHoleXOffset, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Ref Hole Y" Width="70" Binding="{Binding RefHoleYOffset, Mode=TwoWay}"  />
+                            <DataGridTextColumn Header="Part" Width="*" Binding="{Binding PartStrip.Text, Mode=TwoWay}"  />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Grid Grid.Row="5" Visibility="{Binding CurrentStripFeeder, Converter={StaticResource NoTNullToVisibilityConverter}}" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Name" Grid.Column="0" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding CurrentStripFeeder.Name}"  />
+                        <Button Command="{Binding GoToStripFeederCommand}" Grid.Row="0" Grid.Column="3" Style="{StaticResource CommandButton}" Width="80" Height="20" >Go</Button>
+
+
+                        <Label Content="Index" Grid.Column="0" Grid.Row="1" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding CurrentStripFeeder.Index}"  />
+
+                        <Label Content="Ref Hole X Offset (override)" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="2" Width="80" Text="{Binding CurrentStripFeeder.RefHoleXOffset}"  />
+                        <Button Command="{Binding SetStripXOffsetCommand}" Grid.Row="2" Grid.Column="2" Style="{StaticResource CommandButton}" Width="80" Height="20" >Set</Button>
+
+                        <Label Content="Ref Hole Y Offset" Grid.Column="0" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <TextBox Grid.Column="1" Grid.Row="3" Width="80" Text="{Binding CurrentStripFeeder.RefHoleYOffset}"  />
+                        <Button Command="{Binding SetStripYOffsetCommand}" Grid.Row="3" Grid.Column="2" Style="{StaticResource CommandButton}" Width="80" Height="20" >Set</Button>
+
+                        <Label Content="Part Strip" Grid.Column="0" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding PartStrips}" SelectedItem="{Binding SelectedPartStrip, Mode=TwoWay}" DisplayMemberPath="."  />
+
+                        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Right">
+                            <Button Height="20" Width="80" Command="{Binding SaveStripFeederCommand}" Content="Save" Style="{StaticResource CommandButton}" />
+                            <Button Height="20" Width="80" Command="{Binding CancelStripFeederCommand}" Content="Cancel" Style="{StaticResource CommandButton}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Image x:Name="WebCamImage3" Source="{Binding DataContext.PrimaryCapturedImage, ElementName=MainView}" MouseDown="WebCamImage2_MouseDown"  Grid.Column="1" Grid.RowSpan="6" VerticalAlignment="Top"  Stretch="Uniform" />
+                </Grid>
+
+                
             </TabItem>
 
             <TabItem Header="Package Management" DataContext="{Binding PackageLibraryVM}">
@@ -852,43 +989,43 @@
                             </Button>
 
                             <StackPanel Grid.ColumnSpan="5" Grid.Row="6" >
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
                                     ToolTip="Reset to first component"
                                     Grid.Row="4" Grid.Column="0" Command="{Binding ResetCurrentComponentCommand}">
-                                    <Button.Content>
-                                        <fa:ImageAwesome  Icon="MailReply" Margin="10" />
-                                    </Button.Content>
-                                </Button>
+                                        <Button.Content>
+                                            <fa:ImageAwesome  Icon="MailReply" Margin="10" />
+                                        </Button.Content>
+                                    </Button>
 
-                                <Button Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" Padding="6" 
+                                    <Button Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" Padding="6" 
                                     ToolTip="Previous Component"
                                     Grid.Row="4" Grid.Column="0" Command="{Binding MoveToPreviousComponentInTapeCommand}">
-                                    <Button.Content>
-                                        <fa:ImageAwesome  Icon="Backward" Margin="10" />
-                                    </Button.Content>
-                                </Button>
-                                <Button Grid.Row="4" Grid.Column="0"  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
+                                        <Button.Content>
+                                            <fa:ImageAwesome  Icon="Backward" Margin="10" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Grid.Row="4" Grid.Column="0"  Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
                                     ToolTip="Go to part in tray"
                                    Command="{Binding GoToPartInTrayCommand}">
-                                    <Button.Content>
-                                        <fa:ImageAwesome  Icon="Play"  Margin="10"  />
-                                    </Button.Content>
-                                </Button>
-                                <Button Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
+                                        <Button.Content>
+                                            <fa:ImageAwesome  Icon="Play"  Margin="10"  />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Margin="2" HorizontalAlignment="Right"  Style="{StaticResource JogArrow}" 
                                     ToolTip="Next Component"
                                     Grid.Row="4" Grid.Column="0" Command="{Binding MoveToNextComponentInTapeCommand}">
-                                    <Button.Content>
-                                        <fa:ImageAwesome  Icon="Forward"  Margin="10"  />
-                                    </Button.Content>
-                                </Button>
-                            </StackPanel>
+                                        <Button.Content>
+                                            <fa:ImageAwesome  Icon="Forward"  Margin="10"  />
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Command="{Binding GoToRefHoleCommand}" Content="Ref Hole" Width="100" Style="{StaticResource CommandButton}"></Button>
                                     <Button Command="{Binding SetRefHoleCommand}" Content="Set Ref Hole" Width="100" Style="{StaticResource CommandButton}"></Button>
                                     <Button Command="{Binding GoToCurrentPartInStripCommand}" Content="Current Part" Width="100" Style="{StaticResource CommandButton}"></Button>
                                 </StackPanel>
-                                
+
                             </StackPanel>
                         </Grid>
 
@@ -925,7 +1062,7 @@
                                 <Button Command="{Binding PausePlacmentCommand}" Content="Pause" Width="70" Style="{StaticResource CommandButton}"></Button>
                                 <Button Command="{Binding SetBoardOffsetCommand}" Content="Set Offset" Width="70" Style="{StaticResource CommandButton}"></Button>
                             </StackPanel>
-                  
+
                         </Grid>
 
                         <DataGrid PreviewKeyDown="ListView_PreviewKeyDown" Grid.Row="3" ItemsSource="{Binding SelectedPart.Parts}" CanUserSortColumns="False" SelectedItem="{Binding SelectedPartToBePlaced}"

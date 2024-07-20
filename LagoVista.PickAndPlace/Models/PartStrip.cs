@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Models;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models;
 using Newtonsoft.Json;
 using System;
 
@@ -7,6 +8,13 @@ namespace LagoVista.PickAndPlace.Models
     public class PartStrip : ModelBase
     {
         private Package _package;
+
+        public PartStrip()
+        {
+            Id = Guid.NewGuid().ToId();
+        }
+
+        public string Id { get; set; }
 
         private String _packageId;
         public String PackageId
@@ -139,6 +147,11 @@ namespace LagoVista.PickAndPlace.Models
         public void SetPackage(Package package)
         {
             _package = package;
+        }
+
+        public override string ToString()
+        {
+            return $"{Value} {PackageName}";
         }
     }
 }

@@ -252,6 +252,7 @@ namespace LagoVista.PickAndPlace
                 Enqueue($"G0 Z{Settings.ToolSafeMoveHeight} F{Settings.FastFeedRate}");
                 await SetViewTypeAsync(ViewTypes.Camera);
                 GotoPoint(0, 0);
+                Enqueue($"G0 Z{Settings.PartInspectionCamera.FocusHeight}");                
             }
             else
             {
@@ -334,6 +335,22 @@ namespace LagoVista.PickAndPlace
                     GotoPoint(Settings.DefaultWorkspaceHome.X, Settings.DefaultWorkspaceHome.Y);
                     SetWorkspaceHome();
                 }
+            }
+        }
+
+        public void HomeViaOrigin()
+        {
+            _viewType = ViewTypes.Camera;
+            RaisePropertyChanged(nameof(ViewType));
+            VacuumPump = false;
+            PuffPump = false;
+            VacuumSolendoid = false;
+            Enqueue("G27");
+            if (Settings.MachineType == FirmwareTypes.Repeteir_PnP)
+            {
+                Enqueue($"G0 X{Settings.DefaultWorkspaceHome.X} Y{Settings.DefaultWorkspaceHome.Y} F{Settings.FastFeedRate}");
+                GotoPoint(Settings.DefaultWorkspaceHome.X, Settings.DefaultWorkspaceHome.Y); SetWorkspaceHome();
+                Enqueue($"G0 Z{Settings.PartInspectionCamera.FocusHeight} F{Settings.FastFeedRate}");
             }
         }
 

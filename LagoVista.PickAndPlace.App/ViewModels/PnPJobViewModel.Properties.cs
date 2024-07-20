@@ -141,6 +141,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             get;
         }
 
+        public StripFeederViewModel StripFeederVM
+        {
+            get;
+        }
+
         PnPMachine _pnpMachine;
         public PnPMachine PnPMachine
         {

@@ -9,6 +9,7 @@ namespace LagoVista.PickAndPlace.Models
         {
             PartStrips = new ObservableCollection<PartStrip>();
             Packages = new ObservableCollection<Package>();
+            StripFeederPackages = new ObservableCollection<StripFeederPackage>();
         }
 
         public void SortPartStrips()
@@ -24,5 +25,7 @@ namespace LagoVista.PickAndPlace.Models
         public ObservableCollection<PartStrip> PartStrips{ get; set; }
 
         public ObservableCollection<Package> Packages { get; set; }    
+
+        public ObservableCollection<StripFeederPackage> StripFeederPackages { get; set; }
     }
 }
