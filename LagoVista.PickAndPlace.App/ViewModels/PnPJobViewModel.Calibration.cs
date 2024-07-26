@@ -53,6 +53,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             {
                 Machine.Settings.MachineFiducial.X = Machine.NormalizedPosition.X;
                 Machine.Settings.MachineFiducial.Y = Machine.NormalizedPosition.Y;
+                //Machine.Settings.MachineFiducial.Z
             }
             await Machine.MachineRepo.SaveAsync();
         }

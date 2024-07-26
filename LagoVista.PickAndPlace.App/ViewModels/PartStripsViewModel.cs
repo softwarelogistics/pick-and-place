@@ -182,6 +182,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
             feedRate = Machine.Settings.FastFeedRate;
 
+            SelectedPartStrip.TempPartIndex = SelectedPartStrip.CurrentPartIndex;
+
             var partLocation = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.CurrentPart);
             if (partLocation != null)
                 _parent.Machine.GotoPoint(partLocation.X, partLocation.Y, feedRate);
@@ -193,19 +195,32 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private void GotoTempPartLocation()
         {
-            var partLocationRatio = (double)SelectedPartStrip.TempPartIndex / (double)SelectedPartStrip.AvailablePartCount;
+            var location = _stripFeederVM.GetCurrentPartPosition(SelectedPartStrip, PositionType.TempPartIndex);
+            if (location != null)
+            {
+                var deltaX = Math.Abs(location.X - Machine.MachinePosition.X);
+                var deltaY = Math.Abs(location.Y - Machine.MachinePosition.Y);
 
-            var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
-            var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
+            //    var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
 
-            var newX = SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset;
-            var newY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset;
+                _parent.Machine.GotoPoint(location.X, location.Y, Machine.Settings.FastFeedRate);
+            }
+            else
+            {
+                var partLocationRatio = (double)SelectedPartStrip.TempPartIndex / (double)SelectedPartStrip.AvailablePartCount;
 
-            var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
-            var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
-            var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+                var xOffset = SelectedPartStrip.CorrectionFactorX * partLocationRatio;
+                var yOffset = SelectedPartStrip.CorrectionFactorY * partLocationRatio;
 
-            _parent.Machine.GotoPoint(newX, newY, feedRate);
+                var newX = SelectedPartStrip.ReferenceHoleX + (SelectedPartStrip.TempPartIndex * SelectedPackage.SpacingX) + SelectedPackage.CenterXFromHole + xOffset;
+                var newY = SelectedPartStrip.ReferenceHoleY + SelectedPackage.CenterYFromHole + yOffset;
+
+                var deltaX = Math.Abs(newX - Machine.MachinePosition.X);
+                var deltaY = Math.Abs(newY - Machine.MachinePosition.Y);
+                var feedRate = (deltaX < 30 && deltaY < 30) ? 300 : Machine.Settings.FastFeedRate;
+
+                _parent.Machine.GotoPoint(newX, newY, feedRate);
+            }
 
             RefreshCommandEnabled();
         }

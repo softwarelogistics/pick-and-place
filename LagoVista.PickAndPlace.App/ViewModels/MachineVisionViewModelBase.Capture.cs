@@ -58,8 +58,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
                 else if (UseTopCamera && _topCameraCapture != null)
                 {
-                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
-                    
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 1);
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Autofocus, 1);
 
                     if (_lastTopBrightness != _topCameraProfile.Brightness)
                     {
@@ -99,9 +99,13 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         {
                             if (originalFrame != null)
                             {
-                                using (var results = PerformShapeDetection(originalFrame.ToImage<Bgr, byte>()))
+
+                                using (var img = originalFrame.ToImage<Bgr, byte>())
                                 {
-                                    PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
+                                    using (var results = PerformShapeDetection(img))
+                                    {
+                                        PrimaryCapturedImage = Emgu.CV.WPF.BitmapSourceConvert.ToBitmapSource(results);
+                                    }
                                 }
 
                                 if (PictureInPicture && _bottomCameraCapture != null)
@@ -219,6 +223,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                         _bottomCameraCapture = InitCapture(Machine.Settings.PartInspectionCamera.CameraIndex);
                         _topCameraCapture = InitCapture(Machine.Settings.PositioningCamera.CameraIndex);                        
                     }
+
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.FrameWidth, 1920);
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.FrameHeight, 1080);
+                    
                     StartImageRecognization();
                 }
                 else if (positionCameraIndex.HasValue)

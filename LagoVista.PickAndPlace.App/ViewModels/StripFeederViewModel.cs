@@ -19,6 +19,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         FirstPart,
         CurrentPart,
         LastPart,
+        TempPartIndex,
     }
 
     public class StripFeederViewModel : ViewModelBase
@@ -105,7 +106,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             GoToStripFeederCommand = new RelayCommand(GoToStripFeeder, () => CurrentStripFeeder != null);
 
-            GoToStripFeederPackageCommand = new RelayCommand(GoToStripFeederPackage, () => CurrentStripFeeder != null);
+            GoToStripFeederPackageCommand = new RelayCommand(GoToStripFeederPackage, () => CurrentStripFeederPackage != null);
 
             ClearStripXOffsetCommand = new RelayCommand(() =>
             {
@@ -219,6 +220,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     throw new ArgumentNullException("Could not find package for part.");
                 }
 
+                var xScaler = 0.9965;
+
                 switch (positionType)
                 {
                     case PositionType.ReferenceHole:
@@ -229,14 +232,18 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                     case PositionType.CurrentPart:
                         {
-                            var xOffset = partStrip.CurrentPartIndex * package.SpacingX;
+                            var xOffset = partStrip.CurrentPartIndex * package.SpacingX * xScaler;
+                            return new Point2D<double>(referenceHoleX + package.CenterXFromHole + xOffset, referenceHoleY + package.CenterYFromHole);
+                        }
+                    case PositionType.TempPartIndex:
+                        {
+                            var xOffset = partStrip.TempPartIndex * package.SpacingX * xScaler;
                             return new Point2D<double>(referenceHoleX + package.CenterXFromHole + xOffset, referenceHoleY + package.CenterYFromHole);
                         }
                     case PositionType.LastPart:
                         {
-                            var partCount = partStrip.StripLength / package.SpacingX;
-
-                            var xOffset = partCount * package.SpacingX;
+                            var partCount = Math.Floor(partStrip.StripLength / package.SpacingX);
+                            var xOffset = partCount * package.SpacingX * xScaler;
                             return new Point2D<double>(referenceHoleX + package.CenterXFromHole + xOffset, referenceHoleY + package.CenterYFromHole);
                         }
                 }
