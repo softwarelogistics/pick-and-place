@@ -65,7 +65,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 job.BuildFlavors.Add(SelectedBuildFlavor);
             }
 
-            StripFeederVM = new StripFeederViewModel(machine);
+            StripFeederVM = new StripFeederViewModel(machine, this);
             PackageLibraryVM = new PackageLibraryViewModel();
             PartStripsViewModel = new PartStripsViewModel(machine, this, job, StripFeederVM);
             ToolAlignmentVM = new ToolAlignmentViewModel(machine);

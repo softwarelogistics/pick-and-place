@@ -25,14 +25,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
     public class StripFeederViewModel : ViewModelBase
     {
         private PnPMachine _pnpMachine;
-
+        private PnPJobViewModel _jobVM;
         public IMachine _machine;
 
 
 
-        public StripFeederViewModel(IMachine machine)
+        public StripFeederViewModel(IMachine machine, PnPJobViewModel jobVM)
         {
             _machine = machine;
+            _jobVM = jobVM;
             RaisePropertyChanged(nameof(PartStrips));
             RaisePropertyChanged(nameof(StripFeederPackages));
         }
@@ -151,6 +152,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private void GoToStripFeederPackage()
         {
+            _jobVM.ShowCircles = true;
+            _jobVM.ShowHarrisCorners = false;
+            _jobVM.ShowPolygons = false;
+            _jobVM.ShowLines = false;
+            _jobVM.SelectMVProfile("tapehole");
+            _jobVM.ShowBottomCamera = false;
+            _jobVM.ShowTopCamera = true;
+
             _machine.GotoPoint(CurrentStripFeederPackage.LeftX, CurrentStripFeederPackage.BottomY);
         }
 

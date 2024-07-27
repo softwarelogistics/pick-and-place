@@ -350,8 +350,7 @@ namespace LagoVista.PickAndPlace
             {
                 Enqueue($"G0 X{Settings.DefaultWorkspaceHome.X} Y{Settings.DefaultWorkspaceHome.Y} F{Settings.FastFeedRate}");
                 GotoPoint(Settings.DefaultWorkspaceHome.X, Settings.DefaultWorkspaceHome.Y); 
-                SetWorkspaceHome();
-                Enqueue($"G0 Z{Settings.PartInspectionCamera.FocusHeight} F{Settings.FastFeedRate}");
+                SetWorkspaceHome();                
             }
         }
 

@@ -58,7 +58,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
                 else if (UseTopCamera && _topCameraCapture != null)
                 {
-                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 1);
+                    //_topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 1);
                     _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Autofocus, 1);
 
                     if (_lastTopBrightness != _topCameraProfile.Brightness)

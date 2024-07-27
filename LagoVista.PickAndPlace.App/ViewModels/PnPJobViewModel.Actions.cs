@@ -126,17 +126,35 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.GotoWorkspaceHome();
-            ShowTopCamera = false;
-            ShowBottomCamera = true;            
+            
+            ShowBottomCamera = false;
+            ShowTopCamera = true;
+
+            SelectMVProfile("mchfiducual");
+
+            ShowCircles = true;
+            ShowLines = false;
+            ShowHarrisCorners = false;
+            ShowPolygons = false;
+
+            Machine.BottomLightOn = false;
+            Machine.TopLightOn = false;
         }
 
         public void HomeViaOrigin()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.HomeViaOrigin();
-            ShowTopCamera = false;
-            ShowBottomCamera = true;
-            Machine.BottomLightOn = true;
+            ShowBottomCamera = false;
+            ShowTopCamera = true;
+            SelectMVProfile("mchfiducual");
+
+            ShowCircles = true;
+            ShowLines = false;
+            ShowHarrisCorners = false;
+            ShowPolygons = false;
+
+            Machine.BottomLightOn = false;
             Machine.TopLightOn = false;
        }
 
@@ -145,9 +163,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             Machine.SendCommand(SafeHeightGCodeGCode());
             Machine.GotoPoint(Machine.Settings.PCBOffset.X, Machine.Settings.PCBOffset.Y, Machine.Settings.FastFeedRate);
             ShowBottomCamera = false;
+            SelectMVProfile("brdfiducual");            
             ShowTopCamera = true;
             Machine.BottomLightOn = false;
-            Machine.TopLightOn = true;
+            ShowCircles = false;
+            ShowHarrisCorners = true;
         }
 
         public void GoToInspectPartRefHole()
