@@ -31,9 +31,12 @@
                     <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
                     <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
                     <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
+                    <TextBlock Text="{Binding Status}"></TextBlock>
+                    <TextBlock Text="{Binding LocatorState}"></TextBlock>
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                         <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                         <Button Command="{Binding HomeViaOriginCommand}" Style="{StaticResource CommandButton}" Content="1a) Home Via Origin" Width="200"/>
+                        <Button Command="{Binding SetWorkHomeViaVisionCommand}" Style="{StaticResource CommandButton}" Content="1b) Machine Vision Origin" Width="200"/>
                         <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
                         <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
                         <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
@@ -123,28 +126,9 @@
                         <Label Content="PartStrip Scaler Y" Grid.Row="9" Margin="0,0,0,26" Grid.RowSpan="2" />
                         <Controls:MaskingTextBox Text="{Binding Machine.Settings.PartStripScaler.Y, Mode=TwoWay}"  UnitType="Size"  Grid.Row="9" Grid.Column="1" Margin="0,4,0,4" Width="80" HorizontalAlignment="Left" />
 
-                        <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
-                            <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
-                            <Button Command="{Binding HomeViaOriginCommand}" Style="{StaticResource CommandButton}" Content="1a) Home Via Origin" Width="200"/>
-                            <Button Command="{Binding PeformMachineAlignmentCommand}" Style="{StaticResource CommandButton}" Content="2) Perform Machine Fiducial" Width="200" />
-                            <Button Command="{Binding SetMachineFiducialCommand}" Style="{StaticResource CommandButton}" Content="2a) Set Machine Fiducial" Width="200" />
-                            <Button Command="{Binding GoToWorkHomeCommand}" Style="{StaticResource CommandButton}" Content="3) Work Home" Width="200" />
-                            <Button Command="{Binding GoToFiducial1Command}" Style="{StaticResource CommandButton}" Content="4) Board Fiducial 1" Width="200" />
-                            <Button Command="{Binding GoToFiducial2Command}" Style="{StaticResource CommandButton}" Content="5) Board Fiducial 2" Width="200" />
-                            <Button Command="{Binding AlignBottomCameraCommand}" Style="{StaticResource CommandButton}" Content="6) Bottom Camera" Width="200" />
-                            <Button Command="{Binding CalibrateBottomCameraCommand }" Style="{StaticResource CommandButton}" Content="7) Calibrate Bottom Camera" Width="200" />
-                            <Button Command="{Binding SetBottomCameraPositionCommand }" Style="{StaticResource CommandButton}" Content="8) Set Bottom Camera" Width="200" />
-                            <Button Command="{Binding GoToMachineFiducialCommand }" Style="{StaticResource CommandButton}" Content="9) Move To Machine Fiducial" Width="200" />
-                            <Button Command="{Binding ExportBOMCommand }" Style="{StaticResource CommandButton}" Content=" - Export BOM" Width="200" />
-                        </StackPanel>
-
                         <ListBox Grid.Row="11" HorizontalAlignment="Left" Grid.Column="4" VerticalAlignment="Bottom" Height="250" ItemsSource="{Binding CalibrationUpdates}" Grid.RowSpan="2" />
-
                         <Image x:Name="BoadImage" Source="{Binding PrimaryCapturedImage}"  Grid.RowSpan="13"  MouseDown="WebCamImage_MouseDown"  Grid.Column="4" VerticalAlignment="Center"  Stretch="Uniform" Grid.Row="0" />
                         <Image x:Name="SecondaryImage" Source="{Binding SecondaryCapturedImage}" Width="640" Height="480" Grid.Row="10" Stretch="Uniform" Grid.RowSpan="4" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,220" />
-
-
-
                     </Grid>
                 </Grid>
 
@@ -705,6 +689,8 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
                         <Label Content="Name" Grid.Column="0" Grid.Row="0" FontWeight="Bold" VerticalAlignment="Center" Margin="0,3" />
@@ -729,6 +715,26 @@
                         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Right">
                             <Button Height="20" Width="80" Command="{Binding SaveStripFeederCommand}" Content="Save" Style="{StaticResource CommandButton}" />
                             <Button Height="20" Width="80" Command="{Binding CancelStripFeederCommand}" Content="Cancel" Style="{StaticResource CommandButton}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="6" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                            <Button Height="20" Width="80" Command="{Binding GoToStripFeederCommand}" Content="Ref. Point" Style="{StaticResource CommandButton}" />
+                            <Button Height="20" Width="80" Command="{Binding GoToFirstPartCommand}" Content="First Part" Style="{StaticResource CommandButton}" />
+                            <Button Height="20" Width="80" Command="{Binding GoToCurrentPartCommand}" Content="Current Part" Style="{StaticResource CommandButton}" />
+                            <Button Height="20" Width="80" Command="{Binding GoToLastPartCommand}" Content="Last Part" Style="{StaticResource CommandButton}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="7" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource JogArrow}"  Grid.Row="4" Grid.Column="1"   Command="{Binding PrevPartCommand}" >
+                                <Button.Content>
+                                    <fa:ImageAwesome Icon="ArrowCircleLeft" />
+                                </Button.Content>
+                            </Button>
+                            <Button Style="{StaticResource JogArrow}"  Grid.Row="4" Grid.Column="3"  Command="{Binding NextPartCommand}" >
+                                <Button.Content>
+                                    <fa:ImageAwesome Icon="ArrowCircleRight" />
+                                </Button.Content>
+                            </Button>
+                            <Button Height="20" Width="80" Command="{Binding SetCurrentPartIndexCommand}" Content="Set Prt Index" Style="{StaticResource CommandButton}" />
                         </StackPanel>
                     </Grid>
 

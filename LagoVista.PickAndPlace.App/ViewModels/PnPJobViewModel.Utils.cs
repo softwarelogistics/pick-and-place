@@ -24,7 +24,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 PnPMachine = await PnPMachineManager.GetPnPMachineAsync(_job.PnPMachinePath);
                 PackageLibraryVM.SetMachine(PnPMachine);
                 PartStripsViewModel.SetMachine(PnPMachine, _job.PnPMachinePath);
-                StripFeederVM.SetMachine(PnPMachine);
+                StripFeederVM.SetMachine(PnPMachine, _job.PnPMachinePath);
             }
 
             await ToolAlignmentVM.InitAsync();

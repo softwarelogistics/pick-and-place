@@ -14,6 +14,32 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         Object _videoCaptureLocker = new object();
 
+        public enum MVLocatorState
+        {
+            Idle,
+            MachineFidicual,
+            BoardFidicual1,
+            BoardFidicual2,
+            Default,
+            NozzleCalibration,
+            WorkHome,
+
+        }
+
+        protected MVLocatorState _mvLocatorState = MVLocatorState.Default;
+        public MVLocatorState LocatorState
+        {
+            get => _mvLocatorState;
+            set => _mvLocatorState = value;
+        }
+
+        private string _status;
+        public string Status
+        {
+            get => _status;
+            set => Set(ref _status, value);
+        }
+
         private VideoCapture InitCapture(int cameraIndex)
         {
             try

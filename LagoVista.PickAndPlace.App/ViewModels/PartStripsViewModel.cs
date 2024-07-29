@@ -165,8 +165,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
 
-            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
-            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
+            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 8);
+            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 8);
 
             _parent.SelectMVProfile("squarepart");
 
@@ -315,8 +315,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             _parent.SelectMVProfile("squarepart");
 
-            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
-            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
+            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 8);
+            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 8);
 
             SelectedPartStrip.TempPartIndex = 0;
             var newX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole;
@@ -337,8 +337,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToLastPartUncalibrated()
         {
-            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 5);
-            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 5);
+            _parent.PartSizeWidth = Convert.ToInt32(SelectedPackage.Width * 8);
+            _parent.PartSizeHeight = Convert.ToInt32(SelectedPackage.Length * 8);
             _parent.SelectMVProfile("squarepart");
 
             var lastPartX = SelectedPartStrip.ReferenceHoleX + SelectedPackage.CenterXFromHole + SelectedPartStrip.StripLength;
@@ -536,10 +536,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand GoToReferencePointCommand { get; }
         public RelayCommand SetCurrentPartIndexCommand { get; }
 
+        public RelayCommand GoToCurrentPartCommand { get; }
         public RelayCommand GoToFirstPartCommand { get; }
         public RelayCommand GoToLastPartCommand { get; }
         public RelayCommand GoToLastPartUncalibratedCommand { get; }
-        public RelayCommand GoToCurrentPartCommand { get; }
 
         public RelayCommand NextPartCommand { get; }
         public RelayCommand PrevPartCommand { get; }

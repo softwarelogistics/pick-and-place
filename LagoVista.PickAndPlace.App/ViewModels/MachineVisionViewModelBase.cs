@@ -178,7 +178,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public virtual void CircleCentered(Point2D<double> point, double diameter) { }
 
         #region Show Cross Hairs
-        private void DrawCrossHairs(IInputOutputArray destImage, Size size)
+        private void DrawCrossHairs(IInputOutputArray destImage, System.Drawing.Size size)
         {
             var center = new Point2D<int>()
             {
@@ -221,6 +221,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
 
 
+        protected virtual void FoundHomePosition()
+        {
+            LocatorState = MVLocatorState.Idle;
+            Machine.SetWorkspaceHome();
+        }
+
 
         protected void JogToLocation(Point2D<double> offset)
         {
@@ -252,7 +258,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         int _stabilizedPointCount = 0;
 
         #region Find Circles
-        private void FindCircles(IInputOutputArray input, IInputOutputArray output, Size size)
+        private void FindCircles(IInputOutputArray input, IInputOutputArray output, System.Drawing.Size size)
         {
             var center = new Point2D<int>()
             {
@@ -324,7 +330,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         #endregion
 
         #region Find Corners
-        private void FindCorners(Image<Gray,byte> blurredGray, IInputOutputArray output, Size size)
+        private void FindCorners(Image<Gray,byte> blurredGray, IInputOutputArray output, System.Drawing.Size size)
         {
             var center = new Point2D<int>()
             {
@@ -391,7 +397,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         FloatMedianFilter _rectP4 = new FloatMedianFilter();
 
         #region Find Rotated Rectangles
-        private void FindRectangles(Image<Gray,byte> input, IInputOutputArray output, Size size)
+        private void FindRectangles(Image<Gray,byte> input, IInputOutputArray output, System.Drawing.Size size)
         {
             UMat edges = new UMat();
 

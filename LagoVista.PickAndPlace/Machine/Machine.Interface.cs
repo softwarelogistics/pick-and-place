@@ -181,6 +181,8 @@ namespace LagoVista.PickAndPlace
             }
         }
 
+        public object MVLocatorState { get; private set; }
+
         /// <summary>
         /// Send CTRL-X to the machine
         /// </summary>

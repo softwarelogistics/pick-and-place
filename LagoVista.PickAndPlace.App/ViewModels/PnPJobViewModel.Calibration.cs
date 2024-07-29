@@ -82,8 +82,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
 
-            PartSizeWidth = Convert.ToInt32(SelectedPartPackage.Width * 5);
-            PartSizeHeight = Convert.ToInt32(SelectedPartPackage.Length * 5);
+            PartSizeWidth = Convert.ToInt32(SelectedPartPackage.Width * 8);
+            PartSizeHeight = Convert.ToInt32(SelectedPartPackage.Length * 8);
 
             SelectMVProfile("squarepart");
 
@@ -235,7 +235,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 case MVLocatorState.MachineFidicual:
                     JogToLocation(point);
                     break;
-
+                case MVLocatorState.WorkHome:
+                    JogToLocation(point);
+                    break;
                 case MVLocatorState.BoardFidicual1:
                     JogToLocation(point);
                     break;

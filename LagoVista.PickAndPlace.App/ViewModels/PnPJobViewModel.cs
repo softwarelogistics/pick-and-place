@@ -23,18 +23,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         private BOM _billOfMaterials;
         private int _partIndex = 0;
 
-        private enum MVLocatorState
-        {
-            Idle,
-            MachineFidicual,
-            BoardFidicual1,
-            BoardFidicual2,
-            Default,
-            NozzleCalibration,
-
-        }
-
-        MVLocatorState _mvLocatorState = MVLocatorState.Default;
 
         public PnPJobViewModel(IMachine machine, PnPJob job) : base(machine)
         {
@@ -81,6 +69,11 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             switch (_mvLocatorState)
             {
+                case MVLocatorState.WorkHome:
+                    Machine.SetWorkspaceHome();
+                    _mvLocatorState = MVLocatorState.Idle;
+                    Status = "Machine Work Space Home Found";
+                    break;
                 case MVLocatorState.MachineFidicual:
                     SetNewHome();
                     break;

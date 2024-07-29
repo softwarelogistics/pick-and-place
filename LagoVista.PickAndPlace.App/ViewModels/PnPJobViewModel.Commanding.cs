@@ -30,6 +30,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             GoToWorkHomeCommand = new RelayCommand(() => GotoWorkspaceHome());
             HomeViaOriginCommand = new RelayCommand(() => HomeViaOrigin());
+            SetWorkHomeViaVisionCommand = new RelayCommand(() => SetWorkComeViaVision());
             SetWorkHomeCommand = new RelayCommand(() => Machine.SetWorkspaceHome());
             GoToPCBOriginCommand = new RelayCommand(() => GoToPCBOrigin());
 
@@ -130,6 +131,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public RelayCommand ClearBoardOffsetCommand { get; private set; }
         public RelayCommand SetBottomCameraPositionCommand { get; private set; }
 
+        public RelayCommand SetWorkHomeViaVisionCommand { get; private set; }
         public RelayCommand ExportBOMCommand { get; private set; }
 
         public RelayCommand AbortMVLocatorCommand { get; private set; }

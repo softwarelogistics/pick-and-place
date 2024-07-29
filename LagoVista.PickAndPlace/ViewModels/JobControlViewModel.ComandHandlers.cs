@@ -99,6 +99,7 @@ namespace LagoVista.PickAndPlace.ViewModels
 
         public void HomeViaOrigin()
         {
+
             Machine.HomeViaOrigin();
         }
 

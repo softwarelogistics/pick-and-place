@@ -114,7 +114,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         }
 
-
         public void PausePlacement(Object obj)
         {
             _isPlacingParts = false;
@@ -141,6 +140,28 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             Machine.TopLightOn = false;
         }
 
+        public void SetWorkComeViaVision()
+        {
+            Machine.SendCommand(SafeHeightGCodeGCode());
+            Machine.GotoWorkspaceHome();
+            ShowBottomCamera = false;
+            ShowTopCamera = true;
+            SelectMVProfile("mchfiducual");
+
+            ShowCircles = true;
+            ShowLines = false;
+            ShowHarrisCorners = false;
+            ShowPolygons = false;
+
+            Machine.BottomLightOn = false;
+            Machine.TopLightOn = false;
+
+            LocatorState = MVLocatorState.WorkHome;
+
+            Status = "Machinve Vision - Origin";
+        }
+
+
         public void HomeViaOrigin()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
@@ -156,6 +177,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             Machine.BottomLightOn = false;
             Machine.TopLightOn = false;
+
+            _mvLocatorState = MVLocatorState.WorkHome;
        }
 
         public void GoToPCBOrigin()
