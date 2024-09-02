@@ -31,8 +31,20 @@
                     <Controls:PnPButtons DataContext="{Binding MachineControls}"  />
                     <Controls:ImageAdjustments Grid.Column="1" Grid.RowSpan="3"  />
                     <Controls:MVViewOptions HorizontalAlignment="Right" VerticalAlignment="Bottom"  />
-                    <TextBlock Text="{Binding Status}"></TextBlock>
-                    <TextBlock Text="{Binding LocatorState}"></TextBlock>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock FontSize="20" Grid.Row="1">Status:</TextBlock>
+                        <TextBlock FontSize="20" >Vision State:</TextBlock>
+                        <TextBlock Grid.Row="0" FontSize="20" Grid.Column="1" Text="{Binding LocatorState}"></TextBlock>
+                        <TextBlock Grid.Row="1" FontSize="20" Grid.Column="1" Text="{Binding Status}"></TextBlock>
+                    </Grid>
                     <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="0,0,0,220" >
                         <Button Command="{Binding HomingCycleCommand}" Style="{StaticResource CommandButton}" Content="1) Homing Cycle" Width="200"/>
                         <Button Command="{Binding HomeViaOriginCommand}" Style="{StaticResource CommandButton}" Content="1a) Home Via Origin" Width="200"/>

@@ -124,7 +124,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             ShowCircles = false;
 
-            _mvLocatorState = MVLocatorState.Default;
+            LocatorState = MVLocatorState.Default;
         }
     }
 }

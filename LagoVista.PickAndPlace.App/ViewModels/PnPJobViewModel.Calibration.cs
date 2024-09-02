@@ -13,7 +13,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
     {
         private void AbortMVLocator()
         {
-            _mvLocatorState = MVLocatorState.Idle;
+            LocatorState = MVLocatorState.Idle;
             Machine.TopLightOn = false;
             Machine.BottomLightOn = false;
             ShowCircles = false;
@@ -24,7 +24,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public async void PerformMachineAlignment()
         {
             Machine.SendCommand(SafeHeightGCodeGCode());
-            _mvLocatorState = MVLocatorState.Idle;
+            LocatorState = MVLocatorState.Idle;
 
             await Machine.SetViewTypeAsync(ViewTypes.Camera);
             Machine.TopLightOn = false;
@@ -39,7 +39,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             ShowCircles = true;
 
-            _mvLocatorState = MVLocatorState.MachineFidicual;
+            LocatorState = MVLocatorState.MachineFidicual;
         }
 
         public void GotoMachineFiducial()
@@ -112,7 +112,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         private void FinalizeCameraCalibration()
         {
-            _mvLocatorState = MVLocatorState.Idle;
+            LocatorState = MVLocatorState.Idle;
             foreach (var key in _nozzleCalibration.Keys)
             {
                 Debug.WriteLine($"{key},{_nozzleCalibration[key].X},{_nozzleCalibration[key].Y}");
@@ -230,7 +230,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public override void CircleLocated(Point2D<double> point, double diameter, Point2D<double> stdDeviation)
         {
-            switch (_mvLocatorState)
+            switch (LocatorState)
             {
                 case MVLocatorState.MachineFidicual:
                     JogToLocation(point);

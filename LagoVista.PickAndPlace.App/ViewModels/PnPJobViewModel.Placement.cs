@@ -20,10 +20,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 await PlacePartAsync(true);
             }
 
+            // Disable the stepper motor for the rotation of the nozzle, get's very warm
+            Machine.SendCommand("M18 E");
+
             Machine.LocationUpdateEnabled = true;
 
             Machine.VacuumPump = false;
             Machine.PuffPump = false;
+
+            await SaveJobAsync();
         }
 
         public async void PlacePart()
@@ -40,6 +45,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             await Task.Delay(1000);
             await PlacePartAsync();
             Machine.LocationUpdateEnabled = true;
+
+            // Disable the stepper motor for the rotation of the nozzle, get's very warm
+            Machine.SendCommand("M18 E");
         }
 
         public async Task PlacePartAsync(bool multiple = false)
@@ -76,9 +84,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 //cmds.Add(WaitForComplete());
                 //cmds.Add(WaitForComplete());
                 cmds.Add(ProduceVacuumGCode(true)); // Turn on solenoid 
-                cmds.Add(DwellGCode(1500)); // Wait 500ms to pickup part.
+                cmds.Add(DwellGCode(250)); // Wait 500ms to pickup part.
                 cmds.Add(PickHeightGCode()); // Move to pick height                
-                cmds.Add(DwellGCode(1500)); // Wait 500ms to pickup part.
+                cmds.Add(DwellGCode(250)); // Wait 500ms to pickup part.
                 cmds.Add(SafeHeightGCodeGCode()); // Go to move height
 
                 var cRotation = SelectedPartToBePlaced.RotateAngle + SelectedPartPackage.RotationInTape;
@@ -123,8 +131,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
 
                 RaisePropertyChanged(nameof(SelectedPartToBePlaced));
-
-                await SaveJobAsync();
+                
 
                 _isPlacingParts = false;
 

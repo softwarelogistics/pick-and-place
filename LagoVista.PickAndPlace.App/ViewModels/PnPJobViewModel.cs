@@ -67,12 +67,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public override void CircleCentered(Point2D<double> point, double diameter)
         {
-            switch (_mvLocatorState)
+            switch (LocatorState)
             {
                 case MVLocatorState.WorkHome:
                     Machine.SetWorkspaceHome();
-                    _mvLocatorState = MVLocatorState.Idle;
-                    Status = "Machine Work Space Home Found";
+                    LocatorState = MVLocatorState.Idle;
+                    Status = "W/S Home Found";
                     break;
                 case MVLocatorState.MachineFidicual:
                     SetNewHome();

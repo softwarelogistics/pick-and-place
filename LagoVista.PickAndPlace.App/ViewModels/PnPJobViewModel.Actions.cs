@@ -107,7 +107,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             AlignBottomCamera();
             _targetAngle = 0;
-            _mvLocatorState = MVLocatorState.NozzleCalibration;
+            LocatorState = MVLocatorState.NozzleCalibration;
             SelectMVProfile("nozzlecalibration");
             Machine.SendCommand($"G0 E0");
             _averagePoints = new List<Point2D<double>>();
@@ -178,7 +178,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             Machine.BottomLightOn = false;
             Machine.TopLightOn = false;
 
-            _mvLocatorState = MVLocatorState.WorkHome;
+            LocatorState = MVLocatorState.WorkHome;
        }
 
         public void GoToPCBOrigin()

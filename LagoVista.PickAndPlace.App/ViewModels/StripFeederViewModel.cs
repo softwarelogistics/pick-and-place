@@ -155,6 +155,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
         public void GoToPart(PositionType positionType)
         {
+            _machine.SendCommand($"G0 Z{_machine.Settings.ProbeSafeHeight.ToDim()}");
+
             var feedRate = _machine.Settings.FastFeedRate;
             var positon = GetCurrentPartPosition(_selectedPartStrip, positionType);
             _machine.GotoPoint(positon.X, positon.Y, feedRate);
@@ -201,11 +203,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             _machine.TopLightOn = false;
             _machine.BottomLightOn = false;
 
+            _machine.SendCommand($"G0 Z{_machine.Settings.ProbeSafeHeight.ToDim()}");
+
             _machine.GotoPoint(CurrentStripFeederPackage.LeftX, CurrentStripFeederPackage.BottomY);
         }
 
         private void GotoTempPartLocation()
         {
+            _machine.SendCommand($"G0 Z{_machine.Settings.ProbeSafeHeight.ToDim()}");
+
             var location = GetCurrentPartPosition(SelectedPartStrip, PositionType.TempPartIndex);
             if (location != null)
             {
@@ -247,6 +253,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
         private void GoToStripFeeder()
         {
+            _machine.SendCommand($"G0 Z{_machine.Settings.ProbeSafeHeight.ToDim()}");
+
             _machine.GotoPoint(CurrentStripFeeder.RefHoleXOffset.HasValue ?
                     CurrentStripFeeder.RefHoleXOffset.Value + CurrentStripFeederPackage.LeftX : CurrentStripFeederPackage.LeftX + CurrentStripFeederPackage.DefaultRefHoleXOffset,
                     CurrentStripFeederPackage.BottomY + CurrentStripFeeder.RefHoleYOffset);
