@@ -158,7 +158,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
             LocatorState = MVLocatorState.WorkHome;
 
-            Status = "Machinve Vision - Origin";
+            Status = "Machine Vision - Origin";
         }
 
 

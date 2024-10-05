@@ -394,6 +394,7 @@ namespace LagoVista.PickAndPlace.App
                 {
                     var pnpJob = new PnPJob();
                     pnpJob.Board = ViewModel.Machine.PCBManager.Board;
+                    pnpJob.PnPMachinePath = ViewModel.Machine.Settings.DefaultPnPMachineFile;
                     pnpJob.EagleBRDFilePath = ViewModel.Machine.PCBManager.Project.EagleBRDFilePath;
                     var pnpViewModel = new PnPJobViewModel(ViewModel.Machine, pnpJob);
                     await pnpViewModel.InitAsync();

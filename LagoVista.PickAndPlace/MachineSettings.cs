@@ -182,6 +182,8 @@ namespace LagoVista.PickAndPlace
             }
         }
 
+        public string DefaultPnPMachineFile { get; set; }
+
         public bool EnableCodePreview { get; set; }
         public double ProbeSafeHeight { get; set; }
         public double ProbeMaxDepth { get; set; }

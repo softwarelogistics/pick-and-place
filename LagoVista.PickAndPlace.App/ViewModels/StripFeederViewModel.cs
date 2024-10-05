@@ -45,7 +45,6 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             NextPartCommand = new RelayCommand(NextPart, () => SelectedPartStrip != null && SelectedPartStrip != null && SelectedPartStrip.AvailablePartCount > SelectedPartStrip.TempPartIndex);
             PrevPartCommand = new RelayCommand(PrevPart, () => SelectedPartStrip != null && SelectedPartStrip != null && SelectedPartStrip.TempPartIndex > 0);
             SetCurrentPartIndexCommand = new RelayCommand(SetCurrentPartIndex, () => SelectedPartStrip != null);
-
         }
 
         public void SetMachine(PnPMachine machine, string fileName)
@@ -173,7 +172,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             RefreshCommandEnabled();
         }
 
-        public ObservableCollection<StripFeederPackage> StripFeederPackages => _pnpMachine.StripFeederPackages;
+        public ObservableCollection<StripFeederPackage> StripFeederPackages => _pnpMachine?.StripFeederPackages;
 
         StripFeederPackage _currentStripFeederPackage;
         public StripFeederPackage CurrentStripFeederPackage
@@ -309,15 +308,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         public Point2D<double> GetCurrentPartPosition(PartStrip partStrip, PositionType positionType = PositionType.ReferenceHole)
         {
             var feederPackage = (from sfp in _pnpMachine.StripFeederPackages
-                        where sfp.StripFeeders.Any(sf => sf.PartStrip?.Id == partStrip.Id)
+                        where sfp.StripFeeders.Any(sf => sf.PartStrip?.Id == partStrip?.Id)
                         select sfp).FirstOrDefault();
 
             if(feederPackage != null)
             {
-                var part = feederPackage.StripFeeders.FirstOrDefault(sf => sf.PartStrip?.Id == partStrip.Id);
+                var part = feederPackage.StripFeeders.FirstOrDefault(sf => sf.PartStrip?.Id == partStrip?.Id);
                 var referenceHoleX = feederPackage.LeftX + (part.RefHoleXOffset.HasValue ? part.RefHoleXOffset.Value : feederPackage.DefaultRefHoleXOffset);
                 var referenceHoleY = feederPackage.BottomY + part.RefHoleYOffset;
-                var package = _pnpMachine.Packages.FirstOrDefault(pck => pck.Id == partStrip.PackageId);
+                var package = _pnpMachine.Packages.FirstOrDefault(pck => pck.Id == partStrip?.PackageId);
                 if(package == null)
                 {
                     throw new ArgumentNullException("Could not find package for part.");
@@ -338,7 +337,8 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     case PositionType.CurrentPart:
                         {
                             var xOffset = partStrip.CurrentPartIndex * package.SpacingX * xScaler;
-                            _selectedPartStrip.TempPartIndex = _selectedPartStrip.CurrentPartIndex;
+                            if(_selectedPartStrip != null)
+                                _selectedPartStrip.TempPartIndex = _selectedPartStrip.CurrentPartIndex;
                             return new Point2D<double>(referenceHoleX + package.CenterXFromHole + xOffset, referenceHoleY + package.CenterYFromHole);
                         }
                     case PositionType.TempPartIndex:

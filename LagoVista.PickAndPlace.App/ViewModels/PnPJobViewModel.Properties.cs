@@ -202,7 +202,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                 if (value != null)
                 {
-                    _partIndex = SelectedPart.Parts.IndexOf(value);
+                    _partIndex = SelectedPart.Parts.IndexOf(value);                    
                     SetBoardOffsetCommand.RaiseCanExecuteChanged();
                     ClearBoardOffsetCommand.RaiseCanExecuteChanged();
                     GoToPartOnBoard();
