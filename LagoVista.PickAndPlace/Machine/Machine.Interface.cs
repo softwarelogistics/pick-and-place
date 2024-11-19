@@ -254,7 +254,8 @@ namespace LagoVista.PickAndPlace
                 Enqueue($"G0 Z{Settings.ToolSafeMoveHeight} F{Settings.FastFeedRate}");
                 await SetViewTypeAsync(ViewTypes.Camera);
                 GotoPoint(0, 0);
-                Enqueue($"G0 Z{Settings.PartInspectionCamera.FocusHeight}");                
+                if(Settings.PartInspectionCamera != null)
+                    Enqueue($"G0 Z{Settings.PartInspectionCamera.FocusHeight}");                
             }
             else
             {

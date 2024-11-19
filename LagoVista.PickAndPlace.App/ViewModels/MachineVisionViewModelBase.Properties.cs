@@ -199,7 +199,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             }
         }
 
-        bool _pictureInPicture = true;
+        bool _pictureInPicture = false;
         public bool PictureInPicture
         {
             get { return _pictureInPicture; }
