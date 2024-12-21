@@ -63,7 +63,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         private double _lastBottomFocus = -9999;
 
         private double _lastTopExposure = -9999;
-        //private double _lastBottomExposure = -9999;
+        private double _lastBottomExposure = -9999;
 
         private double _lastTopContrast = -9999;
         private double _lastBottomContrast = -9999;
@@ -84,7 +84,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 }
                 else if (UseTopCamera && _topCameraCapture != null)
                 {
-                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 1);
+                    //_topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 1);
                     _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Autofocus, 1);
 
                     if (_lastTopBrightness != _topCameraProfile.Brightness)
@@ -169,13 +169,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                     {
                         _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Contrast, _bottomCameraProfile.Contrast);
                         _lastBottomContrast = _bottomCameraProfile.Contrast;
-                    }/*
+                    }
+
+                    
 
                     if (_lastBottomExposure != _bottomCameraProfile.Exposure)
                     {
-                        _bottomCameraCapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Exposure, _bottomCameraProfile.Exposure);
+                        _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.Exposure, _bottomCameraProfile.Exposure);
                         _lastBottomExposure = _bottomCameraProfile.Exposure;
-                    }*/
+                    }
 
                     if (UseBottomCamera)
                     {
@@ -252,7 +254,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                     _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.FrameWidth, 1920);
                     _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.FrameHeight, 1080);
-                    
+
+                    _topCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+                    _bottomCameraCapture.Set(Emgu.CV.CvEnum.CapProp.AutoExposure, 0);
+
                     StartImageRecognization();
                 }
                 else if (positionCameraIndex.HasValue)

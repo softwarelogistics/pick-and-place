@@ -66,6 +66,12 @@
                         <Label Content="{Binding Profile.Focus, FallbackValue=3}"  Style="{StaticResource Value}" />
                     </StackPanel>                    
                     <Slider Value="{Binding Path=Profile.Focus, Mode=TwoWay}" ToolTip="{Binding GaussianKSizeHelp}" Minimum="0" Maximum="50"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Threshold" Style="{StaticResource Caption}" FontWeight="Bold" />
+                        <Label Content="{Binding Profile.PrimaryThreshold, FallbackValue=3}" Style="{StaticResource Value}" />
+                    </StackPanel>
+                    <Slider Value="{Binding Path=Profile.PrimaryThreshold, Mode=TwoWay}" Minimum="0" Maximum="100" SmallChange="0" LargeChange="5" ToolTip="{Binding CannyLowThresholdHelp}" />
+
                 </StackPanel>
             </TabItem>
 
@@ -98,16 +104,22 @@
                         <Label Content="{Binding Profile.CannyApetureSize, FallbackValue=3}" />
                     </StackPanel>
                     <Slider Value="{Binding  Path=Profile.CannyApetureSize, Mode=TwoWay}" ToolTip="{Binding CannyApetureSizeHelp}" Minimum="3" Maximum="11" />
-                    <Label Content="Threshold" Style="{StaticResource Caption}" HorizontalAlignment="Left" FontWeight="Bold"/>
+                    <Label Content="Canny Threshold" Style="{StaticResource Caption}" HorizontalAlignment="Left" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Low:" Style="{StaticResource Caption}"/>
                         <Label Content="{Binding Profile.CannyLowThreshold, FallbackValue=3}" Style="{StaticResource Value}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="High" Style="{StaticResource Caption}"/>
+                        <Label Content="High" Style="{StaticResource Caption}" />
                         <Label Content="{Binding Profile.CannyHighThreshold, FallbackValue=3}" Style="{StaticResource Value}" />
                     </StackPanel>
                     <Slider Value="{Binding Path=Profile.CannyLowThreshold, Mode=TwoWay}" Minimum="0" Maximum="100" SmallChange="0" LargeChange="5" ToolTip="{Binding CannyLowThresholdHelp}" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Threshold Edge Detection" Style="{StaticResource Caption}" FontWeight="Bold" />
+                        <Label Content="{Binding Profile.ThresholdEdgeDetection, FallbackValue=3}" Style="{StaticResource Value}" />
+                    </StackPanel>
+                    <Slider Value="{Binding Path=Profile.ThresholdEdgeDetection, Mode=TwoWay}" Minimum="0" Maximum="100" SmallChange="0" LargeChange="5" ToolTip="{Binding CannyLowThresholdHelp}" />
                 </StackPanel>
             </TabItem>
             <TabItem Header="Corner">
@@ -241,7 +253,12 @@
                         <Label Content="Min Area:" Width="210"/>
                         <Label Content="{Binding Profile.ContourMinArea, FallbackValue=3}" HorizontalContentAlignment="Right" Width="80"/>
                     </StackPanel>
-                    <Slider Value="{Binding Path=Profile.ContourMinArea, Mode=TwoWay}" ToolTip="{Binding PolygonEpsilonHelp}" Minimum="1" Maximum="500" SmallChange="1" LargeChange="10" />
+                    <Slider Value="{Binding Path=Profile.ContourMinArea, Mode=TwoWay}" ToolTip="{Binding PolygonEpsilonHelp}" Minimum="00" Maximum="1500" SmallChange="1" LargeChange="10" />
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Max Area:" Width="210"/>
+                        <Label Content="{Binding Profile.CountourMaxArea, FallbackValue=3}" HorizontalContentAlignment="Right" Width="80"/>
+                    </StackPanel>
+                    <Slider Value="{Binding Path=Profile.CountourMaxArea, Mode=TwoWay}" ToolTip="{Binding PolygonEpsilonHelp}" Minimum="300" Maximum="5000" SmallChange="1" LargeChange="10" />
                 </StackPanel>
             </TabItem>
 

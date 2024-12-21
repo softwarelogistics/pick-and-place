@@ -23,7 +23,7 @@
 
         <ToggleButton IsChecked="{Binding ShowTopCamera, Mode=TwoWay}" Width="48" Height="48"   >
             <ToggleButton.Content>
-                <fa:ImageAwesome Icon="VideoCamera"   ToolTip="Image Settings" />
+                <fa:ImageAwesome Icon="VideoCamera"   ToolTip="Show Top Camera" />
             </ToggleButton.Content>
             <ToggleButton.RenderTransform>
                 <RotateTransform Angle="90" CenterX="24" CenterY="24"></RotateTransform>
@@ -32,7 +32,7 @@
 
         <ToggleButton IsChecked="{Binding ShowBottomCamera, Mode=TwoWay}" Width="48" Height="48"  >
             <ToggleButton.Content>
-                <fa:ImageAwesome Icon="VideoCamera"   ToolTip="Image Settings" />
+                <fa:ImageAwesome Icon="VideoCamera"   ToolTip="Show Bottom Camera" />
             </ToggleButton.Content>
             <ToggleButton.RenderTransform>
                 <RotateTransform Angle="270" CenterX="24" CenterY="24"></RotateTransform>
@@ -42,7 +42,7 @@
 
         <ToggleButton IsChecked="{Binding PictureInPicture, Mode=TwoWay}"  >
             <ToggleButton.Content>
-                <fa:ImageAwesome Icon="ObjectGroup"   ToolTip="Image Settings" />
+                <fa:ImageAwesome Icon="ObjectGroup"   ToolTip="Picture in Picture View" />
             </ToggleButton.Content>
         </ToggleButton>
 

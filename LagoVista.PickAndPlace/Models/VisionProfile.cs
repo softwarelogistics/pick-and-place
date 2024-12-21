@@ -99,6 +99,13 @@ namespace LagoVista.PickAndPlace.Models
             set { _contourMinArea = value;  RaisePropertyChanged(); }
         }
 
+        private double _contourMaxArea = 800;
+        public double CountourMaxArea
+        {
+            get { return _contourMaxArea; }
+            set { _contourMaxArea = value; RaisePropertyChanged(); }
+        }
+
         private int _harrisCornerApeture = 3;
         public int HarrisCornerAperture
         {
@@ -262,6 +269,27 @@ namespace LagoVista.PickAndPlace.Models
         {
             get { return _houghCirclesMaxRadius; }
             set { _houghCirclesMaxRadius = value; RaisePropertyChanged(); }
+        }
+
+        private bool _applyMask = false;
+        public bool ApplyMask
+        {
+            get { return _applyMask; }
+            set { _applyMask = value; RaisePropertyChanged(); }
+        }
+
+        private bool _applyThreshold = false;
+        public bool ApplyThreshold
+        {
+            get { return _applyThreshold; }
+            set { _applyThreshold = value; RaisePropertyChanged(); }
+        }
+
+        public byte _primaryThreshold = 80;
+        public byte PrimaryThreshold
+        {
+            get { return _primaryThreshold; }
+            set { _primaryThreshold = value; RaisePropertyChanged(); }
         }
     }
 }

@@ -327,11 +327,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 switch (positionType)
                 {
                     case PositionType.ReferenceHole:
-                        _selectedPartStrip.TempPartIndex = 0;
+                        if(_selectedPartStrip != null)
+                            _selectedPartStrip.TempPartIndex = 0;
+
                         return new Point2D<double>(referenceHoleX, referenceHoleY);
 
                     case PositionType.FirstPart:
-                        _selectedPartStrip.TempPartIndex = 0;
+                        if (_selectedPartStrip != null)
+                            _selectedPartStrip.TempPartIndex = 0;
+
                         return new Point2D<double>(referenceHoleX + package.CenterXFromHole, referenceHoleY + package.CenterYFromHole);
 
                     case PositionType.CurrentPart:

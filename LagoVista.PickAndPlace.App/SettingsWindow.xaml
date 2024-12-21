@@ -227,6 +227,8 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
                     <Label Content="Top/Positioning Camera" />
@@ -242,13 +244,21 @@
                           SelectedValuePath="Id"
                           SelectedValue="{Binding InspectionCameraId, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="2" Content="Machine Fiducial Y" />
+                    <Label Grid.Row="2" Content="Machine Fiducial X" />
                     <TextBox  Text="{Binding Settings.MachineFiducial.X}" Grid.Row="2" />
                     <Label Content="mm" Grid.Row="2" Grid.Column="3" />
 
                     <Label Grid.Row="3" Content="Machine Fiducial Y" />
                     <TextBox Text="{Binding Settings.MachineFiducial.Y}"  Grid.Row="3" />
                     <Label Content="mm" Grid.Row="3" Grid.Column="3" />
+
+                    <Label Grid.Row="4" Content="Top Pixels per MM" />
+                    <TextBox  Text="{Binding Settings.PositionCameraPixelsPerMM}" Grid.Row="4" />
+                    <Label Content="mm" Grid.Row="2" Grid.Column="4" />
+
+                    <Label Grid.Row="5" Content="Bottom Pixels per MM" />
+                    <TextBox Text="{Binding Settings.InspectionCameraPixelsPerMM}"  Grid.Row="5" />
+                    <Label Content="mm" Grid.Row="3" Grid.Column="5" />
                 </Grid>
             </TabItem>
 

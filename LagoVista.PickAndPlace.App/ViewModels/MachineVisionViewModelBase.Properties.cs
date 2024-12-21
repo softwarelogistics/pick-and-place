@@ -12,6 +12,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         bool _showRectangles = false;
         bool _showCircles = false;
         bool _showLines = false;
+        bool _show100PixelSquare = false;
         bool _showCrossHairs = true;
         bool _showHarrisCorners = false;
         bool _showOriginalImage = true;
@@ -31,6 +32,12 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         {
             get { return _showCircles; }
             set { Set(ref _showCircles, value); }
+        }
+
+        public bool Show200PixelSquare
+        {
+            get { return _show100PixelSquare; }
+            set { Set(ref _show100PixelSquare, value); }
         }
         public bool ShowLines
         {

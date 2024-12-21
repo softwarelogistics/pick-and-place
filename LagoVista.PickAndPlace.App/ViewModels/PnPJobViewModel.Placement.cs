@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,9 +81,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
 
                 cmds.Add(SafeHeightGCodeGCode()); // Move to move height
                 cmds.Add(GetGoToPartInTrayGCode());
-                cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
                 //cmds.Add(WaitForComplete());
                 //cmds.Add(WaitForComplete());
+                
                 cmds.Add(ProduceVacuumGCode(true)); // Turn on solenoid 
                 cmds.Add(DwellGCode(250)); // Wait 500ms to pickup part.
                 cmds.Add(PickHeightGCode()); // Move to pick height                
@@ -92,32 +93,66 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 var cRotation = SelectedPartToBePlaced.RotateAngle + SelectedPartPackage.RotationInTape;
                 if (cRotation != 0 || (!SelectedPartToBePlaced.Polarized && cRotation != 180))
                 {
-                    if (cRotation > 360)
+                    if (cRotation >= 360)
                         cRotation -= 360;
-                    cmds.Add(RotationGCode(cRotation));
+                    //cmds.Add(RotationGCode(cRotation));
                   //  cmds.Add(WaitForComplete());
-                }              
-
-                cmds.Add(GetGoToPartOnBoardGCode());
-
-                cmds.Add(PlaceHeightGCode(SelectedPartPackage));
-                //cmds.Add(WaitForComplete());
-                cmds.Add(ProduceVacuumGCode(false));
-                cmds.Add(ProducePuffGCode(true));
-                cmds.Add(DwellGCode(50)); // Wait 500ms to let placed part settle in
-                cmds.Add(SafeHeightGCodeGCode()); // Return to move height.
-                cmds.Add(ProducePuffGCode(false));
-                cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
-                //cmds.Add(WaitForComplete());                
-
-                await SendInstructionSequenceAsync(cmds);
-                
-                if (!multiple)
-                {
-                    Machine.VacuumPump = false;
-                    Machine.PuffPump = false;
-                    
                 }
+
+                Machine.BottomLightOn = true;
+                ShowBottomCamera = true;
+                ShowRectangles = true;
+                SelectMVProfile("partinspection");
+                cmds.Add(GetGoToInspectionCameraGCode(cRotation));
+                await SendInstructionSequenceAsync(cmds);
+
+                FoundRectangle = null;
+
+                // Wait for confirmation on all moves
+                while(Machine.Busy)
+                {
+                    await Task.Delay(1);
+                }
+
+                var timeout = DateTime.Now.AddMilliseconds(1000);
+
+                // wait until we identify a rectangle (probably want a time out here)
+                while(!FoundRectangle.HasValue && DateTime.Now < timeout)
+                {
+                    await Task.Delay(1);
+                }
+
+                if (FoundRectangle.HasValue)
+                {
+                    Debug.WriteLine($"Error: {FoundRectangle.Value.Center.X}x{FoundRectangle.Value.Center.Y} - {FoundRectangle.Value.Angle}");
+                }
+                else
+                {
+                    Debug.WriteLine("we dont have an error so keep going.");
+                }
+
+                //cmds.Clear();
+                //cmds.Add(GetGoToPartOnBoardGCode());
+
+                //cmds.Add(PlaceHeightGCode(SelectedPartPackage));
+                ////cmds.Add(WaitForComplete());
+                //cmds.Add(ProduceVacuumGCode(false));
+                //cmds.Add(ProducePuffGCode(true));
+                //cmds.Add(DwellGCode(50)); // Wait 500ms to let placed part settle in
+                //cmds.Add(SafeHeightGCodeGCode()); // Return to move height.
+                //cmds.Add(ProducePuffGCode(false));
+                //cmds.Add(RotationGCode(0)); // Ensure we are at zero position before picking up part.
+                //cmds.Add(WaitForComplete());
+                //await SendInstructionSequenceAsync(cmds);
+
+
+
+                //if (!multiple)
+                //{
+                //    Machine.VacuumPump = false;
+                //    Machine.PuffPump = false;
+                    
+                //}
 
                 SelectedPartStrip.CurrentPartIndex++;
                 _partIndex++;
@@ -154,7 +189,7 @@ namespace LagoVista.PickAndPlace.App.ViewModels
                 var deltaX = Math.Abs(XPartInTray.Value - Machine.MachinePosition.X);
                 var deltaY = Math.Abs(YPartInTray.Value - Machine.MachinePosition.Y);
                 var feedRate = Machine.Settings.FastFeedRate;
-                return $"G0 X{XPartInTray * Machine.Settings.PartStripScaler.X} Y{YPartInTray * Machine.Settings.PartStripScaler.Y} F{feedRate}";
+                return $"G0 X{XPartInTray * Machine.Settings.PartStripScaler.X} Y{YPartInTray * Machine.Settings.PartStripScaler.Y} E0 F{feedRate}";
             }
         }
 
@@ -184,6 +219,14 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             var offsetX = (SelectedPartToBePlaced.X - _job.BoardOffset.X) + Machine.Settings.PCBOffset.X;
             var offsetY = (SelectedPartToBePlaced.Y - _job.BoardOffset.Y) + Machine.Settings.PCBOffset.Y;
             return $"G1 X{offsetX}  Y{offsetY} F{Machine.Settings.FastFeedRate}";
+        }
+
+        private String GetGoToInspectionCameraGCode(double rotation)
+        {
+            var offsetX = Machine.Settings.PartInspectionCamera.AbsolutePosition.X;
+            var offsetY = Machine.Settings.PartInspectionCamera.AbsolutePosition.Y;
+
+            return $"G1 X{offsetX}  Y{offsetY} Z{Machine.Settings.PartInspectionCamera.FocusHeight} E{rotation} F{Machine.Settings.FastFeedRate}";
         }
 
         public async Task GoToPartOnBoard()

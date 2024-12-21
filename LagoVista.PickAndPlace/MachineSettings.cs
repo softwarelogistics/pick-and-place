@@ -289,6 +289,21 @@ namespace LagoVista.PickAndPlace
             set { Set(ref _partInspectionCamera, value); }
         }
 
+        double _positionCameraPixelsPerMM;
+        public double PositionCameraPixelsPerMM
+        {
+            get { return _positionCameraPixelsPerMM; }
+            set { Set(ref _positionCameraPixelsPerMM, value); }
+        }
+
+
+        double _inspectionCameraPixelsPerMM;
+        public double InspectionCameraPixelsPerMM
+        {
+            get { return _inspectionCameraPixelsPerMM; }
+            set { Set(ref _inspectionCameraPixelsPerMM, value); }
+        }
+
 
         private double _maxX;
         public double MaxX 

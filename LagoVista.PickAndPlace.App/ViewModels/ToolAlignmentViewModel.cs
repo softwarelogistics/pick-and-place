@@ -22,9 +22,10 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             MarkTool1LocationCommand = new RelayCommand(MarkTool1Location, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
             GoToMarkTool1LocationCommand = new RelayCommand(GoToMarkTook1Location, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
             SetTopCameraLocationCommand = new RelayCommand(SetTopCameraLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
+            GoToBottomCameraLocationCommand = new RelayCommand(GotoBottomCameraLocation, () => Machine.Connected );
             SetBottomCameraLocationCommand = new RelayCommand(SetBottomCameraLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
-            GoToolOneLocationCommand = new RelayCommand(GoToolOneLocation, () => Machine.Connected && Machine.ViewType == ViewTypes.Camera);
-
+            GoToolOneLocationCommand = new RelayCommand(GoToolOneLocation, () => Machine.Connected );
+            
             AddNozzleCommand = new RelayCommand(AddNozzle);
             DeleteNozzleCommand = new RelayCommand(DeleteNozzle);
             SaveCalibrationCommand = new RelayCommand(SaveCalibration, () => IsDirty);
@@ -122,6 +123,15 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             TopCameraLocation = new Point2D<double>(Machine.MachinePosition.X, Machine.MachinePosition.Y);
             SetToolOneLocationCommand.RaiseCanExecuteChanged();
             SetToolTwoLocationCommand.RaiseCanExecuteChanged();
+        }
+
+        public void GotoBottomCameraLocation()
+        {
+            Machine.SendCommand($"G0 Z{Machine.Settings.ToolSafeMoveHeight} F5000");
+            Machine.GotoPoint(Machine.Settings.PartInspectionCamera.AbsolutePosition.X, Machine.Settings.PartInspectionCamera.AbsolutePosition.Y, Machine.Settings.PartInspectionCamera.FocusHeight, true);
+            ShowBottomCamera = true;
+            Machine.ViewType = ViewTypes.Tool1;
+            Machine.BottomLightOn = true;
         }
 
         public void SetBottomCameraLocation()
@@ -253,6 +263,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
         }
 
         public RelayCommand SetBottomCameraLocationCommand { get; private set; }
+
+        public RelayCommand GoToBottomCameraLocationCommand { get; private set; }
+
 
         public RelayCommand SetToolOneLocationCommand { get; private set; }
         public RelayCommand SetToolTwoLocationCommand { get; private set; }

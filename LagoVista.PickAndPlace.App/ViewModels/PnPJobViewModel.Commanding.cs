@@ -145,6 +145,9 @@ namespace LagoVista.PickAndPlace.App.ViewModels
             if (_isPlacingParts)
                 return false;
 
+            if (SelectedPart.StripFeederPackage == null)
+                return false;
+
             return true;
         }
 

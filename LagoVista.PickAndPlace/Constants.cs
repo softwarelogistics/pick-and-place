@@ -85,6 +85,7 @@ namespace LagoVista.PickAndPlace
         LagoVista_PnP,
         SimulatedMachine,
         Repeteir_PnP,
+        Lumina40_Marlin
     }
 
     public enum OperatingMode

@@ -70,7 +70,7 @@ namespace LagoVista.PickAndPlace
         private List<byte> _outputArray = new List<byte>();
         GCodeParser _parser = new GCodeParser(Core.PlatformSupport.Services.Logger);
         Queue<String> _commands = new Queue<string>();
-        ITimer _timer;
+        Core.PlatformSupport.ITimer _timer;
         FirmwareTypes _firmwareType;
 
         public SimulatedGCodeMachine(FirmwareTypes firmwareType)
